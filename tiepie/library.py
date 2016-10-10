@@ -8,8 +8,13 @@ CallbackDeviceList = CFUNCTYPE(None, c_void_p, c_uint32, c_uint32)
 
 
 class Library:
-    """
-    This class implements an interface to the TiePie device library.
+    """This class implements an interface to the TiePie device library.
+
+    Information on the specific functions can be found in the
+    `library's api documentation <http://api.tiepie.com/libtiepie/>`_
+
+    Attributes:
+        libtiepie: :py:class:`ctypes.CDLL` instance of libtiepie.dll resp. libtiepie.so
     """
 
     def __init__(self):
@@ -1165,8 +1170,9 @@ class Library:
         self.libtiepie.LibInit()
 
     def check_status(self, result, func, args):
-        """
-        Checks the status after calling a library function. This function is not intended as standalone function. It is
+        """Checks the status after calling a library function.
+
+        This function is not intended as standalone function. It is
         a callable to be assigned to the :py:attr:`ctypes._FuncPtr.errcheck` attribute of the foreign function
         definitions.
 
