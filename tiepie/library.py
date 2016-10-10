@@ -1199,3 +1199,31 @@ class Library:
                 raise IOError(status_str)
 
         return result
+
+    @property
+    def initialized(self):
+        """Get library initialized flag
+
+        Returns:
+            bool: True is library is initialized, False otherwise
+        """
+        return self.libtiepie.LibIsInitialized() != 0
+
+    @property
+    def version(self):
+        """Get library version
+
+        Returns:
+            tuple: library version (major, minor, release, build)
+        """
+        raw_version = self.libtiepie.LibGetVersion()
+        return (raw_version >> 48, (raw_version >> 32) & 0xffff, (raw_version >> 16) & 0xffff, raw_version & 0xffff)
+
+    @property
+    def version_postfix(self):
+        """Get library version postfix
+
+        Returns:
+            str: version postfix
+        """
+        return self.libtiepie.LibGetVersionExtra().decode('utf-8')
