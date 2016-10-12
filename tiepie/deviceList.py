@@ -23,9 +23,9 @@ class DeviceList:
                    "HS4D": 20,
                    "HS5": 22}
 
-    DEVICE_TYPES = {"oscilloscope": 1,
-                    "generator": 2,
-                    "i2chost": 4}
+    DEVICE_TYPES = {"Osc": 1,
+                    "Gen": 2,
+                    "I2C": 4}
 
     def __init__(self):
         self.libInst = Library()
@@ -113,3 +113,54 @@ class DeviceList:
         dev_name = str_buffer.value.decode('utf-8')
 
         return dev_name
+
+    def get_device_serial_no(self, id, id_kind=ID_KINDS["index"]):
+        """Get the serial number of the device.
+
+        Args:
+            id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
+            id_kind (int): the kind of the given id (listed in dict ID_KINDS), defaults to device list index
+
+        Returns:
+            int: serial number
+        """
+        # get the serial number
+        serial_no = self.libInst.libtiepie.LstDevGetSerialNumber(id_kind, id)
+
+        return serial_no
+
+    def get_device_types(self, id, id_kind=ID_KINDS["index"]):
+        """Get the the device types of an instrument.
+
+        Args:
+            id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
+            id_kind (int): the kind of the given id (listed in dict ID_KINDS), defaults to device list index
+
+        Returns:
+            dict: key: type (as listed in DEVICE_TYPES), value: True/False
+        """
+        # get the device types
+        dev_types = self.libInst.libtiepie.LstDevGetTypes(id_kind, id)
+
+        # check for every possible type and store in dict
+        type_dict = {"Osc": False,
+                     "Gen": False,
+                     "I2C": False}
+        for key in self.DEVICE_TYPES:
+            if dev_types & self.DEVICE_TYPES[key]:
+                type_dict[key] = True
+
+        return type_dict
+
+    def __str__(self):
+        """Return a (more or less) human-readable representation of the instruments in the device list.
+
+        Returns:
+            str: Instruments in the device list
+        """
+        dev_list = ""
+        for idx in range(self.device_count):
+            dev_list += "%d:\t%s\t%d\t%s\n" % (idx, self.get_device_name_short(idx), self.get_device_serial_no(idx),
+                                               str(self.get_device_types(idx)))
+
+        return dev_list
