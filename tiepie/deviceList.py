@@ -162,3 +162,16 @@ class DeviceList:
                                                str(self.get_device_types(idx)))
 
         return dev_list
+
+    def _open_device(self, id, id_kind=ID_KINDS["index"], device_type=DEVICE_TYPES["Osc"]):
+        """Open a device (of device_type) of an instrument (with given id) and return the device handle.
+
+        Args:
+            id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
+            id_kind (int): the kind of the given id (listed in dict ID_KINDS), defaults to device list index
+            device_type (int): the type of the device (listed in dict DEVICE_TYPES), defaults to oscilloscope
+
+        Returns:
+            handle (:py:class:`ctypes.c_uint32`): device handle
+        """
+        return libtiepie.LstOpenDevice(id_kind, id, device_type)
