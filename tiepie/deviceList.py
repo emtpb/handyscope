@@ -1,4 +1,4 @@
-from tiepie.library import Library
+from tiepie.library import libtiepie
 import ctypes
 
 
@@ -28,10 +28,8 @@ class DeviceList:
                     "I2C": 4}
 
     def __init__(self):
-        self.libInst = Library()
-
         # Fill the device list
-        self.libInst.libtiepie.LstUpdate()
+        libtiepie.LstUpdate()
 
     @property
     def device_count(self):
@@ -40,7 +38,7 @@ class DeviceList:
         Returns:
             int: device count
         """
-        return self.libInst.libtiepie.LstGetCount()
+        return libtiepie.LstGetCount()
 
     def get_device_name(self, id, id_kind=ID_KINDS["index"]):
         """Get the full name of the device.
@@ -53,13 +51,13 @@ class DeviceList:
             str: full device name
         """
         # get length of device name string
-        str_len = self.libInst.libtiepie.LstDevGetName(id_kind, id, None, 0)
+        str_len = libtiepie.LstDevGetName(id_kind, id, None, 0)
 
         # initialize mutable string buffer
         str_buffer = ctypes.create_string_buffer(str_len)
 
         # write the actual device name to the buffer
-        self.libInst.libtiepie.LstDevGetName(id_kind, id, str_buffer, str_len)
+        libtiepie.LstDevGetName(id_kind, id, str_buffer, str_len)
 
         # convert to a normal python string
         dev_name = str_buffer.value.decode('utf-8')
@@ -77,13 +75,13 @@ class DeviceList:
             str: short device name
         """
         # get length of device name string
-        str_len = self.libInst.libtiepie.LstDevGetNameShort(id_kind, id, None, 0)
+        str_len = libtiepie.LstDevGetNameShort(id_kind, id, None, 0)
 
         # initialize mutable string buffer
         str_buffer = ctypes.create_string_buffer(str_len)
 
         # write the actual device name to the buffer
-        self.libInst.libtiepie.LstDevGetNameShort(id_kind, id, str_buffer, str_len)
+        libtiepie.LstDevGetNameShort(id_kind, id, str_buffer, str_len)
 
         # convert to a normal python string
         dev_name = str_buffer.value.decode('utf-8')
@@ -101,13 +99,13 @@ class DeviceList:
             str: shortest device name
         """
         # get length of device name string
-        str_len = self.libInst.libtiepie.LstDevGetNameShortest(id_kind, id, None, 0)
+        str_len = libtiepie.LstDevGetNameShortest(id_kind, id, None, 0)
 
         # initialize mutable string buffer
         str_buffer = ctypes.create_string_buffer(str_len)
 
         # write the actual device name to the buffer
-        self.libInst.libtiepie.LstDevGetNameShortest(id_kind, id, str_buffer, str_len)
+        libtiepie.LstDevGetNameShortest(id_kind, id, str_buffer, str_len)
 
         # convert to a normal python string
         dev_name = str_buffer.value.decode('utf-8')
@@ -125,7 +123,7 @@ class DeviceList:
             int: serial number
         """
         # get the serial number
-        serial_no = self.libInst.libtiepie.LstDevGetSerialNumber(id_kind, id)
+        serial_no = libtiepie.LstDevGetSerialNumber(id_kind, id)
 
         return serial_no
 
@@ -140,7 +138,7 @@ class DeviceList:
             dict: key: type (as listed in DEVICE_TYPES), value: True/False
         """
         # get the device types
-        dev_types = self.libInst.libtiepie.LstDevGetTypes(id_kind, id)
+        dev_types = libtiepie.LstDevGetTypes(id_kind, id)
 
         # check for every possible type and store in dict
         type_dict = {"Osc": False,
