@@ -9,7 +9,6 @@ class DeviceList:
         ID_KINDS (dict): dict which maps readable representations of id kinds to their int version
         PRODUCT_IDS (dict): dict which maps readable representations of product ids to their int version
         DEVICE_TYPES (dict): dict which maps readable representations of device types to their int version
-        libInst (:py:class:`.library.Library`): instance of Library to access libtiepie
     """
 
     ID_KINDS = {"product id": 0,
