@@ -15,6 +15,7 @@ Attributes:
 from ctypes import *
 import platform
 import warnings
+import os.path
 
 # Type definitions for callback usage
 Callback = CFUNCTYPE(None, c_void_p)
@@ -35,7 +36,8 @@ def _load_lib():
     else:
         raise Exception('Can\'t determine library name, unknown platform.system(): ' + platform.system())
 
-    libtiepie = CDLL(library_name)
+    library_path = os.path.dirname(os.path.abspath(__file__)) + os.path.sep + library_name
+    libtiepie = CDLL(library_path)
 
     # define result and argument types
     libtiepie.LibInit.restype = None
