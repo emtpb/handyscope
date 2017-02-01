@@ -11,7 +11,7 @@ class DeviceList:
         DEVICE_TYPES (dict): dict which maps readable representations of device types to their int version
     """
 
-    ID_KINDS = {"product id": 0,
+    ID_KINDS = {"product id": 1,
                 "index": 2,
                 "serial number": 4}
 
@@ -177,11 +177,11 @@ class DeviceList:
 
         return dev_list
 
-    def _open_device(self, instr_id, id_kind="index", device_type="Osc"):
+    def open_device(self, instr_id, id_kind="index", device_type="Osc"):
         """Open a device (of device_type) of an instrument (with given id) and return the device handle.
 
         Args:
-            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
+            instr_id (int or str): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
             id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index
             device_type (str): the type of the device (listed in dict DEVICE_TYPES), defaults to oscilloscope
 
@@ -192,4 +192,13 @@ class DeviceList:
         id_kind_int = self.ID_KINDS[id_kind]
         device_type_int = self.DEVICE_TYPES[device_type]
 
-        return libtiepie.LstOpenDevice(id_kind_int, instr_id, device_type_int)
+        # Translate instr_id to int, if it is a product id str
+        if id_kind == "product id":
+            instr_id_int = self.PRODUCT_IDS[instr_id]
+        else:
+            instr_id_int = instr_id
+
+        return libtiepie.LstOpenDevice(id_kind_int, instr_id_int, device_type_int)
+
+
+device_list = DeviceList()
