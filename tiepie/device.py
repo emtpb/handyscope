@@ -5,7 +5,19 @@ import ctypes
 
 
 class Device:
+    """
+    Base class with functions common to all devices of an instrument, like name and serial number.
+    """
+
     def __init__(self, instr_id, id_kind, device_type):
+        """
+        Constructor for class Device.
+
+        Args:
+            instr_id (int or str): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
+            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS)
+            device_type (str): the type of the device (listed in dict DEVICE_TYPES)
+        """
         self._dev_handle = device_list.open_device(instr_id, id_kind, device_type)
 
     def __del__(self):
@@ -13,26 +25,56 @@ class Device:
 
     @property
     def driver_ver(self):
+        """
+        Get the driver version in the format Major.Minor.Release.Build
+
+        Returns:
+            str: driver version in the format Major.Minor.Release.Build
+        """
         raw_version = libtiepie.DevGetDriverVersion(self._dev_handle)
         return version_to_str(raw_version)
 
     @property
     def firmware_ver(self):
+        """
+        Get the firmware version in the format Major.Minor.Release.Build
+
+        Returns:
+            str: firmware version in the format Major.Minor.Release.Build
+        """
         raw_version = libtiepie.DevGetFirmwareVersion(self._dev_handle)
         return version_to_str(raw_version)
 
     @property
     def calibration_date(self):
+        """
+        Get the calibration date
+
+        Returns:
+            :py:class:`datetime.date`: calibration date
+        """
         raw_date = libtiepie.DevGetCalibrationDate(self._dev_handle)
         split_date = date(raw_date >> 16, (raw_date >> 8) & 0xff, raw_date & 0xff)
         return split_date
 
     @property
     def serial_no(self):
+        """
+        Get the serial number
+
+        Returns:
+            int: serial number
+        """
         return libtiepie.DevGetSerialNumber(self._dev_handle)
 
     @property
     def product_id(self):
+        """
+        Get the product id as human readable string (key of :py:attr:`tiepie.deviceList.DeviceList.PRODUCT_IDS`)
+
+        Returns:
+            str: product id
+        """
         id_int = libtiepie.DevGetProductId(self._dev_handle)
 
         # Lookup id in the dict
