@@ -68,3 +68,9 @@ class TestDevice:
 
     def test_is_removed(self):
         assert self.device.is_removed is False
+
+    def test_trig_in_cnt(self):
+        assert isinstance(self.device.trig_in_cnt, int)
+
+    def test_trig_ins(self):
+        assert len(self.device.trig_ins) is self.device.trig_in_cnt
