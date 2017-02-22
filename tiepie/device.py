@@ -1,6 +1,7 @@
 from tiepie.library import libtiepie
 from tiepie.deviceList import device_list
 from tiepie.triggerInput import TriggerInput
+from tiepie.triggerOutput import TriggerOutput
 from datetime import date
 import ctypes
 
@@ -24,6 +25,10 @@ class Device:
         self._trig_ins = []
         for idx in range(self.trig_in_cnt):
             self._trig_ins.append(TriggerInput(self._dev_handle, idx))
+
+        self._trig_outs = []
+        for idx in range(self.trig_out_cnt):
+            self._trig_outs.append(TriggerOutput(self._dev_handle, idx))
 
     def __del__(self):
         libtiepie.DevClose(self._dev_handle)
@@ -181,16 +186,23 @@ class Device:
 
     @property
     def trig_outs(self):
-        # TODO implement class instantiation
-        return None
+        return self._trig_outs
 
     @property
     def trig_out_cnt(self):
-        return libtiepie.DevTrGetOutputCount(self._dev_handle)
+        try:
+            return libtiepie.DevTrGetOutputCount(self._dev_handle)
+        except OSError as err:
+            # DevTrGetOutputCount raises NOT_SUPPORTED OSError, if the device has no trigger outputs
+            if str(err) == "[-2]: NOT_SUPPORTED":
+                return 0
+            else:
+                # Something other than "not supported" happened -> rethrow error
+                raise err
 
     def trig_out_by_id(self, trig_out_id):
-        # TODO implement trig_out_id dict
-        libtiepie.DevTrGetOutputIndexById(self._dev_handle, trig_out_id)
+        id_int = TriggerInput.TRIGGER_IDS[trig_out_id]
+        libtiepie.DevTrGetOutputIndexById(self._dev_handle, id_int)
 
 
 def version_to_str(raw_version):

@@ -1,4 +1,5 @@
-from tiepie.triggerInput import  TriggerInput
+from tiepie.triggerInput import TriggerInput
+from tiepie.triggerOutput import TriggerOutput
 
 
 class TestDevice:
@@ -71,11 +72,35 @@ class TestDevice:
         assert self.device.is_removed is False
 
     def test_trig_in_cnt(self):
-        assert isinstance(self.device.trig_in_cnt, int)
+        assert type(self.device.trig_in_cnt) is int
 
     def test_trig_ins(self):
         assert len(self.device.trig_ins) is self.device.trig_in_cnt
+        for trig_in in self.device.trig_ins:
+            assert type(trig_in) is TriggerInput
 
     def test_trig_in_id(self):
         for trig_in_id in TriggerInput.TRIGGER_IDS:
-            assert self.device.trig_in_by_id(trig_in_id) in range(len(self.device.trig_in_cnt))
+            try:
+                # If the id is supported by the device, a valid integer has to be returned.
+                assert self.device.trig_in_by_id(trig_in_id) in range(self.device.trig_in_cnt)
+            except OSError as err:
+                # If the id is not supported by the device, an OSError is raised.
+                assert str(err) == "[-2]: NOT_SUPPORTED"
+
+    def test_trig_out_cnt(self):
+        assert type(self.device.trig_out_cnt) is int
+
+    def test_trig_outs(self):
+        assert len(self.device.trig_outs) is self.device.trig_out_cnt
+        for trig_out in self.device.trig_outs:
+            assert type(trig_out) is TriggerOutput
+
+    def test_trig_out_id(self):
+        for trig_out_id in TriggerOutput.TRIGGER_IDS:
+            try:
+                # If the id is supported by the device, a valid integer has to be returned.
+                assert self.device.trig_out_by_id(trig_out_id) in range(self.device.trig_out_cnt)
+            except OSError as err:
+                # If the id is not supported by the device, an OSError is raised.
+                assert str(err) == "[-2]: NOT_SUPPORTED"
