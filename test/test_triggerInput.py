@@ -12,16 +12,16 @@ class TestTriggerInput:
 
     def test_is_available(self):
         for trig_in in self.device.trig_ins:
-            assert isinstance(trig_in.is_available, bool)
+            assert type(trig_in.is_available) is bool
 
     def test_is_triggered(self):
         for trig_in in self.device.trig_ins:
-            assert isinstance(trig_in.is_triggered, bool)
+            assert type(trig_in.is_triggered) is bool
 
     def test_is_enabled(self):
         # Test getter
         for trig_in in self.device.trig_ins:
-            assert isinstance(trig_in.is_enabled, bool)
+            assert type(trig_in.is_enabled) is bool
 
         # Test setter by changing the value and reading it back
         for trig_in in self.device.trig_ins:
@@ -32,7 +32,7 @@ class TestTriggerInput:
 
     def test_name(self):
         for trig_in in self.device.trig_ins:
-            assert isinstance(trig_in.name, str)
+            assert type(trig_in.name) is str
             assert trig_in.name in TriggerInput.TRIGGER_IDS
 
     def test_kinds(self):
