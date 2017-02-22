@@ -57,7 +57,6 @@ class TriggerInput:
 
     @property
     def kinds(self):
-        # TODO check handling of "unknown"
         raw_kinds = libtiepie.DevTrInGetKinds(self._dev_handle, self._idx)
         _kinds = []
 

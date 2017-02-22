@@ -1,5 +1,6 @@
 from tiepie.triggerInput import  TriggerInput
 
+
 class TestDevice:
     def setup_class(self):
         from tiepie.device import Device

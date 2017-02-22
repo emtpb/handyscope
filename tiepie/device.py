@@ -157,7 +157,6 @@ class Device:
 
     @property
     def trig_ins(self):
-        # TODO implement class instantiation
         _trig_ins = []
         for idx in range(self.trig_in_cnt):
             _trig_ins.append(TriggerInput(self._dev_handle, idx))
