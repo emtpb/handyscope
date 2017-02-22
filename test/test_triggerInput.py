@@ -1,4 +1,5 @@
 import pytest
+import warnings
 from tiepie.device import Device
 from tiepie.triggerInput import TriggerInput
 
@@ -6,6 +7,8 @@ from tiepie.triggerInput import TriggerInput
 class TestTriggerInput:
     def setup_class(self):
         self.device = Device("HS5", "product id", "Osc")
+        if len(self.device.trig_ins) is 0:
+            warnings.warn("This device has no trigger outputs, thus a full test cannot be performed.")
 
     def test_is_available(self):
         for trig_in in self.device.trig_ins:
