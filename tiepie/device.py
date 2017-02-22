@@ -21,6 +21,10 @@ class Device:
         """
         self._dev_handle = device_list.open_device(instr_id, id_kind, device_type)
 
+        self._trig_ins = []
+        for idx in range(self.trig_in_cnt):
+            self._trig_ins.append(TriggerInput(self._dev_handle, idx))
+
     def __del__(self):
         libtiepie.DevClose(self._dev_handle)
 
@@ -157,14 +161,19 @@ class Device:
 
     @property
     def trig_ins(self):
-        _trig_ins = []
-        for idx in range(self.trig_in_cnt):
-            _trig_ins.append(TriggerInput(self._dev_handle, idx))
-        return _trig_ins
+        return self._trig_ins
 
     @property
     def trig_in_cnt(self):
-        return libtiepie.DevTrGetInputCount(self._dev_handle)
+        try:
+            return libtiepie.DevTrGetInputCount(self._dev_handle)
+        except OSError as err:
+            # DevTrGetInputCount raises NOT_SUPPORTED OSError, if the device has no trigger inputs
+            if str(err) == "[-2]: NOT_SUPPORTED":
+                return 0
+            else:
+                # Something other than "not supported" happened -> rethrow error
+                raise err
 
     def trig_in_by_id(self, trig_in_id):
         id_int = TriggerInput.TRIGGER_IDS[trig_in_id]
