@@ -1,9 +1,10 @@
 import pytest
+from tiepie.device import Device
+from tiepie.triggerInput import TriggerInput
 
 
 class TestTriggerInput:
     def setup_class(self):
-        from tiepie.device import Device
         self.device = Device("HS5", "product id", "Osc")
 
     def test_is_available(self):
@@ -27,11 +28,9 @@ class TestTriggerInput:
             assert trig_in.is_enabled is False
 
     def test_name(self):
-        known_names = ["EXT 1", "EXT 2", "EXT 3", "Generator start", "Generator stop", "Generator new period"]
-
         for trig_in in self.device.trig_ins:
             assert isinstance(trig_in.name, str)
-            assert trig_in.name in known_names
+            assert trig_in.name in TriggerInput.TRIGGER_IDS
 
     def test_kinds(self):
         for trig_in in self.device.trig_ins:
@@ -63,3 +62,8 @@ class TestTriggerInput:
             else:
                 with pytest.raises(OSError):
                     trig_in.kind = "unknown"
+
+    def test_trigger_id(self):
+        for trig_in in self.device.trig_ins:
+            trig_id = trig_in.trigger_id
+            assert trig_id in TriggerInput.TRIGGER_IDS

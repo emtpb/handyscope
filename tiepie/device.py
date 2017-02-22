@@ -1,6 +1,6 @@
 from tiepie.library import libtiepie
 from tiepie.deviceList import device_list
-import tiepie.triggerInput as triggerInput
+from tiepie.triggerInput import TriggerInput
 from datetime import date
 import ctypes
 
@@ -160,7 +160,7 @@ class Device:
         # TODO implement class instantiation
         _trig_ins = []
         for idx in range(self.trig_in_cnt):
-            _trig_ins.append(triggerInput.TriggerInput(self._dev_handle, idx))
+            _trig_ins.append(TriggerInput(self._dev_handle, idx))
         return _trig_ins
 
     @property
@@ -168,8 +168,8 @@ class Device:
         return libtiepie.DevTrGetInputCount(self._dev_handle)
 
     def trig_in_by_id(self, trig_in_id):
-        # TODO implement trig_in_id dict
-        libtiepie.DevTrGetInputIndexById(self._dev_handle, trig_in_id)
+        id_int = TriggerInput.TRIGGER_IDS[trig_in_id]
+        return libtiepie.DevTrGetInputIndexById(self._dev_handle, id_int)
 
     @property
     def trig_outs(self):

@@ -14,6 +14,14 @@ class TriggerInput:
                      "pulsewidth positive": 128,
                      "pulsewidth negative": 256}
 
+    # See api doc, macro "TRIGGER_IO_ID"
+    TRIGGER_IDS = {"EXT 1":                 0 << 24 | 3 << 20 | 1 << 8 | 0,
+                   "EXT 2":                 0 << 24 | 3 << 20 | 2 << 8 | 0,
+                   "EXT 3":                 0 << 24 | 3 << 20 | 3 << 8 | 0,
+                   "Generator start":       0 << 24 | 2 << 20 | 0 << 8 | 0,
+                   "Generator stop":        0 << 24 | 2 << 20 | 0 << 8 | 1,
+                   "Generator new period":  0 << 24 | 2 << 20 | 0 << 8 | 2}
+
     def __init__(self, dev_handle, trig_in_idx):
         self._dev_handle = dev_handle
         self._idx = trig_in_idx
@@ -23,9 +31,13 @@ class TriggerInput:
         return libtiepie.DevTrInIsAvailable(self._dev_handle, self._idx) == 1
 
     @property
-    def _tiid(self):
-        # TODO implement dict, if necessary
-        return libtiepie.DevTrInGetId(self._dev_handle, self._idx)
+    def trigger_id(self):
+        raw_id = libtiepie.DevTrInGetId(self._dev_handle, self._idx)
+        for key in self.TRIGGER_IDS:
+            if self.TRIGGER_IDS[key] == raw_id:
+                return key
+
+        raise ValueError("Unknown trigger input id %d" % raw_id)
 
     @property
     def name(self):

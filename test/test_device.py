@@ -1,4 +1,4 @@
-
+from tiepie.triggerInput import  TriggerInput
 
 class TestDevice:
     def setup_class(self):
@@ -74,3 +74,7 @@ class TestDevice:
 
     def test_trig_ins(self):
         assert len(self.device.trig_ins) is self.device.trig_in_cnt
+
+    def test_trig_in_id(self):
+        for trig_in_id in TriggerInput.TRIGGER_IDS:
+            assert self.device.trig_in_by_id(trig_in_id) in range(len(self.device.trig_in_cnt))
