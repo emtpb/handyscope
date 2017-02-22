@@ -1203,7 +1203,7 @@ def _check_status(result, func, args):
     # <0 means error
     # >0 means ok, but with a side effect
     if status_code != 0:
-        status_str = '[' + str(status_code) + ']: ' + str(libtiepie.LibGetLastStatusStr())
+        status_str = '[' + str(status_code) + ']: ' + libtiepie.LibGetLastStatusStr().decode('utf-8')
         if status_code > 0:
             warnings.warn(status_str)
         else:
