@@ -2,65 +2,103 @@ from tiepie.library import libtiepie
 
 
 class OscilloscopeChannel:
-    @property
-    def _idx(self):
-        return None
+    CONNECTOR_TYPES = {"unknown":   0,
+                       "BNC":       1,
+                       "Banana":    2,
+                       "Powerplug": 4}
+
+    COUPLINGS = {"unknown":  0,
+                 "V DC":     1,
+                 "V AC":     2,
+                 "A DC":     4,
+                 "A AC":     8,
+                 "Ohm":     16}
+
+    def __init__(self, dev_handle, ch_idx):
+        self._dev_handle = dev_handle
+        self._idx = ch_idx
 
     @property
     def connector_type(self):
-        return libtiepie.ScpChGetConnectorType()
+        raw_type = libtiepie.ScpChGetConnectorType(self._dev_handle, self._idx)
+        for key in self.CONNECTOR_TYPES:
+            if raw_type == self.CONNECTOR_TYPES[key]:
+                return key
+
+        raise ValueError("Unknown connector type: %d" % raw_type)
 
     @property
     def is_differential(self):
-        return libtiepie.ScpChIsDifferential()
+        return libtiepie.ScpChIsDifferential(self._dev_handle, self._idx) == 1
 
     @property
     def impedance(self):
-        return libtiepie.ScpChGetImpedance()
+        return libtiepie.ScpChGetImpedance(self._dev_handle, self._idx)
 
     @property
-    def couplings_available(self):
-        return libtiepie.ScpChGetCouplings()
+    def couplings(self):
+        raw_couplings = libtiepie.ScpChGetCouplings(self._dev_handle, self._idx)
+        _couplings = []
+
+        # if no couplings are available, return unknown
+        if raw_couplings == self.COUPLINGS["unknown"]:
+            _couplings.append("unknown")
+        # else do a detailed analysis...
+        else:
+            # ... by iterating over every possible coupling...
+            for key in self.COUPLINGS:
+                # ... and ignoring "unknown" (already handled above)
+                if key == "unknown":
+                    pass
+                elif raw_couplings & self.COUPLINGS[key] == self.COUPLINGS[key]:
+                    _couplings.append(key)
+
+        return _couplings
 
     @property
     def coupling(self):
-        return libtiepie.ScpChGetCoupling()
+        raw_coupling = libtiepie.ScpChGetCoupling(self._dev_handle, self._idx)
+        for key in self.COUPLINGS:
+            if raw_coupling == self.COUPLINGS[key]:
+                return key
+
+        raise ValueError("Unknown coupling: %d" % raw_coupling)
 
     @coupling.setter
     def coupling(self, value):
-        libtiepie.ScpChSetCoupling(value)
+        libtiepie.ScpChSetCoupling(self._dev_handle, self._idx, self.COUPLINGS[value])
 
     @property
     def is_enabled(self):
-        return libtiepie.ScpChGetEnabled()
+        return libtiepie.ScpChGetEnabled(self._dev_handle, self._idx) == 1
 
     @is_enabled.setter
     def is_enabled(self, value):
-        libtiepie.ScpChSetEnabled(value)
+        libtiepie.ScpChSetEnabled(self._dev_handle, self._idx, value)
 
     @property
     def probe_gain(self):
-        return libtiepie.ScpChGetProbeGain()
+        return libtiepie.ScpChGetProbeGain(self._dev_handle, self._idx)
 
     @probe_gain.setter
     def probe_gain(self, value):
-        libtiepie.ScpChSetProbeGain(value)
+        libtiepie.ScpChSetProbeGain(self._dev_handle, self._idx, value)
 
     @property
     def probe_offset(self):
-        return libtiepie.ScpChGetProbeOffset()
+        return libtiepie.ScpChGetProbeOffset(self._dev_handle, self._idx)
 
     @probe_offset.setter
     def probe_offset(self, value):
-        libtiepie.ScpChSetProbeOffset(value)
+        libtiepie.ScpChSetProbeOffset(self._dev_handle, self._idx, value)
 
     @property
-    def auto_range(self):
-        return libtiepie.ScpChGetAutoRanging()
+    def is_auto_range(self):
+        return libtiepie.ScpChGetAutoRanging(self._dev_handle, self._idx) == 1
 
-    @auto_range.setter
-    def auto_range(self, value):
-        libtiepie.ScpChSetAutoRanging(value)
+    @is_auto_range.setter
+    def is_auto_range(self, value):
+        libtiepie.ScpChSetAutoRanging(self._dev_handle, self._idx, value)
 
     @property
     def ranges_available(self):
@@ -76,11 +114,11 @@ class OscilloscopeChannel:
 
     @property
     def trig_enabled(self):
-        return libtiepie.ScpChTrGetEnabled()
+        return libtiepie.ScpChTrGetEnabled(self._dev_handle, self._idx) == 1
 
     @trig_enabled.setter
     def trig_enabled(self, value):
-        libtiepie.ScpChTrSetEnabled(value)
+        libtiepie.ScpChTrSetEnabled(self._dev_handle, self._idx, value)
 
     @property
     def trig_kinds_available(self):

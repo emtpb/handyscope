@@ -1,14 +1,25 @@
 from tiepie.library import libtiepie
+from tiepie.device import Device
+from tiepie.deviceList import DeviceList
+from tiepie.oscilloscopeChannel import OscilloscopeChannel
 
 
-class Oscilloscope:
+class Oscilloscope(Device):
+    _device_type = "Osc"
+
+    def __init__(self, instr_id, id_kind="product id"):
+        super().__init__(instr_id, id_kind, self._device_type)
+
+        # Initialize channels
+        self._channels = [OscilloscopeChannel(self._dev_handle, ch_idx) for ch_idx in range(self.channel_count)]
+
     @property
     def channel_count(self):
-        return libtiepie.ScpGetChannelCount()
+        return libtiepie.ScpGetChannelCount(self._dev_handle)
 
     @property
     def channels(self):
-        return None
+        return self._channels
 
     def retrieve(self):
         libtiepie.ScpGetData()
