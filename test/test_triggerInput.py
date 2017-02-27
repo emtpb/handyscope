@@ -54,7 +54,7 @@ class TestTriggerInput:
 
         # Test setter by changing the value and reading it back
         for trig_in in self.device.trig_ins:
-            # If there are multiple kinds available, the chosen kind can be retrieved
+            # If there are multiple kinds available, the kind can be set
             if trig_in.kinds != ["unknown"]:
                 # Test every available kind
                 for kind in trig_in.kinds:
@@ -62,7 +62,7 @@ class TestTriggerInput:
                     trig_in.kind = kind
                     # Read it back & compare
                     assert trig_in.kind == kind
-            # Else (no known kinds), accessing the chosen kind raises an OSError
+            # Else (no known kinds), setting the kind raises an OSError
             else:
                 with pytest.raises(OSError) as err:
                     trig_in.kind = "unknown"
