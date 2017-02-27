@@ -48,8 +48,9 @@ class TestTriggerInput:
                 assert trig_in.kind in trig_in.TRIGGER_KINDS
             # Else (no known kinds), accessing the chosen kind raises an OSError
             else:
-                with pytest.raises(OSError):
+                with pytest.raises(OSError) as err:
                     trig_in.kind
+                assert err.value.args[0] == "[-2]: NOT_SUPPORTED"
 
         # Test setter by changing the value and reading it back
         for trig_in in self.device.trig_ins:
@@ -63,8 +64,9 @@ class TestTriggerInput:
                     assert trig_in.kind == kind
             # Else (no known kinds), accessing the chosen kind raises an OSError
             else:
-                with pytest.raises(OSError):
+                with pytest.raises(OSError) as err:
                     trig_in.kind = "unknown"
+                assert err.value.args[0] == "[-2]: NOT_SUPPORTED"
 
     def test_trigger_id(self):
         for trig_in in self.device.trig_ins:
