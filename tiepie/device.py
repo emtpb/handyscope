@@ -202,7 +202,7 @@ class Device:
 
     def trig_out_by_id(self, trig_out_id):
         id_int = TriggerInput.TRIGGER_IDS[trig_out_id]
-        libtiepie.DevTrGetOutputIndexById(self._dev_handle, id_int)
+        return libtiepie.DevTrGetOutputIndexById(self._dev_handle, id_int)
 
 
 def version_to_str(raw_version):
