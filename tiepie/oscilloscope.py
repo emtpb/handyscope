@@ -15,6 +15,19 @@ class Oscilloscope(Device):
                         "native only": 2,
                         "all":         4}
 
+    CLOCK_SOURCES = {"unknown":  0,
+                     "external": 1,
+                     "internal": 2}
+
+    CLOCK_OUTPUTS = {"unknown":  0,
+                     "disabled": 1,
+                     "sample":   2,
+                     "fixed":    4}
+
+    CONNECTION_STATES = {"undefined":    0,
+                         "connected":    1,
+                         "disconnected": 2}
+
     _device_type = "Osc"
 
     def __init__(self, instr_id, id_kind="product id"):
@@ -178,131 +191,195 @@ class Oscilloscope(Device):
         libtiepie.ScpSetAutoResolutionMode(self._dev_handle, self.AUTO_RESOLUTIONS[value])
 
     @property
-    def clock_sources_available(self):
-        return libtiepie.ScpGetClockSources()
+    def clock_sources(self):
+        raw_srcs = libtiepie.ScpGetClockSources(self._dev_handle)
+        srcs = []
+
+        if raw_srcs == self.CLOCK_SOURCES["unknown"]:
+            srcs.append("unknown")
+        else:
+            for key, value in self.CLOCK_SOURCES.items():
+                if value == "unknown":
+                    pass
+                else:
+                    if raw_srcs & value == value:
+                        srcs.append(key)
+
+        return srcs
 
     @property
     def clock_source(self):
-        return libtiepie.ScpGetClockSource()
+        src = libtiepie.ScpGetClockSource(self._dev_handle)
+        for key, value in self.CLOCK_SOURCES:
+            if src == value:
+                return key
+
+        raise ValueError("Unknown clock source: %d" % src)
 
     @clock_source.setter
     def clock_source(self, value):
-        libtiepie.ScpSetClockSource(value)
+        libtiepie.ScpSetClockSource(self._dev_handle, self.CLOCK_SOURCES[value])
 
     @property
-    def clock_outputs_available(self):
-        return libtiepie.ScpGetClockOutputs()
+    def clock_outputs(self):
+        raw_outs = libtiepie.ScpGetClockOutputs(self._dev_handle)
+        outs = []
+
+        if raw_outs == self.CLOCK_OUTPUTS["unknown"]:
+            outs.append("unknown")
+        else:
+            for key, value in self.CLOCK_OUTPUTS.items():
+                if value == "unknown":
+                    pass
+                else:
+                    if raw_outs & value == value:
+                        outs.append(key)
+
+        return outs
 
     @property
     def clock_output(self):
-        return libtiepie.ScpGetClockOutput()
+        out = libtiepie.ScpGetClockOutput(self._dev_handle)
+        for key, value in self.CLOCK_OUTPUTS:
+            if out == value:
+                return key
+
+        raise ValueError("Unknown clock output: %d" % out)
 
     @clock_output.setter
     def clock_output(self, value):
-        libtiepie.ScpSetClockOutput(value)
+        libtiepie.ScpSetClockOutput(self._dev_handle, self.CLOCK_OUTPUTS[value])
 
     @property
     def sample_freq_max(self):
-        return libtiepie.ScpGetSampleFrequencyMax()
+        return libtiepie.ScpGetSampleFrequencyMax(self._dev_handle)
 
     @property
     def sample_freq(self):
-        return libtiepie.ScpGetSampleFrequency()
+        return libtiepie.ScpGetSampleFrequency(self._dev_handle)
 
     @sample_freq.setter
     def sample_freq(self, value):
-        libtiepie.ScpSetSampleFrequency(value)
+        libtiepie.ScpSetSampleFrequency(self._dev_handle, value)
 
     @property
     def record_length_max(self):
-        return libtiepie.ScpGetRecordLengthMax()
+        return libtiepie.ScpGetRecordLengthMax(self._dev_handle)
 
     @property
     def record_length(self):
-        return libtiepie.ScpGetRecordLength()
+        return libtiepie.ScpGetRecordLength(self._dev_handle)
 
     @record_length.setter
     def record_length(self, value):
-        libtiepie.ScpSetRecordLength(value)
+        libtiepie.ScpSetRecordLength(self._dev_handle, value)
 
     @property
     def pre_sample_ratio(self):
-        return libtiepie.ScpGetPreSampleRatio()
+        return libtiepie.ScpGetPreSampleRatio(self._dev_handle)
 
     @pre_sample_ratio.setter
     def pre_sample_ratio(self, value):
-        libtiepie.ScpSetPreSampleRatio(value)
+        libtiepie.ScpSetPreSampleRatio(self._dev_handle, value)
 
     @property
     def segment_cnt_max(self):
-        return libtiepie.ScpGetSegmentCountMax()
+        return libtiepie.ScpGetSegmentCountMax(self._dev_handle)
 
     @property
     def segment_cnt(self):
-        return libtiepie.ScpGetSegmentCount()
+        return libtiepie.ScpGetSegmentCount(self._dev_handle)
 
     @segment_cnt.setter
     def segment_cnt(self, value):
-        libtiepie.ScpSetSegmentCount(value)
+        libtiepie.ScpSetSegmentCount(self._dev_handle, value)
 
     @property
     def trig_timeout(self):
-        return libtiepie.ScpGetTriggerTimeOut()
+        return libtiepie.ScpGetTriggerTimeOut(self._dev_handle)
 
     @trig_timeout.setter
     def trig_timeout(self, value):
-        libtiepie.ScpSetTriggerTimeOut(value)
+        libtiepie.ScpSetTriggerTimeOut(self._dev_handle, value)
 
     @property
     def is_trig_delay_available(self):
-        return libtiepie.ScpHasTriggerDelay()
+        return libtiepie.ScpHasTriggerDelay(self._dev_handle) == 1
 
     @property
     def trig_delay_max(self):
-        return libtiepie.ScpGetTriggerDelayMax()
+        return libtiepie.ScpGetTriggerDelayMax(self._dev_handle)
 
     @property
     def trig_delay(self):
-        return libtiepie.ScpGetTriggerDelay()
+        return libtiepie.ScpGetTriggerDelay(self._dev_handle)
 
     @trig_delay.setter
     def trig_delay(self, value):
-        libtiepie.ScpSetTriggerDelay(value)
+        libtiepie.ScpSetTriggerDelay(self._dev_handle, value)
 
     @property
     def is_trig_holdoff_available(self):
-        return libtiepie.ScpHasTriggerHoldOff()
+        return libtiepie.ScpHasTriggerHoldOff(self._dev_handle)
 
     @property
     def trig_holdoff_max(self):
-        return libtiepie.ScpGetTriggerHoldOffCountMax()
+        return libtiepie.ScpGetTriggerHoldOffCountMax(self._dev_handle)
 
     @property
     def trig_holdoff(self):
-        return libtiepie.ScpGetTriggerHoldOff()
+        return libtiepie.ScpGetTriggerHoldOff(self._dev_handle)
 
     @trig_holdoff.setter
     def trig_holdoff(self, value):
-        libtiepie.ScpSetTriggerHoldOff(value)
+        libtiepie.ScpSetTriggerHoldOff(self._dev_handle, value)
 
     @property
     def is_trig_available(self):
-        return libtiepie.ScpHasTrigger()
+        return libtiepie.ScpHasTrigger(self._dev_handle) == 1
 
     @property
     def is_connection_test_available(self):
-        return libtiepie.ScpHasConnectionTest()
+        return libtiepie.ScpHasConnectionTest(self._dev_handle) == 1
 
     def start_connection_test(self):
-        libtiepie.ScpStartConnectionTest()
+        return libtiepie.ScpStartConnectionTest(self._dev_handle) == 1
 
     @property
     def is_connection_test_completed(self):
-        return libtiepie.ScpIsConnectionTestCompleted()
+        return libtiepie.ScpIsConnectionTestCompleted(self._dev_handle) == 1
 
     @property
     def connection_test_data(self):
-        return libtiepie.ScpGetConnectionTestData()
+        # Initialize uint8 array
+        data = (ctypes.c_uint8 * self.channel_count)()
+
+        # Write the actual data to the array
+        libtiepie.ScpGetConnectionTestData(self._dev_handle, ctypes.byref(data), self.channel_count)
+
+        # Convert to a normal python list
+        data = list(data)
+
+        # Evaluate
+        data_evaluated = []
+        for element in data:
+            for key, value in self.CONNECTION_STATES.items():
+                if element == value:
+                    data_evaluated.append(key)
+                else:
+                    raise ValueError("Unknown connection state: %d" % element)
+
+        return data_evaluated
 
     def test_connection(self):
-        pass
+        if self.is_connection_test_available:
+            res = self.start_connection_test()
+            if res is False:
+                raise IOError("Connection test could not be started.")
+
+            while not self.is_connection_test_completed:
+                pass
+
+            return self.connection_test_data
+        else:
+            return None
