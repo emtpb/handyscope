@@ -2,9 +2,19 @@ from tiepie.library import libtiepie
 from tiepie.device import Device
 from tiepie.deviceList import DeviceList
 from tiepie.oscilloscopeChannel import OscilloscopeChannel
+import ctypes
 
 
 class Oscilloscope(Device):
+    MEASURE_MODES = {"unknown": 0,
+                     "stream":  1,
+                     "block":   2}
+
+    AUTO_RESOLUTIONS = {"unknown":     0,
+                        "disabled":    1,
+                        "native only": 2,
+                        "all":         4}
+
     _device_type = "Osc"
 
     def __init__(self, instr_id, id_kind="product id"):
@@ -38,80 +48,134 @@ class Oscilloscope(Device):
 
     @property
     def valid_pre_sample_cnt(self):
-        return libtiepie.ScpGetValidPreSampleCount()
+        return libtiepie.ScpGetValidPreSampleCount(self._dev_handle)
 
     def start(self):
-        libtiepie.ScpStart()
+        return libtiepie.ScpStart(self._dev_handle) == 1
 
     def stop(self):
-        libtiepie.ScpStop()
+        return libtiepie.ScpStop(self._dev_handle) == 1
 
     def force_trig(self):
-        libtiepie.ScpForceTrigger()
+        return libtiepie.ScpForceTrigger(self._dev_handle) == 1
 
     @property
-    def measure_modes_available(self):
-        return libtiepie.ScpGetMeasureModes()
+    def measure_modes(self):
+        raw_modes = libtiepie.ScpGetMeasureModes(self._dev_handle)
+        _modes = []
+
+        # If no measure modes are available, return unknown
+        if raw_modes == self.MEASURE_MODES["unknown"]:
+            _modes.append("unknown")
+        # Else do a detailed analysis...
+        else:
+            # ... by iterating over every possible kind...
+            for key in self.MEASURE_MODES:
+                # ... and ignoring "unknown" (already handled above)
+                if key == "unknown":
+                    pass
+                elif raw_modes & self.MEASURE_MODES[key] == self.MEASURE_MODES[key]:
+                    _modes.append(key)
+
+        return _modes
 
     @property
     def measure_mode(self):
-        return libtiepie.ScpGetMeasureMode()
+        mode_int = libtiepie.ScpGetMeasureMode(self._dev_handle)
+        for key in self.MEASURE_MODES:
+            if mode_int == self.MEASURE_MODES[key]:
+                return key
+
+        raise ValueError("Unknown measure mode: %d" % mode_int)
 
     @measure_mode.setter
     def measure_mode(self, value):
-        libtiepie.ScpSetMeasureMode(value)
+        libtiepie.ScpSetMeasureMode(self._dev_handle, self.MEASURE_MODES[value])
 
     @property
     def is_running(self):
-        return libtiepie.ScpIsRunning()
+        return libtiepie.ScpIsRunning(self._dev_handle) == 1
 
     @property
     def is_triggered(self):
-        return libtiepie.ScpIsTriggered()
+        return libtiepie.ScpIsTriggered(self._dev_handle) == 1
 
     @property
     def is_timeout_trig(self):
-        return libtiepie.ScpIsTimeoutTriggered()
+        return libtiepie.ScpIsTimeoutTriggered(self._dev_handle) == 1
 
     @property
     def is_force_trig(self):
-        return libtiepie.ScpIsForceTriggered()
+        return libtiepie.ScpIsForceTriggered(self._dev_handle) == 1
 
     @property
     def is_data_ready(self):
-        return libtiepie.ScpIsDataReady()
+        return libtiepie.ScpIsDataReady(self._dev_handle) == 1
 
     @property
     def is_data_overflow(self):
-        return libtiepie.ScpIsDataOverflow()
+        return libtiepie.ScpIsDataOverflow(self._dev_handle) == 1
 
     @property
-    def resolutions_availabe(self):
-        return libtiepie.ScpGetResolutions()
+    def resolutions(self):
+        # get length of list
+        res_len = libtiepie.ScpGetResolutions(self._dev_handle, None, 0)
+
+        # initialize uint8 array
+        res = (ctypes.c_uint8 * res_len)()
+
+        # write the actual data to the array
+        libtiepie.ScpGetResolutions(self._dev_handle, ctypes.byref(res), res_len)
+
+        # convert to a normal python list
+        res = list(res)
+
+        return res
 
     @property
     def resolution(self):
-        return libtiepie.ScpGetResolution()
+        return libtiepie.ScpGetResolution(self._dev_handle)
 
     @resolution.setter
     def resolution(self, value):
-        libtiepie.ScpSetResolution(value)
+        libtiepie.ScpSetResolution(self._dev_handle, value)
 
     @property
     def is_resolution_enhanced(self):
-        return libtiepie.ScpIsResolutionEnhanced()
+        return libtiepie.ScpIsResolutionEnhanced(self._dev_handle) == 1
 
     @property
-    def auto_resolutions_available(self):
-        return libtiepie.ScpGetAutoResolutionModes()
+    def auto_resolutions(self):
+        raw_res = libtiepie.ScpGetAutoResolutionModes(self._dev_handle)
+        _res = []
+
+        # If no auto resolution modes are available, return unknown
+        if raw_res == self.AUTO_RESOLUTIONS["unknown"]:
+            _res.append("unknown")
+        # Else do a detailed analysis...
+        else:
+            # ... by iterating over every possible kind...
+            for key in self.AUTO_RESOLUTIONS:
+                # ... and ignoring "unknown" (already handled above)
+                if key == "unknown":
+                    pass
+                elif raw_res & self.AUTO_RESOLUTIONS[key] == self.AUTO_RESOLUTIONS[key]:
+                    _res.append(key)
+
+        return _res
 
     @property
     def auto_resolution(self):
-        return libtiepie.ScpGetAutoResolutionMode()
+        raw_res = libtiepie.ScpGetAutoResolutionMode(self._dev_handle)
+        for key, value in self.AUTO_RESOLUTIONS.items():
+            if raw_res == value:
+                return key
+
+        raise ValueError("Unknown auto resolution mode: %d" % raw_res)
 
     @auto_resolution.setter
     def auto_resolution(self, value):
-        libtiepie.ScpSetAutoResolutionMode(value)
+        libtiepie.ScpSetAutoResolutionMode(self._dev_handle, self.AUTO_RESOLUTIONS[value])
 
     @property
     def clock_sources_available(self):
