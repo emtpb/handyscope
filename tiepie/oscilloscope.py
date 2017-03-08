@@ -40,18 +40,6 @@ class Oscilloscope(Device):
     def valid_pre_sample_cnt(self):
         return libtiepie.ScpGetValidPreSampleCount()
 
-    @property
-    def data_range(self):
-        return libtiepie.ScpChGetDataValueRange()
-
-    @property
-    def data_range_min(self):
-        return libtiepie.ScpChGetDataValueMin()
-
-    @property
-    def data_range_max(self):
-        return libtiepie.ScpChGetDataValueMax()
-
     def start(self):
         libtiepie.ScpStart()
 

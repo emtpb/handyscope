@@ -195,3 +195,23 @@ class OscilloscopeChannel:
     @property
     def is_connection_test_available(self):
         return libtiepie.ScpChHasConnectionTest()
+
+    @property
+    def data_range(self):
+        # Init floats
+        range_min = ctypes.c_double()
+        range_max = ctypes.c_double()
+
+        # Get data
+        libtiepie.ScpChGetDataValueRange(self._dev_handle, self._idx, ctypes.byref(range_min), ctypes.byref(range_max))
+
+        # Get values and return them
+        return range_min.value, range_max.value
+
+    @property
+    def data_range_min(self):
+        return libtiepie.ScpChGetDataValueMin(self._dev_handle, self._idx)
+
+    @property
+    def data_range_max(self):
+        return libtiepie.ScpChGetDataValueMax(self._dev_handle, self._idx)
