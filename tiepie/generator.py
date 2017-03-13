@@ -165,7 +165,7 @@ class Generator(Device):
 
         buffer = (ctypes.c_double * list_len)()
 
-        libtiepie.GenGetAmplitudeRanges(self._dev_handle, buffer, list_len)
+        libtiepie.GenGetAmplitudeRanges(self._dev_handle, ctypes.byref(buffer), list_len)
 
         return list(buffer)
 
@@ -315,7 +315,7 @@ class Generator(Device):
         else:
             buffer = (ctypes.c_float * list_len)(*value_list)
 
-        libtiepie.GenSetData(self._dev_handle, buffer, list_len)
+        libtiepie.GenSetData(self._dev_handle, ctypes.byref(buffer), list_len)
 
     @property
     def modes_native(self):
