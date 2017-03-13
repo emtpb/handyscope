@@ -1,13 +1,5 @@
-import pytest
 from tiepie.triggerInput import TriggerInput
 from tiepie.triggerOutput import TriggerOutput
-from tiepie.deviceList import DeviceList
-from tiepie.device import Device
-
-
-@pytest.fixture(scope="module", params=[key for key in DeviceList.DEVICE_TYPES])
-def device(request):
-    return Device("HS5", "product id", request.param)
 
 
 def test_driver_ver(device):
