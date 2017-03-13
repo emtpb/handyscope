@@ -3,6 +3,7 @@ from tiepie.device import Device
 from tiepie.deviceList import DeviceList
 from tiepie.oscilloscopeChannel import OscilloscopeChannel
 import ctypes
+import time
 
 
 class Oscilloscope(Device):
@@ -489,3 +490,16 @@ class Oscilloscope(Device):
             return self.connection_test_data
         else:
             return None
+
+    def measure(self):
+        # Start measurement
+        self.start()
+
+        # Wait until measurement is finished
+        while not self.is_data_ready:
+            time.sleep(0.01)
+
+        # Get data
+        data = self.retrieve()
+
+        return data
