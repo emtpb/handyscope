@@ -56,7 +56,7 @@ class OscilloscopeChannel:
         return libtiepie.ScpChGetImpedance(self._dev_handle, self._idx)
 
     @property
-    def couplings(self):
+    def couplings_available(self):
         raw_couplings = libtiepie.ScpChGetCouplings(self._dev_handle, self._idx)
         _couplings = []
 
@@ -121,7 +121,7 @@ class OscilloscopeChannel:
         libtiepie.ScpChSetAutoRanging(self._dev_handle, self._idx, value)
 
     @property
-    def ranges(self):
+    def ranges_available(self):
         # Get length of list
         ranges_len = libtiepie.ScpChGetRanges(self._dev_handle, self._idx, None, 0)
 
@@ -153,7 +153,7 @@ class OscilloscopeChannel:
         libtiepie.ScpChTrSetEnabled(self._dev_handle, self._idx, value)
 
     @property
-    def trig_kinds(self):
+    def trig_kinds_available(self):
         raw_kinds = libtiepie.ScpChTrGetKinds(self._dev_handle, self._idx)
         _kinds = []
 
@@ -219,7 +219,7 @@ class OscilloscopeChannel:
             libtiepie.ScpChTrSetHysteresis(self._dev_handle, self._idx, idx, value_list[idx])
 
     @property
-    def trig_conditions(self):
+    def trig_conditions_available(self):
         raw_conds = libtiepie.ScpChTrGetConditions(self._dev_handle, self._idx)
         _conds = []
 

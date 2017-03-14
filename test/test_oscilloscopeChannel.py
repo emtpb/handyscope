@@ -18,12 +18,12 @@ def test_impedance(osc):
         assert channel.impedance > 0
 
 
-def test_couplings(osc):
+def test_couplings_available(osc):
     for channel in osc.channels:
         # must at least contain "unknown"
-        assert len(channel.couplings) > 0
+        assert len(channel.couplings_available) > 0
 
-        for coupling in channel.couplings:
+        for coupling in channel.couplings_available:
             assert coupling in OscilloscopeChannel.COUPLINGS
 
 
@@ -33,7 +33,7 @@ def test_coupling(osc):
         assert channel.coupling in OscilloscopeChannel.COUPLINGS
 
         # test setter
-        for coupling in channel.couplings:
+        for coupling in channel.couplings_available:
             channel.coupling = coupling
             assert channel.coupling is coupling
 

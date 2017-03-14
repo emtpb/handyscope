@@ -31,9 +31,9 @@ def test_name(device):
         assert trig_in.name in TriggerInput.TRIGGER_IDS
 
 
-def test_kinds(device):
+def test_kinds_available(device):
     for trig_in in device.trig_ins:
-        for kind in trig_in.kinds:
+        for kind in trig_in.kinds_available:
             assert kind in trig_in.TRIGGER_KINDS
 
 
@@ -41,7 +41,7 @@ def test_kind(device):
     # Test getter
     for trig_in in device.trig_ins:
         # If there are multiple kinds available, the chosen kind can be retrieved
-        if trig_in.kinds != ["unknown"]:
+        if trig_in.kinds_available!= ["unknown"]:
             assert trig_in.kind in trig_in.TRIGGER_KINDS
         # Else (no known kinds), accessing the chosen kind raises an OSError
         else:
@@ -52,9 +52,9 @@ def test_kind(device):
     # Test setter by changing the value and reading it back
     for trig_in in device.trig_ins:
         # If there are multiple kinds available, the kind can be set
-        if trig_in.kinds != ["unknown"]:
+        if trig_in.kinds_available!= ["unknown"]:
             # Test every available kind
-            for kind in trig_in.kinds:
+            for kind in trig_in.kinds_available:
                 # Set the value
                 trig_in.kind = kind
                 # Read it back & compare

@@ -56,7 +56,7 @@ class TriggerInput:
         return name
 
     @property
-    def kinds(self):
+    def kinds_available(self):
         raw_kinds = libtiepie.DevTrInGetKinds(self._dev_handle, self._idx)
         _kinds = []
 

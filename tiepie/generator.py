@@ -114,7 +114,7 @@ class Generator(Device):
         libtiepie.GenStop(self._dev_handle)
 
     @property
-    def signal_types(self):
+    def signal_types_available(self):
         raw_types = libtiepie.GenGetSignalTypes(self._dev_handle)
         _types = []
 
@@ -160,7 +160,7 @@ class Generator(Device):
         return libtiepie.GenSetAmplitude(self._dev_handle, value)
 
     @property
-    def amplitude_ranges(self):
+    def amplitude_ranges_available(self):
         list_len = libtiepie.GenGetAmplitudeRanges(self._dev_handle, None, 0)
 
         buffer = (ctypes.c_double * list_len)()
@@ -218,7 +218,7 @@ class Generator(Device):
         return libtiepie.GenSetFrequency(self._dev_handle, value)
 
     @property
-    def freq_modes(self):
+    def freq_modes_available(self):
         raw_modes = libtiepie.GenGetFrequencyModes(self._dev_handle)
         _modes = []
 
@@ -318,7 +318,7 @@ class Generator(Device):
         libtiepie.GenSetData(self._dev_handle, ctypes.byref(buffer), list_len)
 
     @property
-    def modes_native(self):
+    def modes_native_available(self):
         raw_modes = libtiepie.GenGetModesNative(self._dev_handle)
         _modes = []
 
@@ -334,7 +334,7 @@ class Generator(Device):
         return _modes
 
     @property
-    def modes(self):
+    def modes_available(self):
         raw_modes = libtiepie.GenGetModes(self._dev_handle)
         _modes = []
 

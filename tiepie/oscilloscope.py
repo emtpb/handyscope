@@ -180,7 +180,7 @@ class Oscilloscope(Device):
         return libtiepie.ScpForceTrigger(self._dev_handle) == 1
 
     @property
-    def measure_modes(self):
+    def measure_modes_available(self):
         raw_modes = libtiepie.ScpGetMeasureModes(self._dev_handle)
         _modes = []
 
@@ -237,7 +237,7 @@ class Oscilloscope(Device):
         return libtiepie.ScpIsDataOverflow(self._dev_handle) == 1
 
     @property
-    def resolutions(self):
+    def resolutions_available(self):
         # get length of list
         res_len = libtiepie.ScpGetResolutions(self._dev_handle, None, 0)
 
@@ -265,7 +265,7 @@ class Oscilloscope(Device):
         return libtiepie.ScpIsResolutionEnhanced(self._dev_handle) == 1
 
     @property
-    def auto_resolutions(self):
+    def auto_resolutions_available(self):
         raw_res = libtiepie.ScpGetAutoResolutionModes(self._dev_handle)
         _res = []
 
@@ -298,7 +298,7 @@ class Oscilloscope(Device):
         libtiepie.ScpSetAutoResolutionMode(self._dev_handle, self.AUTO_RESOLUTIONS[value])
 
     @property
-    def clock_sources(self):
+    def clock_sources_available(self):
         raw_srcs = libtiepie.ScpGetClockSources(self._dev_handle)
         srcs = []
 
@@ -328,7 +328,7 @@ class Oscilloscope(Device):
         libtiepie.ScpSetClockSource(self._dev_handle, self.CLOCK_SOURCES[value])
 
     @property
-    def clock_outputs(self):
+    def clock_outputs_available(self):
         raw_outs = libtiepie.ScpGetClockOutputs(self._dev_handle)
         outs = []
 

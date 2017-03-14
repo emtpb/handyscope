@@ -51,7 +51,7 @@ class TriggerOutput:
         return name
 
     @property
-    def events(self):
+    def events_available(self):
         raw_events = libtiepie.DevTrOutGetEvents(self._dev_handle, self._idx)
         _events = []
 

@@ -25,9 +25,9 @@ def test_name(device):
         assert trig_out.name in TriggerOutput.TRIGGER_IDS
 
 
-def test_events(device):
+def test_events_available(device):
     for trig_out in device.trig_outs:
-        for event in trig_out.events:
+        for event in trig_out.events_available:
             assert event in TriggerOutput.TRIGGER_EVENTS
 
 
@@ -38,6 +38,6 @@ def test_event(device):
 
         # test setter by changing a value and reading it back
         # possible values are accessible via property events
-        for event in trig_out.events:
+        for event in trig_out.events_available:
             trig_out.event = event
             assert trig_out.event is event
