@@ -164,18 +164,42 @@ class DeviceList:
 
         return type_dict
 
+    def get_overview(self):
+        """Return a list with information on all connected instruments (index, name, serial number and device types).
+
+        Returns:
+            list: List of dicts with info on connected instruments
+        """
+        instr_list = []
+        for idx in range(self.device_count):
+            instr_info = {"Index":      idx,
+                          "Name":       self.get_device_name_short(idx),
+                          "SerNo":      self.get_device_serial_no(idx),
+                          "DevTypes":   self.get_device_types(idx)}
+            instr_list.append(instr_info)
+
+        return instr_list
+
+    def get_overview_str(self):
+        """Return a string with information on all connected instruments (index, name, serial number and device types).
+
+        Returns:
+            str: Information on connected instruments
+        """
+        instr_str = ""
+        for instr_info in self.get_overview():
+            instr_str += "%d:\t%s\t%d\t%s\n" % (instr_info["Index"], instr_info["Name"], instr_info["SerNo"],
+                                                instr_info["DevTypes"])
+
+        return instr_str
+
     def __str__(self):
         """Return a (more or less) human-readable representation of the instruments in the device list.
 
         Returns:
-            str: Instruments in the device list
+            str: Instruments in the device list and info on them
         """
-        dev_list = ""
-        for idx in range(self.device_count):
-            dev_list += "%d:\t%s\t%d\t%s\n" % (idx, self.get_device_name_short(idx), self.get_device_serial_no(idx),
-                                               str(self.get_device_types(idx)))
-
-        return dev_list
+        return self.get_overview_str()
 
     def open_device(self, instr_id, id_kind="index", device_type="Osc"):
         """Open a device (of device_type) of an instrument (with given id) and return the device handle.
