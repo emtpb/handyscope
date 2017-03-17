@@ -123,3 +123,151 @@ def test_trig_enabled(osc):
         channel.trig_enabled = False
         assert channel.trig_enabled is False
 
+
+def test_trig_kinds_available(osc):
+    for channel in osc.channels:
+        for trig_kind in channel.trig_kinds_available:
+            assert trig_kind in channel.TRIGGER_KINDS
+
+
+def test_trig_kind(osc):
+    for channel in osc.channels:
+        # Test getter
+        # If there are multiple kinds available, the chosen kind can be retrieved.
+        if channel.trig_kinds_available != ["unknown"]:
+            assert channel.trig_kind in channel.TRIGGER_KINDS
+        # Else (no known kinds), accessing the chosen kind raises an OSError.
+        else:
+            with pytest.raises(OSError) as err:
+                channel.trig_kind
+            assert err.value.args[0] == "[-2]: NOT_SUPPORTED"
+
+        # Test setter
+        # If there are multiple kinds available, the chosen kind can be set.
+        if channel.trig_kinds_available != ["unknown"]:
+            # Test every available kind
+            for kind in channel.trig_kinds_available:
+                # Set the value
+                channel.trig_kind = kind
+                # Read it back & compare
+                assert channel.trig_kind == kind
+        # Else (no known kinds), setting the chosen kind raises an OSError.
+        else:
+            with pytest.raises(OSError) as err:
+                channel.trig_kind = "unknown"
+            assert err.value.args[0] == "[-2]: NOT_SUPPORTED"
+
+
+def test_trig_lvl_cnt(osc):
+    for channel in osc.channels:
+        # Alter trig_kind, because trig_lvl_cnt is influenced by them
+        for trig_kind in channel.trig_kinds_available:
+            channel.trig_kind = trig_kind
+            assert type(channel.trig_lvl_cnt) is int
+            assert channel.trig_lvl_cnt >= 0
+
+
+def test_trig_lvl(osc):
+    for channel in osc.channels:
+        # Alter trig_kind, because trig_lvl is influenced by them
+        for trig_kind in channel.trig_kinds_available:
+            channel.trig_kind = trig_kind
+
+            # Test getter
+            assert len(channel.trig_lvl) is channel.trig_lvl_cnt
+            for element in channel.trig_lvl:
+                assert type(element) is float
+
+            # Test setter
+            channel.trig_lvl = [0.0] * channel.trig_lvl_cnt
+            assert channel.trig_lvl == [0.0] * channel.trig_lvl_cnt
+            channel.trig_lvl = [0.5] * channel.trig_lvl_cnt
+            assert channel.trig_lvl == [0.5] * channel.trig_lvl_cnt
+            channel.trig_lvl = [1.0] * channel.trig_lvl_cnt
+            assert channel.trig_lvl == [1.0] * channel.trig_lvl_cnt
+
+
+def test_trig_hysteresis_cnt(osc):
+    for channel in osc.channels:
+        # Alter trig_kind, because trig_hysteresis_cnt is influenced by them
+        for trig_kind in channel.trig_kinds_available:
+            channel.trig_kind = trig_kind
+            assert type(channel.trig_hysteresis_cnt) is int
+            assert channel.trig_hysteresis_cnt >= 0
+            
+            
+def test_trig_hysteresis(osc):
+    for channel in osc.channels:
+        # Alter trig_kind, because trig_hysteresis is influenced by them
+        for trig_kind in channel.trig_kinds_available:
+            channel.trig_kind = trig_kind
+
+            # Test getter
+            assert len(channel.trig_hysteresis) is channel.trig_hysteresis_cnt
+            for element in channel.trig_hysteresis:
+                assert type(element) is float
+
+            # Test setter
+            channel.trig_hysteresis = [0.0] * channel.trig_hysteresis_cnt
+            assert channel.trig_hysteresis == [0.0] * channel.trig_hysteresis_cnt
+            channel.trig_hysteresis = [0.5] * channel.trig_hysteresis_cnt
+            assert channel.trig_hysteresis == [0.5] * channel.trig_hysteresis_cnt
+            channel.trig_hysteresis = [1.0] * channel.trig_hysteresis_cnt
+            assert channel.trig_hysteresis == [1.0] * channel.trig_hysteresis_cnt
+
+
+def test_trig_conditions_available(osc):
+    for channel in osc.channels:
+        # Alter trig_kind, because trig_conditions_available is influenced by them
+        for trig_kind in channel.trig_kinds_available:
+            channel.trig_kind = trig_kind
+
+            for trig_condition in channel.trig_conditions_available:
+                assert trig_condition in channel.TRIGGER_CONDITIONS
+
+
+def test_trig_condition(osc):
+    for channel in osc.channels:
+        # Alter trig_kind, because trig_condition is influenced by them
+        for trig_kind in channel.trig_kinds_available:
+            channel.trig_kind = trig_kind
+
+            # Test getter
+            # If there are multiple conditions available, the chosen condition can be retreived.
+            if channel.trig_conditions_available != ["unknown"]:
+                assert channel.trig_condition in channel.TRIGGER_CONDITIONS
+            # Else (no known conditions), accessing the chosen condition raises an OSError.
+            else:
+                with pytest.raises(OSError) as err:
+                    channel.trig_condition
+                assert err.value.args[0] == "[-2]: NOT_SUPPORTED"
+
+            # Test setter
+            # If there are multiple conditions available, the condition can be set.
+            if channel.trig_conditions_available != ["unknown"]:
+                for condition in channel.trig_conditions_available:
+                    channel.trig_condition = condition
+                    assert channel.trig_condition is condition
+            # Else (no known conditions), setting the chosen condition raises an OSError.
+            else:
+                with pytest.raises(OSError) as err:
+                    channel.trig_condition = "unknown"
+                assert err.value.args[0] == "[-2]: NOT_SUPPORTED"
+
+
+def test_trig_time_cnt(osc):
+    for channel in osc.channels:
+        # Alter trig_kind, because trig_time_cnt is influenced by it
+        for trig_kind in channel.trig_kinds_available:
+            channel.trig_kind = trig_kind
+            # If possible, alter trig_condition, because trig_time_cnt is influenced by it
+            if channel.trig_conditions_available != ["unknown"]:
+                for trig_condition in channel.trig_conditions_available:
+                    channel.trig_condition = trig_condition
+
+                    assert type(channel.trig_time_cnt) is int
+                    assert channel.trig_time_cnt >= 0
+            # If not possible, just do the check
+            else:
+                assert type(channel.trig_time_cnt) is int
+                assert channel.trig_time_cnt >= 0
