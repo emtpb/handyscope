@@ -198,7 +198,7 @@ class OscilloscopeChannel:
 
     @trig_lvl.setter
     def trig_lvl(self, value_list):
-        for idx in range(self.trig_lvl_cnt):
+        for idx in range(len(value_list)):
             libtiepie.ScpChTrSetLevel(self._dev_handle, self._idx, idx, value_list[idx])
 
     @property
