@@ -112,6 +112,26 @@ def test_is_auto_range(osc):
         assert channel.is_auto_range is False
 
 
+def test_ranges_available(osc):
+    for channel in osc.channels:
+        assert type(channel.ranges_available) is list
+        for element in channel.ranges_available:
+            assert type(element) is float
+            assert element > 0
+
+
+def test_range(osc):
+    for channel in osc.channels:
+        # Test getter
+        assert type(channel.range) is float
+        assert channel.range > 0
+
+        # Test setter
+        for range_available in channel.ranges_available:
+            channel.range = range_available
+            assert channel.range == range_available
+
+
 def test_trig_enabled(osc):
     for channel in osc.channels:
         # test getter
@@ -271,3 +291,73 @@ def test_trig_time_cnt(osc):
             else:
                 assert type(channel.trig_time_cnt) is int
                 assert channel.trig_time_cnt >= 0
+
+
+def test_trig_time(osc):
+    for channel in osc.channels:
+        # Alter trig_kind, because trig_time_cnt is influenced by it
+        for trig_kind in channel.trig_kinds_available:
+            channel.trig_kind = trig_kind
+            # If possible, alter trig_condition, because trig_time_cnt is influenced by it
+            if channel.trig_conditions_available != ["unknown"]:
+                for trig_condition in channel.trig_conditions_available:
+                    channel.trig_condition = trig_condition
+
+                    # Test getter
+                    assert type(channel.trig_time) is list
+                    assert len(channel.trig_time) is channel.trig_time_cnt
+                    for element in channel.trig_time:
+                        assert type(element) is float
+
+                    # Test setter
+                    channel.trig_time = [0.1] * channel.trig_time_cnt
+                    assert channel.trig_time == [0.1] * channel.trig_time_cnt
+                    channel.trig_time = [0.001] * channel.trig_time_cnt
+                    assert channel.trig_time == [0.001] * channel.trig_time_cnt
+
+            # If not possible, just do the check
+            else:
+                # Test getter
+                assert type(channel.trig_time) is list
+                assert len(channel.trig_time) is channel.trig_time_cnt
+                for element in channel.trig_time:
+                    assert type(element) is float
+
+                # Test setter
+                channel.trig_time = [0.1] * channel.trig_time_cnt
+                assert channel.trig_time == [0.1] * channel.trig_time_cnt
+                channel.trig_time = [0.001] * channel.trig_time_cnt
+                assert channel.trig_time == [0.001] * channel.trig_time_cnt
+
+
+def test_trig_is_available(osc):
+    for channel in osc.channels:
+        assert type(channel.trig_is_available) is bool
+
+
+def test_is_available(osc):
+    for channel in osc.channels:
+        assert type(channel.is_available) is bool
+
+
+def test_is_connection_test_available(osc):
+    for channel in osc.channels:
+        assert type(channel.is_connection_test_available) is bool
+
+
+def test_data_range(osc):
+    for channel in osc.channels:
+        assert type(channel.data_range) is tuple
+        assert len(channel.data_range) is 2
+        for element in channel.data_range:
+            assert type(element) is float
+
+
+def test_data_range_min(osc):
+    for channel in osc.channels:
+        assert type(channel.data_range_min) is float
+
+
+def test_data_range_max(osc):
+    for channel in osc.channels:
+        assert type(channel.data_range_max) is float
