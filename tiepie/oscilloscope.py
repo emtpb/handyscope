@@ -34,7 +34,7 @@ class Oscilloscope(Device):
         super().__init__(instr_id, id_kind, self._device_type)
 
         # Initialize channels
-        self._channels = [OscilloscopeChannel(self._dev_handle, ch_idx) for ch_idx in range(self.channel_count)]
+        self._channels = tuple(OscilloscopeChannel(self._dev_handle, ch_idx) for ch_idx in range(self.channel_cnt))
 
     @property
     def channel_cnt(self):
@@ -202,7 +202,7 @@ class Oscilloscope(Device):
                 elif raw_modes & self.MEASURE_MODES[key] == self.MEASURE_MODES[key]:
                     _modes.append(key)
 
-        return _modes
+        return tuple(_modes)
 
     @property
     def measure_mode(self):
@@ -255,7 +255,7 @@ class Oscilloscope(Device):
         # convert to a normal python list
         res = list(res)
 
-        return res
+        return tuple(res)
 
     @property
     def resolution(self):
@@ -287,7 +287,7 @@ class Oscilloscope(Device):
                 elif raw_res & self.AUTO_RESOLUTIONS[key] == self.AUTO_RESOLUTIONS[key]:
                     _res.append(key)
 
-        return _res
+        return tuple(_res)
 
     @property
     def auto_resolution(self):
@@ -317,7 +317,7 @@ class Oscilloscope(Device):
                     if raw_srcs & value == value:
                         srcs.append(key)
 
-        return srcs
+        return tuple(srcs)
 
     @property
     def clock_source(self):
@@ -347,7 +347,7 @@ class Oscilloscope(Device):
                     if raw_outs & value == value:
                         outs.append(key)
 
-        return outs
+        return tuple(outs)
 
     @property
     def clock_output(self):
@@ -481,7 +481,7 @@ class Oscilloscope(Device):
                 else:
                     raise ValueError("Unknown connection state: %d" % element)
 
-        return data_evaluated
+        return tuple(data_evaluated)
 
     def test_connection(self):
         if self.is_connection_test_available:
