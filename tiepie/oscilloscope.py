@@ -37,7 +37,7 @@ class Oscilloscope(Device):
         self._channels = [OscilloscopeChannel(self._dev_handle, ch_idx) for ch_idx in range(self.channel_count)]
 
     @property
-    def channel_count(self):
+    def channel_cnt(self):
         return libtiepie.ScpGetChannelCount(self._dev_handle)
 
     @property
@@ -464,10 +464,10 @@ class Oscilloscope(Device):
     @property
     def connection_test_data(self):
         # Initialize uint8 array
-        data = (ctypes.c_uint8 * self.channel_count)()
+        data = (ctypes.c_uint8 * self.channel_cnt)()
 
         # Write the actual data to the array
-        libtiepie.ScpGetConnectionTestData(self._dev_handle, ctypes.byref(data), self.channel_count)
+        libtiepie.ScpGetConnectionTestData(self._dev_handle, ctypes.byref(data), self.channel_cnt)
 
         # Convert to a normal python list
         data = list(data)

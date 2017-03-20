@@ -31,7 +31,7 @@ class DeviceList:
         libtiepie.LstUpdate()
 
     @property
-    def device_count(self):
+    def device_cnt(self):
         """Get device count
 
         Returns:
