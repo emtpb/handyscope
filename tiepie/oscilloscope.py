@@ -1,6 +1,5 @@
 from tiepie.library import libtiepie
 from tiepie.device import Device
-from tiepie.deviceList import DeviceList
 from tiepie.oscilloscopeChannel import OscilloscopeChannel
 import ctypes
 import time
