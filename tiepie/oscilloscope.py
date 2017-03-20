@@ -108,9 +108,9 @@ class Oscilloscope(Device):
             # Cast ctypes float array to normal python list
             data = list(buffer)
 
-            return data
+            return [data]
         else:
-            return None
+            return [None]
 
     def retrieve_ch1_ch2(self):
         # Get number of valid samples
