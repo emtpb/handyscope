@@ -61,6 +61,12 @@ class Oscilloscope(Device):
             for channel in self.channels:
                 if channel.is_enabled:
                     channel_nos.append(channel._idx + 1)
+        # Else check that the given channels are enabled
+        else:
+            for channel_no in channel_nos:
+                if self.channels[channel_no-1].is_enabled is False:
+                    raise ValueError("The given channel %d is not enabled. It has to be enabled before " % channel_no
+                                     + "oscilloscope.start() is called to get valid values!")
 
         # Check that there is at least one entry in channel_nos
         if not channel_nos:
