@@ -114,7 +114,7 @@ def test_is_auto_range(osc):
 
 def test_ranges_available(osc):
     for channel in osc.channels:
-        assert type(channel.ranges_available) is list
+        assert type(channel.ranges_available) is tuple
         for element in channel.ranges_available:
             assert type(element) is float
             assert element > 0
@@ -154,7 +154,7 @@ def test_trig_kind(osc):
     for channel in osc.channels:
         # Test getter
         # If there are multiple kinds available, the chosen kind can be retrieved.
-        if channel.trig_kinds_available != ["unknown"]:
+        if channel.trig_kinds_available != ("unknown", ):
             assert channel.trig_kind in channel.TRIGGER_KINDS
         # Else (no known kinds), accessing the chosen kind raises an OSError.
         else:
@@ -164,7 +164,7 @@ def test_trig_kind(osc):
 
         # Test setter
         # If there are multiple kinds available, the chosen kind can be set.
-        if channel.trig_kinds_available != ["unknown"]:
+        if channel.trig_kinds_available != ("unknown", ):
             # Test every available kind
             for kind in channel.trig_kinds_available:
                 # Set the value
@@ -199,12 +199,12 @@ def test_trig_lvl(osc):
                 assert type(element) is float
 
             # Test setter
-            channel.trig_lvl = [0.0] * channel.trig_lvl_cnt
-            assert channel.trig_lvl == [0.0] * channel.trig_lvl_cnt
-            channel.trig_lvl = [0.5] * channel.trig_lvl_cnt
-            assert channel.trig_lvl == [0.5] * channel.trig_lvl_cnt
-            channel.trig_lvl = [1.0] * channel.trig_lvl_cnt
-            assert channel.trig_lvl == [1.0] * channel.trig_lvl_cnt
+            channel.trig_lvl = tuple(0.0 for _ in range(channel.trig_lvl_cnt))
+            assert channel.trig_lvl == tuple(0.0 for _ in range(channel.trig_lvl_cnt))
+            channel.trig_lvl = tuple(0.5 for _ in range(channel.trig_lvl_cnt))
+            assert channel.trig_lvl == tuple(0.5 for _ in range(channel.trig_lvl_cnt))
+            channel.trig_lvl = tuple(1.0 for _ in range(channel.trig_lvl_cnt))
+            assert channel.trig_lvl == tuple(1.0 for _ in range(channel.trig_lvl_cnt))
 
 
 def test_trig_hysteresis_cnt(osc):
@@ -228,12 +228,12 @@ def test_trig_hysteresis(osc):
                 assert type(element) is float
 
             # Test setter
-            channel.trig_hysteresis = [0.0] * channel.trig_hysteresis_cnt
-            assert channel.trig_hysteresis == [0.0] * channel.trig_hysteresis_cnt
-            channel.trig_hysteresis = [0.5] * channel.trig_hysteresis_cnt
-            assert channel.trig_hysteresis == [0.5] * channel.trig_hysteresis_cnt
-            channel.trig_hysteresis = [1.0] * channel.trig_hysteresis_cnt
-            assert channel.trig_hysteresis == [1.0] * channel.trig_hysteresis_cnt
+            channel.trig_hysteresis = tuple(0.0 for _ in range(channel.trig_hysteresis_cnt))
+            assert channel.trig_hysteresis == tuple(0.0 for _ in range(channel.trig_hysteresis_cnt))
+            channel.trig_hysteresis = tuple(0.5 for _ in range(channel.trig_hysteresis_cnt))
+            assert channel.trig_hysteresis == tuple(0.5 for _ in range(channel.trig_hysteresis_cnt))
+            channel.trig_hysteresis = tuple(1.0 for _ in range(channel.trig_hysteresis_cnt))
+            assert channel.trig_hysteresis == tuple(1.0 for _ in range(channel.trig_hysteresis_cnt))
 
 
 def test_trig_conditions_available(osc):
@@ -254,7 +254,7 @@ def test_trig_condition(osc):
 
             # Test getter
             # If there are multiple conditions available, the chosen condition can be retreived.
-            if channel.trig_conditions_available != ["unknown"]:
+            if channel.trig_conditions_available != ("unknown", ):
                 assert channel.trig_condition in channel.TRIGGER_CONDITIONS
             # Else (no known conditions), accessing the chosen condition raises an OSError.
             else:
@@ -264,7 +264,7 @@ def test_trig_condition(osc):
 
             # Test setter
             # If there are multiple conditions available, the condition can be set.
-            if channel.trig_conditions_available != ["unknown"]:
+            if channel.trig_conditions_available != ("unknown", ):
                 for condition in channel.trig_conditions_available:
                     channel.trig_condition = condition
                     assert channel.trig_condition is condition
@@ -281,7 +281,7 @@ def test_trig_time_cnt(osc):
         for trig_kind in channel.trig_kinds_available:
             channel.trig_kind = trig_kind
             # If possible, alter trig_condition, because trig_time_cnt is influenced by it
-            if channel.trig_conditions_available != ["unknown"]:
+            if channel.trig_conditions_available != ("unknown", ):
                 for trig_condition in channel.trig_conditions_available:
                     channel.trig_condition = trig_condition
 
@@ -299,35 +299,35 @@ def test_trig_time(osc):
         for trig_kind in channel.trig_kinds_available:
             channel.trig_kind = trig_kind
             # If possible, alter trig_condition, because trig_time_cnt is influenced by it
-            if channel.trig_conditions_available != ["unknown"]:
+            if channel.trig_conditions_available != ("unknown", ):
                 for trig_condition in channel.trig_conditions_available:
                     channel.trig_condition = trig_condition
 
                     # Test getter
-                    assert type(channel.trig_time) is list
+                    assert type(channel.trig_time) is tuple
                     assert len(channel.trig_time) is channel.trig_time_cnt
                     for element in channel.trig_time:
                         assert type(element) is float
 
                     # Test setter
-                    channel.trig_time = [0.1] * channel.trig_time_cnt
-                    assert channel.trig_time == [0.1] * channel.trig_time_cnt
-                    channel.trig_time = [0.001] * channel.trig_time_cnt
-                    assert channel.trig_time == [0.001] * channel.trig_time_cnt
+                    channel.trig_time = tuple(0.1 for _ in range(channel.trig_time_cnt))
+                    assert channel.trig_time == tuple(0.1 for _ in range(channel.trig_time_cnt))
+                    channel.trig_time = tuple(0.001 for _ in range(channel.trig_time_cnt))
+                    assert channel.trig_time == tuple(0.001 for _ in range(channel.trig_time_cnt))
 
             # If not possible, just do the check
             else:
                 # Test getter
-                assert type(channel.trig_time) is list
+                assert type(channel.trig_time) is tuple
                 assert len(channel.trig_time) is channel.trig_time_cnt
                 for element in channel.trig_time:
                     assert type(element) is float
 
                 # Test setter
-                channel.trig_time = [0.1] * channel.trig_time_cnt
-                assert channel.trig_time == [0.1] * channel.trig_time_cnt
-                channel.trig_time = [0.001] * channel.trig_time_cnt
-                assert channel.trig_time == [0.001] * channel.trig_time_cnt
+                channel.trig_time = tuple(0.1 for _ in range(channel.trig_time_cnt))
+                assert channel.trig_time == tuple(0.1 for _ in range(channel.trig_time_cnt))
+                channel.trig_time = tuple(0.001 for _ in range(channel.trig_time_cnt))
+                assert channel.trig_time == tuple(0.001 for _ in range(channel.trig_time_cnt))
 
 
 def test_trig_is_available(osc):

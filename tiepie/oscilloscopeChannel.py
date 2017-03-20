@@ -73,7 +73,7 @@ class OscilloscopeChannel:
                 elif raw_couplings & self.COUPLINGS[key] == self.COUPLINGS[key]:
                     _couplings.append(key)
 
-        return _couplings
+        return tuple(_couplings)
 
     @property
     def coupling(self):
@@ -132,7 +132,7 @@ class OscilloscopeChannel:
         libtiepie.ScpChGetRanges(self._dev_handle, self._idx, ctypes.byref(ranges), ranges_len)
 
         # Convert to a normal python list
-        ranges = list(ranges)
+        ranges = tuple(ranges)
 
         return ranges
 
@@ -170,7 +170,7 @@ class OscilloscopeChannel:
                 elif raw_kinds & self.TRIGGER_KINDS[key] == self.TRIGGER_KINDS[key]:
                     _kinds.append(key)
 
-        return _kinds
+        return tuple(_kinds)
 
     @property
     def trig_kind(self):
@@ -194,12 +194,12 @@ class OscilloscopeChannel:
         _lvls = []
         for idx in range(self.trig_lvl_cnt):
             _lvls.append(libtiepie.ScpChTrGetLevel(self._dev_handle, self._idx, idx))
-        return _lvls
+        return tuple(_lvls)
 
     @trig_lvl.setter
-    def trig_lvl(self, value_list):
-        for idx in range(len(value_list)):
-            libtiepie.ScpChTrSetLevel(self._dev_handle, self._idx, idx, value_list[idx])
+    def trig_lvl(self, iterable):
+        for idx, value in enumerate(iterable):
+            libtiepie.ScpChTrSetLevel(self._dev_handle, self._idx, idx, value)
 
     @property
     def trig_hysteresis_cnt(self):
@@ -211,12 +211,12 @@ class OscilloscopeChannel:
         for idx in range(self.trig_hysteresis_cnt):
             _hyst.append(libtiepie.ScpChTrGetHysteresis(self._dev_handle, self._idx, idx))
 
-        return _hyst
+        return tuple(_hyst)
 
     @trig_hysteresis.setter
-    def trig_hysteresis(self, value_list):
-        for idx in range(self.trig_hysteresis_cnt):
-            libtiepie.ScpChTrSetHysteresis(self._dev_handle, self._idx, idx, value_list[idx])
+    def trig_hysteresis(self, iterable):
+        for idx, value in enumerate(iterable):
+            libtiepie.ScpChTrSetHysteresis(self._dev_handle, self._idx, idx, value)
 
     @property
     def trig_conditions_available(self):
@@ -236,7 +236,7 @@ class OscilloscopeChannel:
                 elif raw_conds & self.TRIGGER_CONDITIONS[key] == self.TRIGGER_CONDITIONS[key]:
                     _conds.append(key)
 
-        return _conds
+        return tuple(_conds)
 
     @property
     def trig_condition(self):
@@ -262,12 +262,12 @@ class OscilloscopeChannel:
         for idx in range(self.trig_time_cnt):
             times.append(libtiepie.ScpChTrGetTime(self._dev_handle, self._idx, idx))
 
-        return times
+        return tuple(times)
 
     @trig_time.setter
-    def trig_time(self, value_list):
-        for idx in range(self.trig_time_cnt):
-            libtiepie.ScpChTrSetTime(self._dev_handle, self._idx, idx, value_list[idx])
+    def trig_time(self, iterable):
+        for idx, value in enumerate(iterable):
+            libtiepie.ScpChTrSetTime(self._dev_handle, self._idx, idx, value)
 
     @property
     def trig_is_available(self):
