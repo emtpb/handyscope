@@ -275,7 +275,7 @@ class OscilloscopeChannel:
         # Check if trigger support is given under the currently selected measure mode
         measure_mode_ok = libtiepie.ScpChHasTrigger(self._dev_handle, self._idx) == 1
         # Check if trigger is available with current settings
-        settings_ok = libtiepie.ScpChTrIsAvailable(self._dev_handle, self._idx, value) == 1
+        settings_ok = libtiepie.ScpChTrIsAvailable(self._dev_handle, self._idx) == 1
 
         return measure_mode_ok & settings_ok
 
