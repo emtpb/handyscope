@@ -259,14 +259,14 @@ class OscilloscopeChannel:
     def trig_time(self):
         times = []
 
-        for idx in self.trig_time_cnt:
+        for idx in range(self.trig_time_cnt):
             times.append(libtiepie.ScpChTrGetTime(self._dev_handle, self._idx, idx))
 
         return times
 
     @trig_time.setter
     def trig_time(self, value_list):
-        for idx in self.trig_time_cnt:
+        for idx in range(self.trig_time_cnt):
             libtiepie.ScpChTrSetTime(self._dev_handle, self._idx, idx, value_list[idx])
 
     @property
