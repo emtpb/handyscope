@@ -55,3 +55,23 @@ class I2CHost(Device):
 
     def write_byte_word(self, address, data_byte, data_word):
         libtiepie.I2CWriteByteWord(self._dev_handle, address, data_byte, data_word)
+
+    def scan(self):
+        valid_addresses = []
+
+        # Only check allowed addresses: "Two groups of eight addresses (0000 XXX and 1111 XXX) are reserved"
+        # `see official I2C-bus specification and user manual <http://www.nxp.com/documents/user_manual/UM10204.pdf>`_
+        for address in range(0x08, 0x77):
+            if self.is_internal_address(address):
+                continue
+            else:
+                try:
+                    self.write(address, [])
+                except OSError as err:
+                    # If no ACK was received, there is no device listening on this address
+                    if err.args[0] == "[-15]: NO_ACKNOWLEDGE":
+                        continue
+                # If code didn't raise an exception, i.e. ACK was received, address is valid!
+                valid_addresses.append(address)
+
+        return tuple(valid_addresses)
