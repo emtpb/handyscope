@@ -273,3 +273,147 @@ def test_stop(default_osc):
     # Stopping a measurement right after start should return True
     default_osc.start()
     assert default_osc.stop() is True
+
+
+def test_force_trig(default_osc):
+    # Disable triggers
+    for channel in default_osc.channels:
+        channel.trig_is_enabled = False
+    default_osc.trig_timeout = -1
+
+    assert default_osc.is_force_trig is False
+
+    # Start measurement and force trigger
+    default_osc.start()
+    default_osc.force_trig()
+
+    while not default_osc.is_data_ready:
+        time.sleep(0.01)
+    assert default_osc.is_force_trig is True
+
+
+def test_measure_modes_available(default_osc):
+    assert type(default_osc.measure_modes_available) is tuple
+    for mode in default_osc.measure_modes_available:
+        assert mode in default_osc.MEASURE_MODES
+
+
+def test_measure_mode(default_osc):
+    # Test getter
+    assert default_osc.measure_mode in default_osc.MEASURE_MODES
+
+    # Test setter
+    for mode in default_osc.measure_modes_available:
+        default_osc.measure_mode = mode
+        assert default_osc.measure_mode == mode
+
+
+def test_is_running(default_osc):
+    assert default_osc.is_running is False
+    default_osc.start()
+    assert default_osc.is_running is True
+
+
+def test_is_triggered(default_osc):
+    assert default_osc.is_triggered is False
+
+    # Start measurement and force trigger
+    default_osc.start()
+    default_osc.force_trig()
+
+    while not default_osc.is_data_ready:
+        time.sleep(0.01)
+    assert default_osc.is_triggered is True
+
+
+def test_is_timeout_trig(default_osc):
+    assert default_osc.is_timeout_trig is False
+    default_osc.trig_timeout = 1e-6
+
+    default_osc.start()
+
+    while not default_osc.is_data_ready:
+        time.sleep(0.01)
+    assert default_osc.is_timeout_trig is True
+
+
+def test_is_force_trig(default_osc):
+    # Disable triggers
+    for channel in default_osc.channels:
+        channel.trig_is_enabled = False
+    default_osc.trig_timeout = -1
+
+    assert default_osc.is_force_trig is False
+
+    # Start measurement and force trigger
+    default_osc.start()
+    default_osc.force_trig()
+
+    while not default_osc.is_data_ready:
+        time.sleep(0.01)
+    assert default_osc.is_force_trig is True
+
+
+def test_is_data_ready(default_osc):
+    assert type(default_osc.is_data_ready) is bool
+
+    default_osc.start()
+    default_osc.force_trig()
+    time.sleep(0.5)
+    assert default_osc.is_data_ready is True
+
+
+def test_is_data_overflow(default_osc):
+    assert type(default_osc.is_data_overflow) is bool
+
+    # Overflow can only occur in streaming mode
+    default_osc.measure_mode = "stream"
+
+    default_osc.start()
+
+    # There should be no overflow in the beginning
+    assert default_osc.is_data_overflow is False
+    # No readout of data -> buffer should run full after some time
+    time.sleep(1)
+    assert default_osc.is_data_overflow is True
+
+
+def test_resolutions_available(default_osc):
+    assert type(default_osc.resolutions_available) is tuple
+    for resolution in default_osc.resolutions_available:
+        assert type(resolution) is int
+        assert resolution > 0
+
+
+def test_resolution(default_osc):
+    # Test getter
+    assert type(default_osc.resolution) is int
+    assert default_osc.resolution > 0
+    assert default_osc.resolution in default_osc.resolutions_available
+
+    # Test setter
+    for res in default_osc.resolutions_available:
+        default_osc.resolution = res
+        assert default_osc.resolution == res
+
+
+def test_is_resolution_enhanced(default_osc):
+    # Test for every available resolution
+    for res in default_osc.resolutions_available:
+        default_osc.resolution = res
+        assert type(default_osc.is_resolution_enhanced) is bool
+
+
+def test_auto_resolutions_available(default_osc):
+    for res in default_osc.auto_resolutions_available:
+        assert res in default_osc.AUTO_RESOLUTIONS
+
+
+def test_auto_resolution(default_osc):
+    # Test getter
+    assert default_osc.auto_resolution in default_osc.AUTO_RESOLUTIONS
+
+    # Test setter
+    for res in default_osc.auto_resolutions_available:
+        default_osc.auto_resolution = res
+        assert default_osc.auto_resolution == res
