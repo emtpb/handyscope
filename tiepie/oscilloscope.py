@@ -227,7 +227,7 @@ class Oscilloscope(Device):
 
     @property
     def is_timeout_trig(self):
-        return libtiepie.ScpIsTimeoutTriggered(self._dev_handle) == 1
+        return libtiepie.ScpIsTimeOutTriggered(self._dev_handle) == 1
 
     @property
     def is_force_trig(self):
