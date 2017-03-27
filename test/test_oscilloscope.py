@@ -264,15 +264,12 @@ def test_valid_pre_sample_cnt(osc):
     assert osc.valid_pre_sample_cnt >= 0
 
 
-def test_start(osc):
+def test_start(default_osc):
     # Starting a measurement should work without problems and return True
-    assert osc.start() is True
+    assert default_osc.start() is True
 
 
-def test_stop(osc):
-    # Ensure a clean state
-    osc.stop()
-
+def test_stop(default_osc):
     # Stopping a measurement right after start should return True
-    osc.start()
-    assert osc.stop() is True
+    default_osc.start()
+    assert default_osc.stop() is True

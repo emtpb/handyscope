@@ -18,6 +18,15 @@ def osc():
     return Oscilloscope(_product_id)
 
 
+@pytest.fixture(scope="function")
+def default_osc(osc):
+    if osc.is_running:
+        osc.stop()
+    osc.measure_mode = "block"
+
+    return osc
+
+
 @pytest.fixture(scope="module")
 def gen():
     return Generator(_product_id)
