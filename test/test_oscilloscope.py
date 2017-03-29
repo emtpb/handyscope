@@ -555,3 +555,15 @@ def test_is_trig_holdoff_available(default_osc):
 def test_trig_holdoff_max(default_osc):
     assert type(default_osc.trig_holdoff_max) is int
     assert default_osc.trig_holdoff_max >= 0
+
+
+def test_trig_holdoff(default_osc):
+    # Test getter
+    assert type(default_osc.trig_holdoff) is int
+    assert default_osc.trig_holdoff >= 0
+
+    # Test setter
+    holdoffs = [0, 1, 100, default_osc.trig_holdoff_max]
+    for holdoff in holdoffs:
+        default_osc.trig_holdoff = holdoff
+        assert default_osc.trig_holdoff == holdoff
