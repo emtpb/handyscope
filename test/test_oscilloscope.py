@@ -447,3 +447,111 @@ def test_clock_output(default_osc):
     for clk_out in default_osc.clock_outputs_available:
         default_osc.clock_output = clk_out
         assert default_osc.clock_output == clk_out
+
+
+def test_sample_freq_max(default_osc):
+    assert type(default_osc.sample_freq_max) is float
+    assert default_osc.sample_freq_max > 0
+
+
+def test_sample_freq(default_osc):
+    # Test getter
+    assert type(default_osc.sample_freq) is float
+    assert default_osc.sample_freq > 0
+    assert default_osc.sample_freq <= default_osc.sample_freq_max
+
+    # Test setter
+    freqs = [10e3, 100e3, default_osc.sample_freq_max]
+    for freq in freqs:
+        default_osc.sample_freq = freq
+        assert default_osc.sample_freq == freq
+
+
+def test_record_length_max(default_osc):
+    assert type(default_osc.record_length_max) is int
+    assert default_osc.record_length_max > 0
+
+
+def test_record_length(default_osc):
+    # Test getter
+    assert type(default_osc.record_length) is int
+    assert default_osc.record_length > 0
+    assert default_osc.record_length <= default_osc.record_length_max
+
+    # Test setter
+    lengths = [1000, 10000, default_osc.record_length_max]
+    for length in lengths:
+        default_osc.record_length = length
+        assert default_osc.record_length == length
+
+
+def test_pre_sample_ratio(default_osc):
+    # Test getter
+    assert type(default_osc.pre_sample_ratio) is float
+    assert default_osc.pre_sample_ratio >= 0
+    assert default_osc.pre_sample_ratio <= 1
+
+    # Test setter
+    ratios = [0.0, 0.25, 0.5, 0.75, 1.0]
+    for ratio in ratios:
+        default_osc.pre_sample_ratio = ratio
+        assert default_osc.pre_sample_ratio == ratio
+
+
+def test_segment_cnt_max(default_osc):
+    assert type(default_osc.segment_cnt_max) is int
+    assert default_osc.segment_cnt_max >= 0
+
+
+def test_segment_cnt(default_osc):
+    # Test getter
+    assert type(default_osc.segment_cnt) is int
+    assert default_osc.segment_cnt > 0
+
+    # Test setter
+    cnts = [1, 2, default_osc.segment_cnt_max]
+    for cnt in cnts:
+        default_osc.segment_cnt = cnt
+        assert default_osc.segment_cnt == cnt
+
+
+def test_trig_timeout(default_osc):
+    # Test getter
+    assert type(default_osc.trig_timeout) is float
+    assert (default_osc.trig_timeout >= 0) | (default_osc.trig_timeout == -1)
+
+    # Test setter
+    timeouts = [-1, 0, 1e-3, 0.5, 1]
+    for timeout in timeouts:
+        default_osc.trig_timeout = timeout
+        assert default_osc.trig_timeout == timeout
+
+
+def test_is_trig_delay_available(default_osc):
+    assert type(default_osc.is_trig_delay_available) is bool
+
+
+def test_trig_delay_max(default_osc):
+    assert type(default_osc.trig_delay_max) is float
+    assert default_osc.trig_delay_max >= 0
+
+
+def test_trig_delay(default_osc):
+    # Test getter
+    assert type(default_osc.trig_delay) is float
+    assert default_osc.trig_delay >= 0
+
+    # Test setter
+    delays = [0, 1e-3, default_osc.trig_delay_max]
+    for delay in delays:
+        default_osc.trig_delay = delay
+        assert default_osc.trig_delay == delay
+
+
+def test_is_trig_holdoff_available(default_osc):
+    assert type(default_osc.is_trig_holdoff_available) is bool
+
+
+def test_trig_holdoff_max(default_osc):
+    assert type(default_osc.trig_holdoff_max) is int
+    assert default_osc.trig_holdoff_max >= 0
