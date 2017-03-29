@@ -432,7 +432,7 @@ class Oscilloscope(Device):
 
     @property
     def is_trig_holdoff_available(self):
-        return libtiepie.ScpHasTriggerHoldOff(self._dev_handle)
+        return libtiepie.ScpHasTriggerHoldOff(self._dev_handle) == 1
 
     @property
     def trig_holdoff_max(self):
