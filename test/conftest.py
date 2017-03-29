@@ -24,6 +24,10 @@ def default_osc(osc):
         osc.stop()
     osc.measure_mode = "block"
     osc.clock_source = "internal"
+    osc.auto_resolution = "disabled"
+    osc.resolution = 14
+    osc.record_length = 5000
+
     osc.channels[0].is_enabled = True
     for channel in osc.channels[1:]:
         channel.is_enabled = False
