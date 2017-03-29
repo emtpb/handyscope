@@ -95,9 +95,9 @@ def test_retrieve_ch1(osc):
     osc.start()
     while not osc.is_data_ready:
         time.sleep(0.05)
-    data = osc.retrieve_ch1_ch2()
+    data = osc.retrieve_ch1()
     assert type(data) is list
-    assert len(data) == 2
+    assert len(data) == 1
     for idx, channel_data in enumerate(data):
         # Check, if channel is valid
         if idx < osc.channel_cnt:
