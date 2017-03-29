@@ -24,6 +24,9 @@ def default_osc(osc):
         osc.stop()
     osc.measure_mode = "block"
     osc.clock_source = "internal"
+    osc.channels[0].is_enabled = True
+    for channel in osc.channels[1:]:
+        channel.is_enabled = False
 
     return osc
 
