@@ -597,3 +597,39 @@ def test_is_connection_test_completed(default_osc):
             default_osc.is_connection_test_completed
             assert err.value.args[0] == "[-2]: NOT_SUPPORTED"
 
+
+def test_connection_test_data(default_osc):
+    if default_osc.is_connection_test_available:
+        # Start the test
+        default_osc.start_connection_test()
+        # Wait, until it's finished
+        while not default_osc.is_connection_test_completed:
+            time.sleep(0.01)
+
+        # Get the results
+        results = default_osc.connection_test_data
+        assert type(results) is tuple
+        for idx, result in enumerate(results):
+            if result == "undefined":
+                assert default_osc.channels[idx].is_enabled is False
+            else:
+                assert default_osc.channels[idx].is_enabled is True
+    else:
+        with pytest.raises(OSError) as err:
+            default_osc.connection_test_data
+            assert err.value.args[0] == "[-2]: NOT_SUPPORTED"
+
+
+def test_test_connection(default_osc):
+    results = default_osc.test_connection()
+
+    if default_osc.is_connection_test_available:
+        assert type(results) is tuple
+        for idx, result in enumerate(results):
+            if result == "undefined":
+                assert default_osc.channels[idx].is_enabled is False
+            else:
+                assert default_osc.channels[idx].is_enabled is True
+    else:
+        assert results is None
+

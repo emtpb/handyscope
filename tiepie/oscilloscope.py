@@ -475,11 +475,19 @@ class Oscilloscope(Device):
         # Evaluate
         data_evaluated = []
         for element in data:
+            result = None
+
+            # Try to look up the element
             for key, value in self.CONNECTION_STATES.items():
                 if element == value:
-                    data_evaluated.append(key)
-                else:
-                    raise ValueError("Unknown connection state: %d" % element)
+                    result = key
+
+            # If found append it to the output
+            if result is not None:
+                data_evaluated.append(result)
+            # Else throw an exception
+            else:
+                raise ValueError("Unknown connection state: %d" % element)
 
         return tuple(data_evaluated)
 
