@@ -567,3 +567,33 @@ def test_trig_holdoff(default_osc):
     for holdoff in holdoffs:
         default_osc.trig_holdoff = holdoff
         assert default_osc.trig_holdoff == holdoff
+
+
+def test_is_trig_available(default_osc):
+    assert type(default_osc.is_trig_available) is bool
+
+
+def test_is_connection_test_available(default_osc):
+    assert type(default_osc.is_connection_test_available) is bool
+
+
+def test_start_connection_test(default_osc):
+    if default_osc.is_connection_test_available:
+        assert default_osc.start_connection_test() is True
+        # Wait until connection test is completed before returning (there is no known way to stop the test)
+        while not default_osc.is_connection_test_completed:
+            time.sleep(0.01)
+    else:
+        with pytest.raises(OSError) as err:
+            default_osc.start_connection_test()
+            assert err.value.args[0] == "[-2]: NOT_SUPPORTED"
+
+
+def test_is_connection_test_completed(default_osc):
+    if default_osc.is_connection_test_available:
+        assert type(default_osc.is_connection_test_completed) is bool
+    else:
+        with pytest.raises(OSError) as err:
+            default_osc.is_connection_test_completed
+            assert err.value.args[0] == "[-2]: NOT_SUPPORTED"
+
