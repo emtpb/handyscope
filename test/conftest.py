@@ -23,6 +23,7 @@ def default_osc(osc):
     if osc.is_running:
         osc.stop()
     osc.measure_mode = "block"
+    osc.clock_source = "internal"
 
     return osc
 

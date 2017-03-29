@@ -311,8 +311,8 @@ class Oscilloscope(Device):
             srcs.append("unknown")
         else:
             for key, value in self.CLOCK_SOURCES.items():
-                if value == "unknown":
-                    pass
+                if key == "unknown":
+                    continue
                 else:
                     if raw_srcs & value == value:
                         srcs.append(key)
@@ -322,7 +322,7 @@ class Oscilloscope(Device):
     @property
     def clock_source(self):
         src = libtiepie.ScpGetClockSource(self._dev_handle)
-        for key, value in self.CLOCK_SOURCES:
+        for key, value in self.CLOCK_SOURCES.items():
             if src == value:
                 return key
 
@@ -341,7 +341,7 @@ class Oscilloscope(Device):
             outs.append("unknown")
         else:
             for key, value in self.CLOCK_OUTPUTS.items():
-                if value == "unknown":
+                if key == "unknown":
                     pass
                 else:
                     if raw_outs & value == value:
@@ -352,7 +352,7 @@ class Oscilloscope(Device):
     @property
     def clock_output(self):
         out = libtiepie.ScpGetClockOutput(self._dev_handle)
-        for key, value in self.CLOCK_OUTPUTS:
+        for key, value in self.CLOCK_OUTPUTS.items():
             if out == value:
                 return key
 

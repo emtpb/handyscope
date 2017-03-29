@@ -417,3 +417,33 @@ def test_auto_resolution(default_osc):
     for res in default_osc.auto_resolutions_available:
         default_osc.auto_resolution = res
         assert default_osc.auto_resolution == res
+
+
+def test_clock_sources_available(default_osc):
+    for clk_src in default_osc.clock_sources_available:
+        assert clk_src in default_osc.CLOCK_SOURCES
+
+
+def test_clock_source(default_osc):
+    # Test getter
+    assert default_osc.clock_source in default_osc.CLOCK_SOURCES
+
+    # Test setter
+    for clk_src in default_osc.clock_sources_available:
+        default_osc.clock_source = clk_src
+        assert default_osc.clock_source == clk_src
+
+
+def test_clock_outputs_available(default_osc):
+    for clk_out in default_osc.clock_outputs_available:
+        assert clk_out in default_osc.CLOCK_OUTPUTS
+
+
+def test_clock_output(default_osc):
+    # Test getter
+    assert default_osc.clock_output in default_osc.CLOCK_OUTPUTS
+
+    # Test setter
+    for clk_out in default_osc.clock_outputs_available:
+        default_osc.clock_output = clk_out
+        assert default_osc.clock_output == clk_out
