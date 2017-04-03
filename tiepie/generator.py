@@ -157,7 +157,7 @@ class Generator(Device):
 
     @amplitude.setter
     def amplitude(self, value):
-        return libtiepie.GenSetAmplitude(self._dev_handle, value)
+        libtiepie.GenSetAmplitude(self._dev_handle, value)
 
     @property
     def amplitude_ranges_available(self):
@@ -175,7 +175,7 @@ class Generator(Device):
 
     @amplitude_range.setter
     def amplitude_range(self, value):
-        return libtiepie.GenSetAmplitudeRange(self._dev_handle, value)
+        libtiepie.GenSetAmplitudeRange(self._dev_handle, value)
 
     @property
     def is_amplitude_autorange(self):
@@ -199,7 +199,7 @@ class Generator(Device):
 
     @offset.setter
     def offset(self, value):
-        return libtiepie.GenSetOffset(self._dev_handle, value)
+        libtiepie.GenSetOffset(self._dev_handle, value)
 
     @property
     def freq_min(self):
@@ -215,7 +215,7 @@ class Generator(Device):
 
     @freq.setter
     def freq(self, value):
-        return libtiepie.GenSetFrequency(self._dev_handle, value)
+        libtiepie.GenSetFrequency(self._dev_handle, value)
 
     @property
     def freq_modes_available(self):
@@ -261,7 +261,7 @@ class Generator(Device):
 
     @phase.setter
     def phase(self, value):
-        return libtiepie.GenSetPhase(self._dev_handle, value/360)
+        libtiepie.GenSetPhase(self._dev_handle, value/360)
 
     @property
     def symmetry_min(self):
@@ -277,7 +277,7 @@ class Generator(Device):
 
     @symmetry.setter
     def symmetry(self, value):
-        return libtiepie.GenSetSymmetry(self._dev_handle, value)
+        libtiepie.GenSetSymmetry(self._dev_handle, value)
 
     @property
     def pulse_width_min(self):
@@ -293,7 +293,7 @@ class Generator(Device):
 
     @pulse_width.setter
     def pulse_width(self, value):
-        return libtiepie.GenSetWidth(self._dev_handle, value)
+        libtiepie.GenSetWidth(self._dev_handle, value)
 
     @property
     def arb_data_length_min(self):
@@ -381,7 +381,7 @@ class Generator(Device):
 
     @burst_cnt.setter
     def burst_cnt(self, value):
-        return libtiepie.GenSetBurstCount(self._dev_handle, value)
+        libtiepie.GenSetBurstCount(self._dev_handle, value)
 
     @property
     def burst_sample_cnt_min(self):
