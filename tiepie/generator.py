@@ -249,19 +249,19 @@ class Generator(Device):
 
     @property
     def phase_min(self):
-        return libtiepie.GenGetPhaseMin(self._dev_handle)
+        return libtiepie.GenGetPhaseMin(self._dev_handle) * 360
 
     @property
     def phase_max(self):
-        return libtiepie.GenGetPhaseMax(self._dev_handle)
+        return libtiepie.GenGetPhaseMax(self._dev_handle) * 360
 
     @property
     def phase(self):
-        return libtiepie.GenGetPhase(self._dev_handle)
+        return libtiepie.GenGetPhase(self._dev_handle) * 360
 
     @phase.setter
     def phase(self, value):
-        return libtiepie.GenSetPhase(self._dev_handle, value)
+        return libtiepie.GenSetPhase(self._dev_handle, value/360)
 
     @property
     def symmetry_min(self):
