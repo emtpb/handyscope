@@ -108,10 +108,10 @@ class Generator(Device):
         libtiepie.GenSetOutputInvert(self._dev_handle, value)
 
     def start(self):
-        libtiepie.GenStart(self._dev_handle)
+        return libtiepie.GenStart(self._dev_handle) == 1
 
     def stop(self):
-        libtiepie.GenStop(self._dev_handle)
+        return libtiepie.GenStop(self._dev_handle) == 1
 
     @property
     def signal_types_available(self):
