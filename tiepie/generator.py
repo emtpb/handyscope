@@ -127,7 +127,7 @@ class Generator(Device):
                 elif raw_types & value == value:
                     _types.append(key)
 
-        return _types
+        return tuple(_types)
 
     @property
     def signal_type(self):
@@ -167,7 +167,7 @@ class Generator(Device):
 
         libtiepie.GenGetAmplitudeRanges(self._dev_handle, ctypes.byref(buffer), list_len)
 
-        return list(buffer)
+        return tuple(buffer)
 
     @property
     def amplitude_range(self):
@@ -231,7 +231,7 @@ class Generator(Device):
                 elif raw_modes & value == value:
                     _modes.append(key)
 
-        return _modes
+        return tuple(_modes)
 
     @property
     def freq_mode(self):
@@ -331,7 +331,7 @@ class Generator(Device):
                 elif raw_modes & value == value:
                     _modes.append(key)
 
-        return _modes
+        return tuple(_modes)
 
     @property
     def modes_available(self):
@@ -347,7 +347,7 @@ class Generator(Device):
                 elif raw_modes & value == value:
                     _modes.append(key)
 
-        return _modes
+        return tuple(_modes)
 
     @property
     def mode(self):
