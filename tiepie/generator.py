@@ -311,11 +311,12 @@ class Generator(Device):
         list_len = len(value_list)
 
         if list_len == 0:
-            buffer = None
+            pointer = None
         else:
             buffer = (ctypes.c_float * list_len)(*value_list)
+            pointer = ctypes.byref(buffer)
 
-        libtiepie.GenSetData(self._dev_handle, ctypes.byref(buffer), list_len)
+        libtiepie.GenSetData(self._dev_handle, pointer, list_len)
 
     @property
     def modes_native_available(self):
