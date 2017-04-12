@@ -40,6 +40,75 @@ def gen():
     return Generator(_product_id)
 
 
+@pytest.fixture(scope="function")
+def default_gen_sine(gen):
+    gen.is_amplitude_autorange = True
+    gen.signal_type = "sine"
+    gen.mode = "continuous"
+    gen.offset = 0.0
+    gen.amplitude = 1.0
+    gen.stop()
+
+    return gen
+
+
+@pytest.fixture(scope="function")
+def default_gen_pulse(gen):
+    gen.is_amplitude_autorange = True
+    gen.signal_type = "pulse"
+    gen.mode = "continuous"
+    gen.offset = 0.0
+    gen.amplitude = 1.0
+
+    return gen
+
+
+@pytest.fixture(scope="function")
+def default_gen_arb(gen):
+    gen.is_amplitude_autorange = True
+    gen.signal_type = "arbitrary"
+    gen.mode = "continuous"
+    gen.offset = 0.0
+    gen.amplitude = 1.0
+
+    return gen
+
+
+@pytest.fixture(scope="function")
+def default_gen_burst(gen):
+    gen.is_amplitude_autorange = True
+    gen.signal_type = "sine"
+    gen.mode = "burst count"
+    gen.offset = 0.0
+    gen.amplitude = 1.0
+
+    return gen
+
+
+@pytest.fixture(scope="function")
+def default_gen_burst_sample(gen):
+    gen.is_amplitude_autorange = True
+    gen.signal_type = "arbitrary"
+    gen.arb_data([0.0, 1.0, 2.0, 3.0, 4.0])
+    gen.mode = "burst sample count"
+    gen.offset = 0.0
+    gen.amplitude = 1.0
+
+    return gen
+
+
+@pytest.fixture(scope="function")
+def default_gen_burst_segment(gen):
+    gen.is_amplitude_autorange = True
+    gen.signal_type = "arbitrary"
+    gen.arb_data([0.0, 1.0, 2.0, 3.0, 4.0])
+    gen.mode = "burst segment count"
+    gen.offset = 0.0
+    gen.amplitude = 1.0
+
+    return gen
+
+
 @pytest.fixture(scope="module")
 def i2c():
     return I2CHost(_product_id)
