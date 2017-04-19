@@ -28,7 +28,10 @@ setup(
     ],
 
     # Setup/build dependencies; setuptools_scm required for git-based versioning
-    setup_requires=['setuptools_scm'],
+    setup_requires=['setuptools_scm', 'pytest-runner'],
+
+    # Test dependencies
+    tests_require=['pytest'],
 
     # For a list of valid classifiers, see
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers for full list.
