@@ -30,9 +30,6 @@ class Device:
         for idx in range(self.trig_out_cnt):
             self._trig_outs.append(TriggerOutput(self._dev_handle, idx))
 
-    def __del__(self):
-        libtiepie.DevClose(self._dev_handle)
-
     @property
     def driver_ver(self):
         """
