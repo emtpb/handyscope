@@ -10,12 +10,16 @@ _product_id = "HS5"
 
 @pytest.fixture(scope="module", params=[key for key in DeviceList.DEVICE_TYPES])
 def device(request):
-    return Device(_product_id, "product id", request.param)
+    dev_instance = Device(_product_id, "product id", request.param)
+    yield dev_instance
+    dev_instance.dev_close()
 
 
 @pytest.fixture(scope="module")
 def osc():
-    return Oscilloscope(_product_id)
+    osc_instance = Oscilloscope(_product_id)
+    yield osc_instance
+    osc_instance.dev_close()
 
 
 @pytest.fixture(scope="function")
@@ -37,7 +41,9 @@ def default_osc(osc):
 
 @pytest.fixture(scope="module")
 def gen():
-    return Generator(_product_id)
+    gen_instance = Generator(_product_id)
+    yield gen_instance
+    gen_instance.dev_close()
 
 
 @pytest.fixture(scope="function")
@@ -111,4 +117,6 @@ def default_gen_burst_segment(gen):
 
 @pytest.fixture(scope="module")
 def i2c():
-    return I2CHost(_product_id)
+    i2c_instance = I2CHost(_product_id)
+    yield i2c_instance
+    i2c_instance.dev_close()
