@@ -190,7 +190,6 @@ def test_freq_mode(default_gen_sine):
     assert default_gen_sine.freq_mode in default_gen_sine.FREQUENCY_MODES
 
     # Test setter
-    print(default_gen_sine.freq_modes_available)
     for mode in default_gen_sine.freq_modes_available:
         default_gen_sine.freq_mode = mode
         assert default_gen_sine.freq_mode == mode
@@ -399,6 +398,5 @@ def test_burst_segment_cnt(default_gen_burst_segment):
                   round((default_gen_burst_segment.burst_segment_cnt_max -
                          default_gen_burst_segment.burst_segment_cnt_min) / 2),
                   default_gen_burst_segment.burst_segment_cnt_max]:
-        print(value)
         default_gen_burst_segment.burst_segment_cnt = value
         assert default_gen_burst_segment.burst_segment_cnt == value
