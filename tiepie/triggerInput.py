@@ -98,4 +98,19 @@ class TriggerInput:
 
     @property
     def is_triggered(self):
-        return libtiepie.ScpTrInIsTriggered(self._dev_handle, self._idx) == 1
+        """Check if the oscilloscope trigger input caused a trigger.
+
+        Only valid for oscilloscope trigger inputs, otherwise always False is returned.
+
+        Returns:
+            bool: True if trigger input belongs to an oscilloscope and is triggered, false otherwise.
+        """
+        try:
+            result = libtiepie.ScpTrInIsTriggered(self._dev_handle, self._idx) == 1
+        except IOError as err:
+            if str(err) == "[-3]: INVALID_HANDLE":
+                result = False
+            else:
+                raise
+
+        return result
