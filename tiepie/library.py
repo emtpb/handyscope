@@ -12,6 +12,7 @@ Attributes:
     libtiepie (:py:class:`ctypes.CDLL`): instance of the library
 """
 
+from pkg_resources import resource_filename
 from ctypes import *
 import platform
 import warnings
@@ -36,7 +37,7 @@ def _load_lib():
     else:
         raise Exception('Can\'t determine library name, unknown platform.system(): ' + platform.system())
 
-    library_path = os.path.dirname(os.path.abspath(__file__)) + os.path.sep + library_name
+    library_path = resource_filename(__name__, 'bin/{}'.format(library_name))
     libtiepie = CDLL(library_path)
 
     # define result and argument types

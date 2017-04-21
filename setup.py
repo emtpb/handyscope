@@ -23,6 +23,11 @@ setup(
         'tiepie'
     ],
 
+    # Additional data
+    package_data={
+        'tiepie': ['bin/libtiepie.dll'],
+    },
+
     # Runtime dependencies
     install_requires=[
     ],
