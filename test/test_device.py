@@ -50,15 +50,12 @@ def test_short_name(device):
 
     name = device.short_name
     assert type(name) is str
-    # For "Osc": Short name corresponds to product names -> look it up in the dict
-    if device.device_type == "Osc":
+    # For "Osc" and "I2C": Short name corresponds to product names -> look it up in the dict.
+    # Attention: This is just an assumption made while working with the HS5 and libtiepie 0.6.3.
+    if device.device_type in ["Osc", "I2C"]:
         assert name in DeviceList.PRODUCT_IDS
-    # For "I2C": Short name consist out of "I²C " + product name. Attention: This is just an assumption made while
-    # working with the HS5.
-    elif device.device_type == "I2C":
-        assert name in ["I²C " + product for product in DeviceList.PRODUCT_IDS]
     # For "Gen": Short name consist out of "AWG " + product name. Attention: This is just an assumption made while
-    # working with the HS5.
+    # working with the HS5 and libtiepie 0.5 / 0.6.3.
         if device.device_type == "Gen":
             assert name in ["AWG " + product for product in DeviceList.PRODUCT_IDS]
 
@@ -74,28 +71,11 @@ def test_name(device):
 def test_long_name(device):
     name = device.long_name
     name_list = name.split(' ')
-    if device.device_type == "Osc":
-        assert len(name_list) == 2
-        # first part of long name is always the manufacturer name
-        assert name_list[0] == "Handyscope"
-        # second part of long name is the name
-        assert name_list[1] == device.name
-    elif device.device_type == "Gen":
-        assert len(name_list) == 3
-        # first part of long name is the device type
-        assert name_list[0] == "AWG"
-        # second part of long name is always the manufacturer name
-        assert name_list[1] == "Handyscope"
-        # third part of long name is the name (e.g. AWG HS5-540XMS) without the device type
-        assert name_list[2] == device.name.split(' ')[1]
-    elif device.device_type == "I2C":
-        assert len(name_list) == 3
-        # first part of long name is the device type
-        assert name_list[0] == "I²C"
-        # second part of long name is always the manufacturer name
-        assert name_list[1] == "Handyscope"
-        # third part of long name is the name (e.g. I²C HS5-540XMS) without the device type
-        assert name_list[2] == device.name.split(' ')[1]
+    assert len(name_list) == 2
+    # first part of long name is always the manufacturer name
+    assert name_list[0] == "Handyscope"
+    # second part of long name is the name
+    assert name_list[1] == device.name
 
 
 def test_is_removed(device):
