@@ -27,12 +27,14 @@ class DeviceList:
                     "I2C": 4}
 
     def __init__(self):
+        """Constructor for class DeviceList.
+        """
         # Fill the device list
         libtiepie.LstUpdate()
 
     @property
     def device_cnt(self):
-        """Get device count
+        """Get device count.
 
         Returns:
             int: device count
@@ -224,5 +226,5 @@ class DeviceList:
 
         return libtiepie.LstOpenDevice(id_kind_int, instr_id_int, device_type_int)
 
-
+# Instantiate class to make it available via import. Thus only one instance exists (singleton design pattern).
 device_list = DeviceList()
