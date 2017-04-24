@@ -82,3 +82,6 @@ class TriggerOutput:
     @event.setter
     def event(self, value):
         libtiepie.DevTrOutSetEvent(self._dev_handle, self._idx, self.TRIGGER_EVENTS[value])
+
+    def force_trig(self):
+        return libtiepie.DevTrOutTrigger(self._dev_handle, self._idx) == 1

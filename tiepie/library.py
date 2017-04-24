@@ -303,6 +303,9 @@ def _load_lib():
     libtiepie.DevTrOutGetName.restype = c_uint32
     libtiepie.DevTrOutGetName.argtypes = [c_uint32, c_uint16, c_char_p, c_uint32]
     libtiepie.DevTrOutGetName.errcheck = _check_status
+    libtiepie.DevTrOutTrigger.restype = c_uint8
+    libtiepie.DevTrOutTrigger.argtypes = [c_uint32, c_uint16]
+    libtiepie.DevTrOutTrigger.errcheck = _check_status
     libtiepie.ScpGetChannelCount.restype = c_uint16
     libtiepie.ScpGetChannelCount.argtypes = [c_uint32]
     libtiepie.ScpGetChannelCount.errcheck = _check_status
