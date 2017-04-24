@@ -42,19 +42,29 @@ class I2CHost(Device):
     def write(self, address, data, send_stop=True):
         data_len = len(data)
         buffer = (ctypes.c_uint8 * data_len)(*data)
-        libtiepie.I2CWrite(self._dev_handle, address, ctypes.byref(buffer), data_len, send_stop)
+        result = libtiepie.I2CWrite(self._dev_handle, address, ctypes.byref(buffer), data_len, send_stop)
+
+        return result == 1
 
     def write_byte(self, address, data_byte):
-        libtiepie.I2CWriteByte(self._dev_handle, address, data_byte)
+        result = libtiepie.I2CWriteByte(self._dev_handle, address, data_byte)
+
+        return result == 1
 
     def write_byte_byte(self, address, data_byte1, data_byte2):
-        libtiepie.I2CWriteByteByte(self._dev_handle, address, data_byte1, data_byte2)
+        result = libtiepie.I2CWriteByteByte(self._dev_handle, address, data_byte1, data_byte2)
+
+        return result == 1
 
     def write_word(self, address, data_word):
-        libtiepie.I2CWriteWord(self._dev_handle, address, data_word)
+        result = libtiepie.I2CWriteWord(self._dev_handle, address, data_word)
+
+        return result == 1
 
     def write_byte_word(self, address, data_byte, data_word):
-        libtiepie.I2CWriteByteWord(self._dev_handle, address, data_byte, data_word)
+        result = libtiepie.I2CWriteByteWord(self._dev_handle, address, data_byte, data_word)
+
+        return result == 1
 
     def scan(self):
         valid_addresses = []
