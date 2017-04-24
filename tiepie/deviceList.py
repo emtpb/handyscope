@@ -173,7 +173,7 @@ class DeviceList:
             list: List of dicts with info on connected instruments
         """
         instr_list = []
-        for idx in range(self.device_count):
+        for idx in range(self.device_cnt):
             instr_info = {"Index":      idx,
                           "Name":       self.get_device_name_short(idx),
                           "SerNo":      self.get_device_serial_no(idx),
