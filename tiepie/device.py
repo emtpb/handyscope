@@ -262,4 +262,4 @@ def version_to_str(raw_version):
     Returns:
         str: version number as str
     """
-    return '.'.join([str((raw_version >> (idx * 16)) & 0xffff) for idx in range(3,-1,-1)])
+    return '.'.join([str((raw_version >> (idx * 16)) & 0xffff) for idx in range(3, -1, -1)])
