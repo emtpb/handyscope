@@ -198,7 +198,7 @@ class Device:
                 raise err
 
     def trig_out_by_id(self, trig_out_id):
-        id_int = TriggerInput.TRIGGER_IDS[trig_out_id]
+        id_int = TriggerOutput.TRIGGER_IDS[trig_out_id]
         return libtiepie.DevTrGetOutputIndexById(self._dev_handle, id_int)
 
 
