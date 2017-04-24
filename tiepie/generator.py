@@ -51,8 +51,8 @@ class Generator(Device):
     @property
     def connector_type(self):
         raw_type = libtiepie.GenGetConnectorType(self._dev_handle)
-        for key in self.CONNECTOR_TYPES:
-            if raw_type == self.CONNECTOR_TYPES[key]:
+        for key, value in self.CONNECTOR_TYPES.items():
+            if raw_type == value:
                 return key
 
         raise ValueError("Unknown connector type: %d" % raw_type)
