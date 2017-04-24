@@ -16,7 +16,6 @@ from pkg_resources import resource_filename
 from ctypes import *
 import platform
 import warnings
-import os.path
 
 # Type definitions for callback usage
 Callback = CFUNCTYPE(None, c_void_p)
@@ -1216,7 +1215,7 @@ def _check_status(result, func, args):
     return result
 
 
-def is_initialized(self):
+def is_initialized():
     """Get library initialized flag
 
     Returns:
@@ -1225,17 +1224,17 @@ def is_initialized(self):
     return libtiepie.LibIsInitialized() != 0
 
 
-def get_version(self):
+def get_version():
     """Get library version
 
     Returns:
         tuple: library version (major, minor, release, build)
     """
     raw_version = libtiepie.LibGetVersion()
-    return (raw_version >> 48, (raw_version >> 32) & 0xffff, (raw_version >> 16) & 0xffff, raw_version & 0xffff)
+    return raw_version >> 48, (raw_version >> 32) & 0xffff, (raw_version >> 16) & 0xffff, raw_version & 0xffff
 
 
-def get_version_postfix(self):
+def get_version_postfix():
     """Get library version postfix
 
     Returns:
