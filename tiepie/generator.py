@@ -4,6 +4,15 @@ import ctypes
 
 
 class Generator(Device):
+    """Class for a generator.
+
+    Attributes:
+        CONNECTOR_TYPES (dict): dict which maps connector types as strs to their libtiepie int version
+        GENERATOR_STATUSES (dict): dict which maps generator statuses as strs to their libtiepie int version
+        SIGNAL_TYPES (dict): dict which maps signal types as strs to their libtiepie int version
+        FREQUENCY_MODES (dict): dict which maps frequency modes as strs to their libtiepie int version
+        GENERATOR_MODES (dict): dict which maps generator modes as strs to their libtiepie int version
+    """
     # See also OscilloscopeChannel.CONNECTOR_TYPES
     CONNECTOR_TYPES = {"unknown":   0,
                        "BNC":       1,
@@ -46,10 +55,21 @@ class Generator(Device):
     _device_type = "Gen"
 
     def __init__(self, instr_id, id_kind="product id"):
+        """Contructor for a generator.
+
+        Args:
+            instr_id (int or str): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
+            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS)
+        """
         super().__init__(instr_id, id_kind, self._device_type)
 
     @property
     def connector_type(self):
+        """Get the connector type.
+
+        Returns:
+            str: The connector type, key of :py:attr:`tiepie.generator.Generator.CONNECTOR_TYPES`
+        """
         raw_type = libtiepie.GenGetConnectorType(self._dev_handle)
         for key, value in self.CONNECTOR_TYPES.items():
             if raw_type == value:
@@ -59,30 +79,65 @@ class Generator(Device):
 
     @property
     def is_differential(self):
+        """Check if output is differential.
+
+        Returns:
+            bool: True if differential, False otherwise.
+        """
         return libtiepie.GenIsDifferential(self._dev_handle) == 1
 
     @property
     def impedance(self):
+        """Get output impedance.
+
+        Returns:
+            float: Output impedance in Ohm.
+        """
         return libtiepie.GenGetImpedance(self._dev_handle)
 
     @property
     def resolution(self):
+        """Get DAC resolution.
+
+        Returns:
+            int: Resolution of the DAC in bits.
+        """
         return libtiepie.GenGetResolution(self._dev_handle)
 
     @property
     def out_min(self):
+        """Get minimum available output voltage.
+
+        Returns:
+            float: Minimum available output voltage in Volt.
+        """
         return libtiepie.GenGetOutputValueMin(self._dev_handle)
 
     @property
     def out_max(self):
+        """Get maximum available output voltage.
+
+        Returns:
+            float: Maximum available output voltage in Volt.
+        """
         return libtiepie.GenGetOutputValueMax(self._dev_handle)
 
     @property
     def is_controllable(self):
+        """Check if the generator is controllable.
+
+        Returns:
+            bool: True if controllable, False otherwise.
+        """
         return libtiepie.GenIsControllable(self._dev_handle) == 1
 
     @property
     def status(self):
+        """Get the current generator status.
+
+        Returns:
+            str: Generator status, key of :py:attr:`tiepie.generator.Generator.GENERATOR_STATUSES`
+        """
         raw_status = libtiepie.GenGetStatus(self._dev_handle)
 
         for key, value in self.GENERATOR_STATUSES.items():
@@ -93,6 +148,7 @@ class Generator(Device):
 
     @property
     def is_out_on(self):
+        """Get or set if the generator output is enabled."""
         return libtiepie.GenGetOutputOn(self._dev_handle) == 1
 
     @is_out_on.setter
@@ -101,6 +157,7 @@ class Generator(Device):
 
     @property
     def is_out_inv(self):
+        """Get or set if the generator output is inverted."""
         return libtiepie.GenGetOutputInvert(self._dev_handle) == 1
 
     @is_out_inv.setter
@@ -108,13 +165,28 @@ class Generator(Device):
         libtiepie.GenSetOutputInvert(self._dev_handle, value)
 
     def start(self):
+        """Start the generator.
+
+        Returns:
+            bool: True if successful, False otherwise.
+        """
         return libtiepie.GenStart(self._dev_handle) == 1
 
     def stop(self):
+        """Stop the generator.
+
+        Returns:
+            bool: True if successful, False otherwise.
+        """
         return libtiepie.GenStop(self._dev_handle) == 1
 
     @property
     def signal_types_available(self):
+        """Get available signal types.
+
+        Returns:
+            tuple: Available signal types, keys of :py:attr:`tiepie.generator.Generator.SIGNAL_TYPES`
+        """
         raw_types = libtiepie.GenGetSignalTypes(self._dev_handle)
         _types = []
 
@@ -131,6 +203,7 @@ class Generator(Device):
 
     @property
     def signal_type(self):
+        """Get or set the currently active signal type."""
         raw_type = libtiepie.GenGetSignalType(self._dev_handle)
 
         for key, value in self.SIGNAL_TYPES.items():
@@ -145,14 +218,25 @@ class Generator(Device):
 
     @property
     def amplitude_min(self):
+        """Get the minimum available amplitude.
+
+        Returns:
+            float: Miminum available amplitude in Volt.
+        """
         return libtiepie.GenGetAmplitudeMin(self._dev_handle)
 
     @property
     def amplitude_max(self):
+        """Get the maximum available amplitude.
+
+        Returns:
+            float: Maximum available amplitude in Volt.
+        """
         return libtiepie.GenGetAmplitudeMax(self._dev_handle)
 
     @property
     def amplitude(self):
+        """Get or set the amplitude in Volt."""
         return libtiepie.GenGetAmplitude(self._dev_handle)
 
     @amplitude.setter
@@ -161,6 +245,11 @@ class Generator(Device):
 
     @property
     def amplitude_ranges_available(self):
+        """Get the available amplitude ranges.
+
+        Returns:
+            tuple: Available amplitude ranges as floats in Volt.
+        """
         list_len = libtiepie.GenGetAmplitudeRanges(self._dev_handle, None, 0)
 
         buffer = (ctypes.c_double * list_len)()
@@ -171,6 +260,7 @@ class Generator(Device):
 
     @property
     def amplitude_range(self):
+        """Get or set the currently used amplitude range."""
         return libtiepie.GenGetAmplitudeRange(self._dev_handle)
 
     @amplitude_range.setter
@@ -179,6 +269,7 @@ class Generator(Device):
 
     @property
     def is_amplitude_autorange(self):
+        """Get or set if amplitude autoranging is enabled."""
         return libtiepie.GenGetAmplitudeAutoRanging(self._dev_handle) == 1
 
     @is_amplitude_autorange.setter
@@ -187,14 +278,25 @@ class Generator(Device):
 
     @property
     def offset_min(self):
+        """Get the minumum available offset.
+
+        Returns:
+            float: Minimum available offset in Volt.
+        """
         return libtiepie.GenGetOffsetMin(self._dev_handle)
 
     @property
     def offset_max(self):
+        """Get the maximum available offset.
+
+        Returns:
+            float: Maximum available offset in Volt.
+        """
         return libtiepie.GenGetOffsetMax(self._dev_handle)
 
     @property
     def offset(self):
+        """Get or set the current offset in Volt."""
         return libtiepie.GenGetOffset(self._dev_handle)
 
     @offset.setter
@@ -203,14 +305,25 @@ class Generator(Device):
 
     @property
     def freq_min(self):
+        """Get the minumum available frequency.
+
+        Returns:
+            float: Minimum available frequency in Hz.
+        """
         return libtiepie.GenGetFrequencyMin(self._dev_handle)
 
     @property
     def freq_max(self):
+        """Get the maximum available frequency.
+
+        Returns:
+            float: Maximum available frequency in Hz.
+        """
         return libtiepie.GenGetFrequencyMax(self._dev_handle)
 
     @property
     def freq(self):
+        """Get or set the currently used frequency in Hz."""
         return libtiepie.GenGetFrequency(self._dev_handle)
 
     @freq.setter
@@ -219,6 +332,11 @@ class Generator(Device):
 
     @property
     def freq_modes_available(self):
+        """Get the available frequency modes.
+
+        Returns:
+            tuple: Available frequency modes, keys of :py:attr:`tiepie.generator.Generator.FREQUENCY_MODES`
+        """
         raw_modes = libtiepie.GenGetFrequencyModes(self._dev_handle)
         _modes = []
 
@@ -235,6 +353,7 @@ class Generator(Device):
 
     @property
     def freq_mode(self):
+        """Get or set the currently active frequency mode."""
         raw_mode = libtiepie.GenGetFrequencyMode(self._dev_handle)
 
         for key, value in self.FREQUENCY_MODES.items():
@@ -249,14 +368,25 @@ class Generator(Device):
 
     @property
     def phase_min(self):
+        """Get the minumum available signal phase.
+
+        Returns:
+            float: Minimum available signal phase in degree.
+        """
         return libtiepie.GenGetPhaseMin(self._dev_handle) * 360
 
     @property
     def phase_max(self):
+        """Get the maximum available signal phase.
+
+        Returns:
+            float: Maximum available signal phase in degree.
+        """
         return libtiepie.GenGetPhaseMax(self._dev_handle) * 360
 
     @property
     def phase(self):
+        """Get or set the signal phase in degree."""
         return libtiepie.GenGetPhase(self._dev_handle) * 360
 
     @phase.setter
@@ -265,14 +395,35 @@ class Generator(Device):
 
     @property
     def symmetry_min(self):
+        """Get the minimum available symmetry.
+
+        The symmetry of a signal defines the ratio between the length of positive part of a period and the length of
+        the negative part of a period of the generated signal.
+
+        Returns:
+            float: Minimum available symmetry, value between 0 and 1.
+        """
         return libtiepie.GenGetSymmetryMin(self._dev_handle)
 
     @property
     def symmetry_max(self):
+        """Get the maximum available symmetry.
+
+        The symmetry of a signal defines the ratio between the length of positive part of a period and the length of
+        the negative part of a period of the generated signal.
+
+        Returns:
+            float: Maximum available symmetry, value between 0 and 1.
+        """
         return libtiepie.GenGetSymmetryMax(self._dev_handle)
 
     @property
     def symmetry(self):
+        """Get or set the maximum available symmetry.
+
+        The symmetry of a signal defines the ratio between the length of positive part of a period and the length of
+        the negative part of a period of the generated signal.
+        """
         return libtiepie.GenGetSymmetry(self._dev_handle)
 
     @symmetry.setter
@@ -281,14 +432,32 @@ class Generator(Device):
 
     @property
     def pulse_width_min(self):
+        """Get the minimum available pulse width.
+
+        Available for signal type "pulse".
+
+        Returns:
+            float: Minimum available pulse width in seconds.
+        """
         return libtiepie.GenGetWidthMin(self._dev_handle)
 
     @property
     def pulse_width_max(self):
+        """Get the maximum available pulse width.
+
+        Available for signal type "pulse".
+
+        Returns:
+            float: Maximum available pulse width in seconds.
+        """
         return libtiepie.GenGetWidthMax(self._dev_handle)
 
     @property
     def pulse_width(self):
+        """Get or set the pulse width in seconds.
+
+        Available for signal type "pulse".
+        """
         return libtiepie.GenGetWidth(self._dev_handle)
 
     @pulse_width.setter
@@ -297,14 +466,35 @@ class Generator(Device):
 
     @property
     def arb_data_length_min(self):
+        """Get the minimum length (number of samples) of arbitrary data.
+
+        Available for signal type "arbitrary".
+
+        Returns:
+            int: Minimum length of arbitrary data
+        """
         return libtiepie.GenGetDataLengthMin(self._dev_handle)
 
     @property
     def arb_data_length_max(self):
+        """Get the maximum length (number of samples) of arbitrary data.
+
+        Available for signal type "arbitrary".
+
+        Returns:
+            int: Maximum length of arbitrary data
+        """
         return libtiepie.GenGetDataLengthMax(self._dev_handle)
 
     @property
     def arb_data_length(self):
+        """Get the length of the currently loaded arbitrary data.
+
+        Available for signal type "arbitrary".
+
+        Returns:
+            int: Length of currently loaded arbitrary data.
+        """
         return libtiepie.GenGetDataLength(self._dev_handle)
 
     def arb_data(self, value_list):
@@ -320,6 +510,13 @@ class Generator(Device):
 
     @property
     def modes_native_available(self):
+        """Get the natively available generator modes.
+
+        The natively available modes are the built-in modes of the generetator, independent of current settings.
+
+        Returns:
+            tuple: Available modes, keys of :py:attr:`tiepie.generator.Generator.GENERATOR_MODES`
+        """
         raw_modes = libtiepie.GenGetModesNative(self._dev_handle)
         _modes = []
 
@@ -336,6 +533,13 @@ class Generator(Device):
 
     @property
     def modes_available(self):
+        """Get the currently available generator modes.
+
+        The currently available modes depend on the current generator settings.
+
+        Returns:
+            tuple: Available modes, keys of :py:attr:`tiepie.generator.Generator.GENERATOR_MODES`
+        """
         raw_modes = libtiepie.GenGetModes(self._dev_handle)
         _modes = []
 
@@ -352,6 +556,8 @@ class Generator(Device):
 
     @property
     def mode(self):
+        """Get or set the current generator mode (keys of :py:attr:`tiepie.generator.Generator.GENERATOR_MODES`).
+        """
         raw_mode = libtiepie.GenGetMode(self._dev_handle)
 
         for key, value in self.GENERATOR_MODES.items():
@@ -366,18 +572,41 @@ class Generator(Device):
 
     @property
     def is_burst_active(self):
+        """Check if a burst is active.
+
+        Returns:
+            bool: True if burst is active, False otherwise.
+        """
         return libtiepie.GenIsBurstActive(self._dev_handle) == 1
 
     @property
     def burst_cnt_min(self):
+        """Get the minimum available burst count.
+
+        Available in generator burst modes.
+
+        Returns:
+            int: Minimum available burst count.
+        """
         return libtiepie.GenGetBurstCountMin(self._dev_handle)
 
     @property
     def burst_cnt_max(self):
+        """Get the maximum available burst count.
+
+        Available in generator burst modes.
+
+        Returns:
+            int: Maximum available burst count.
+        """
         return libtiepie.GenGetBurstCountMax(self._dev_handle)
 
     @property
     def burst_cnt(self):
+        """Get or set the burst count.
+
+        Available in generator burst modes.
+        """
         return libtiepie.GenGetBurstCount(self._dev_handle)
 
     @burst_cnt.setter
@@ -386,14 +615,32 @@ class Generator(Device):
 
     @property
     def burst_sample_cnt_min(self):
+        """Get the minimum available burst sample count.
+
+        Available in generator sample burst modes.
+
+        Returns:
+            int: Minimum available sample burst count.
+        """
         return libtiepie.GenGetBurstSampleCountMin(self._dev_handle)
 
     @property
     def burst_sample_cnt_max(self):
+        """Get the maximum available burst sample count.
+
+        Available in generator sample burst modes.
+
+        Returns:
+            int: Maximum available sample burst count.
+        """
         return libtiepie.GenGetBurstSampleCountMax(self._dev_handle)
 
     @property
     def burst_sample_cnt(self):
+        """Get or set the burst sample count.
+
+        Available in generator sample burst modes.
+        """
         return libtiepie.GenGetBurstSampleCount(self._dev_handle)
 
     @burst_sample_cnt.setter
@@ -402,14 +649,32 @@ class Generator(Device):
 
     @property
     def burst_segment_cnt_min(self):
+        """Get the minimum available burst segment count.
+
+        Available in generator segment burst modes.
+
+        Returns:
+            int: Minimum available segment burst count.
+        """
         return libtiepie.GenGetBurstSegmentCountMin(self._dev_handle)
 
     @property
     def burst_segment_cnt_max(self):
+        """Get the maximum available burst segment count.
+
+        Available in generator segment burst modes.
+
+        Returns:
+            int: Maximum available segment burst count.
+        """
         return libtiepie.GenGetBurstSegmentCountMax(self._dev_handle)
 
     @property
     def burst_segment_cnt(self):
+        """Get or set the burst segment count.
+
+        Available in generator segment burst modes.
+        """
         return libtiepie.GenGetBurstSegmentCount(self._dev_handle)
 
     @burst_segment_cnt.setter
