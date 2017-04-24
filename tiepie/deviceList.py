@@ -11,16 +11,18 @@ class DeviceList:
         DEVICE_TYPES (dict): dict which maps readable representations of device types to their int version
     """
 
-    ID_KINDS = {"product id": 1,
-                "index": 2,
+    ID_KINDS = {"product id":    1,
+                "index":         2,
                 "serial number": 4}
 
-    PRODUCT_IDS = {"none": 0,
-                   "combined": 2,
-                   "HS4": 15,
-                   "HP3": 18,
-                   "HS4D": 20,
-                   "HS5": 22}
+    PRODUCT_IDS = {"none":       0,
+                   "combined":   2,
+                   "HS3":       13,
+                   "HS4":       15,
+                   "HP3":       18,
+                   "HS4D":      20,
+                   "HS5":       22,
+                   "HS6D":      25}
 
     DEVICE_TYPES = {"Osc": 1,
                     "Gen": 2,
