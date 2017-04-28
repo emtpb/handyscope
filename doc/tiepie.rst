@@ -9,3 +9,4 @@ API
 .. automodule:: tiepie.generator
 .. automodule:: tiepie.i2cHost
 .. automodule:: tiepie.oscilloscope
+.. automodule:: tiepie.oscilloscopeChannel
