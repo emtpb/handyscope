@@ -6,6 +6,15 @@ import time
 
 
 class Oscilloscope(Device):
+    """Class for an oscilloscope.
+
+    Attributes:
+        MEASURE_MODES (dict): dict which maps measure modes as strs to their libtiepie int version
+        AUTO_RESOLUTIONS (dict): dict which maps auto resolutions as strs to their libtiepie int version
+        CLOCK_SOURCES (dict): dict which maps clock sources as strs to their libtiepie int version
+        CLOCK_OUTPUTS (dict): dict which maps clock outputs as strs to their libtiepie int version
+        CONNECTION_STATES (dict): dict which maps connection states as strs to their libtiepie int version
+    """
     MEASURE_MODES = {"unknown": 0,
                      "stream":  1,
                      "block":   2}
@@ -31,6 +40,12 @@ class Oscilloscope(Device):
     _device_type = "Osc"
 
     def __init__(self, instr_id, id_kind="product id"):
+        """Constructor for an oscilloscope.
+
+        Args:
+            instr_id (int or str): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
+            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS)
+        """
         super().__init__(instr_id, id_kind, self._device_type)
 
         # Initialize channels
@@ -38,13 +53,31 @@ class Oscilloscope(Device):
 
     @property
     def channel_cnt(self):
+        """Get the channel count.
+
+        Returns:
+            int: The channel count
+        """
         return libtiepie.ScpGetChannelCount(self._dev_handle)
 
     @property
     def channels(self):
+        """Tuple of all channels.
+
+        Returns:
+            tuple: Tuple of oscilloscope channels (:py:class:`tiepie.oscilloscopeChannel.OscilloscopeChannel`)
+        """
         return self._channels
 
     def _get_sample_cnts(self):
+        """Get information on the sample counts.
+
+        The recorded samples are divided in pre and post samples. If multiple triggers occur in a short time, not all
+        pre samples might be valid. This method calculates the start count and the total number of valid samples.
+
+        Returns:
+            tuple: sample start count and valid sample count as ints
+        """
         # Calc number of valid samples
         post_sample_cnt = round((1.0 - self.pre_sample_ratio) * self.record_length)
         valid_sample_cnt = post_sample_cnt + self.valid_pre_sample_cnt
@@ -54,6 +87,18 @@ class Oscilloscope(Device):
         return sample_start_cnt, valid_sample_cnt
 
     def retrieve(self, channel_nos=None):
+        """Retrieve measured samples.
+
+        Previously to retrieving data, a measurement has to be started.
+        If no channel numbers are given, all enabled channels are retrieved.
+
+        Args:
+            channel_nos (list): (optional) iterable with channel numbers to retrieve, or None
+
+        Returns:
+            list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
+                  a list of samples.
+        """
         # If no channel numbers are given, get the active ones
         if channel_nos is None:
             channel_nos = []
@@ -94,6 +139,14 @@ class Oscilloscope(Device):
         return data
 
     def retrieve_ch1(self):
+        """Retrieve measured samples of channel 1.
+
+        Previously to retrieving data, a measurement has to be started.
+
+        Returns:
+            list: List with an entry for channel 1. The entry contains None, if channel 1 is disabled, otherwise
+                  a list of samples.
+        """
         # Check availability
         if self.channels[0].is_enabled:
             # Get number of valid samples
@@ -112,6 +165,14 @@ class Oscilloscope(Device):
             return [None]
 
     def retrieve_ch1_ch2(self):
+        """Retrieve measured samples of channel 1 and 2.
+
+        Previously to retrieving data, a measurement has to be started.
+
+        Returns:
+            list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
+                  a list of samples.
+        """
         # Get number of valid samples
         sample_start_cnt, valid_sample_cnt = self._get_sample_cnts()
 
@@ -132,6 +193,14 @@ class Oscilloscope(Device):
         return data
 
     def retrieve_ch1_ch2_ch3(self):
+        """Retrieve measured samples of channel 1, 2 and 3.
+
+        Previously to retrieving data, a measurement has to be started.
+
+        Returns:
+            list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
+                  a list of samples.
+        """
         # Get number of valid samples
         sample_start_cnt, valid_sample_cnt = self._get_sample_cnts()
 
@@ -152,6 +221,14 @@ class Oscilloscope(Device):
         return data
 
     def retrieve_ch1_ch2_ch3_ch4(self):
+        """Retrieve measured samples of channel 1, 2, 3 and 4.
+
+        Previously to retrieving data, a measurement has to be started.
+
+        Returns:
+            list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
+                  a list of samples.
+        """
         # Get number of valid samples
         sample_start_cnt, valid_sample_cnt = self._get_sample_cnts()
 
@@ -173,19 +250,44 @@ class Oscilloscope(Device):
 
     @property
     def valid_pre_sample_cnt(self):
+        """Get the count of valid pre samples.
+
+        Returns:
+            int: Count of valid pre samples.
+        """
         return libtiepie.ScpGetValidPreSampleCount(self._dev_handle)
 
     def start(self):
+        """Start a measurement.
+
+        Returns:
+            bool: True if successful, False otherwise.
+        """
         return libtiepie.ScpStart(self._dev_handle) == 1
 
     def stop(self):
+        """Stop a measurement.
+
+        Returns:
+            bool: True if successful, False otherwise.
+        """
         return libtiepie.ScpStop(self._dev_handle) == 1
 
     def force_trig(self):
+        """Force a trigger.
+
+        Returns:
+            bool: True if successful, False otherwise.
+        """
         return libtiepie.ScpForceTrigger(self._dev_handle) == 1
 
     @property
     def measure_modes_available(self):
+        """Get the available measure modes.
+
+        Returns:
+            tuple: Available measure modes (keys of :py:attr:`tiepie.oscilloscope.Oscilloscope.MEASURE_MODES`)
+        """
         raw_modes = libtiepie.ScpGetMeasureModes(self._dev_handle)
         _modes = []
 
@@ -206,6 +308,7 @@ class Oscilloscope(Device):
 
     @property
     def measure_mode(self):
+        """Get or set the current measure mode (keys of :py:attr:`tiepie.oscilloscope.Oscilloscope.MEASURE_MODES`)"""
         mode_int = libtiepie.ScpGetMeasureMode(self._dev_handle)
         for key in self.MEASURE_MODES:
             if mode_int == self.MEASURE_MODES[key]:
@@ -219,30 +322,65 @@ class Oscilloscope(Device):
 
     @property
     def is_running(self):
+        """Check if the oscilloscope is running.
+
+        Returns:
+            bool: Truef if oscilloscope is running, False otherwise.
+        """
         return libtiepie.ScpIsRunning(self._dev_handle) == 1
 
     @property
     def is_triggered(self):
+        """Check if the oscilloscope is triggered.
+
+        Returns:
+            bool: True if oscilloscope is triggered, False otherwise.
+        """
         return libtiepie.ScpIsTriggered(self._dev_handle) == 1
 
     @property
     def is_timeout_trig(self):
+        """Check if the oscilloscope is triggered by a timeout.
+
+        Returns:
+            bool: True if oscilloscope is triggered by a timeout, False otherwise.
+        """
         return libtiepie.ScpIsTimeOutTriggered(self._dev_handle) == 1
 
     @property
     def is_force_trig(self):
+        """Check if the trigger of the oscilloscope is forced.
+
+        Returns:
+            bool: True if trigger is forced, False otherwise.
+        """
         return libtiepie.ScpIsForceTriggered(self._dev_handle) == 1
 
     @property
     def is_data_ready(self):
+        """Check if data is ready.
+
+        Returns:
+            bool: True if data ready, False otherwise.
+        """
         return libtiepie.ScpIsDataReady(self._dev_handle) == 1
 
     @property
     def is_data_overflow(self):
+        """Check if there is a data overflow.
+
+        Returns:
+            bool: True if data overflow, False otherwise.
+        """
         return libtiepie.ScpIsDataOverflow(self._dev_handle) == 1
 
     @property
     def resolutions_available(self):
+        """Get available ADC resolutions.
+
+        Returns:
+            tuple: Available ADC resolutions in bits.
+        """
         # get length of list
         res_len = libtiepie.ScpGetResolutions(self._dev_handle, None, 0)
 
@@ -259,6 +397,7 @@ class Oscilloscope(Device):
 
     @property
     def resolution(self):
+        """Get or set the current ADC resolution in bit."""
         return libtiepie.ScpGetResolution(self._dev_handle)
 
     @resolution.setter
@@ -267,10 +406,20 @@ class Oscilloscope(Device):
 
     @property
     def is_resolution_enhanced(self):
+        """Check if the ADC resolution is enhanced.
+
+        Returns:
+            bool: True if ADC resolution is enhanced, False otherwise.
+        """
         return libtiepie.ScpIsResolutionEnhanced(self._dev_handle) == 1
 
     @property
     def auto_resolutions_available(self):
+        """Get available auto resolutions.
+
+        Returns:
+            tuple: Available auto resolutions (keys of :py:attr:`tiepie.oscilloscope.Oscilloscope.AUTO_RESOLUTIONS`)
+        """
         raw_res = libtiepie.ScpGetAutoResolutionModes(self._dev_handle)
         _res = []
 
@@ -291,6 +440,9 @@ class Oscilloscope(Device):
 
     @property
     def auto_resolution(self):
+        """Get or set the current auto resolution mode (key of
+        :py:attr:`tiepie.oscilloscope.Oscilloscope.AUTO_RESOLUTIONS`)
+        """
         raw_res = libtiepie.ScpGetAutoResolutionMode(self._dev_handle)
         for key, value in self.AUTO_RESOLUTIONS.items():
             if raw_res == value:
@@ -304,6 +456,11 @@ class Oscilloscope(Device):
 
     @property
     def clock_sources_available(self):
+        """Get available clock sources.
+
+        Returns:
+            tuple: Available clock sources (keys of :py:attr:`tiepie.oscilloscope.Oscilloscope.CLOCK_SOURCES`)
+        """
         raw_srcs = libtiepie.ScpGetClockSources(self._dev_handle)
         srcs = []
 
@@ -321,6 +478,8 @@ class Oscilloscope(Device):
 
     @property
     def clock_source(self):
+        """Get or set the current clock source (key of :py:attr:`tiepie.oscilloscope.Oscilloscope.CLOCK_SOURCES`)
+        """
         src = libtiepie.ScpGetClockSource(self._dev_handle)
         for key, value in self.CLOCK_SOURCES.items():
             if src == value:
@@ -334,6 +493,11 @@ class Oscilloscope(Device):
 
     @property
     def clock_outputs_available(self):
+        """Get available clock outputs.
+
+        Returns:
+            tuple: Available clock outputs (keys of :py:attr:`tiepie.oscilloscope.Oscilloscope.CLOCK_OUTPUTS`)
+        """
         raw_outs = libtiepie.ScpGetClockOutputs(self._dev_handle)
         outs = []
 
@@ -351,6 +515,7 @@ class Oscilloscope(Device):
 
     @property
     def clock_output(self):
+        """Get or set the current clock output (key of :py:attr:`tiepie.oscilloscope.Oscilloscope.CLOCK_OUTPUTS`)"""
         out = libtiepie.ScpGetClockOutput(self._dev_handle)
         for key, value in self.CLOCK_OUTPUTS.items():
             if out == value:
@@ -364,10 +529,16 @@ class Oscilloscope(Device):
 
     @property
     def sample_freq_max(self):
+        """Get the maximum sample frequency in Hz.
+
+        Returns:
+            float: Maximum sample frequency in Hz
+        """
         return libtiepie.ScpGetSampleFrequencyMax(self._dev_handle)
 
     @property
     def sample_freq(self):
+        """Get or set the current sample frequency in Hz."""
         return libtiepie.ScpGetSampleFrequency(self._dev_handle)
 
     @sample_freq.setter
@@ -376,10 +547,16 @@ class Oscilloscope(Device):
 
     @property
     def record_length_max(self):
+        """Get the maximum record length (number of samples).
+
+        Returns:
+            int: Maximum record length
+        """
         return libtiepie.ScpGetRecordLengthMax(self._dev_handle)
 
     @property
     def record_length(self):
+        """Get or set the current record length (number of samples)."""
         return libtiepie.ScpGetRecordLength(self._dev_handle)
 
     @record_length.setter
@@ -388,6 +565,10 @@ class Oscilloscope(Device):
 
     @property
     def pre_sample_ratio(self):
+        """Get or set the pre sample ratio.
+
+        The pre sample ratio is a float between 0 and 1 and defines how many samples should be recorded before the
+        trigger point."""
         return libtiepie.ScpGetPreSampleRatio(self._dev_handle)
 
     @pre_sample_ratio.setter
@@ -396,10 +577,16 @@ class Oscilloscope(Device):
 
     @property
     def segment_cnt_max(self):
+        """Get the maximum available segment count.
+
+        Returns:
+            int: Maximum available segment count
+        """
         return libtiepie.ScpGetSegmentCountMax(self._dev_handle)
 
     @property
     def segment_cnt(self):
+        """Get or set the current segment count."""
         return libtiepie.ScpGetSegmentCount(self._dev_handle)
 
     @segment_cnt.setter
@@ -408,6 +595,9 @@ class Oscilloscope(Device):
 
     @property
     def trig_timeout(self):
+        """Get or set the trigger timeout in seconds.
+
+        0 forces a trigger immediately after a measurement is started, -1 will wait infinitely for a trigger."""
         return libtiepie.ScpGetTriggerTimeOut(self._dev_handle)
 
     @trig_timeout.setter
@@ -416,14 +606,25 @@ class Oscilloscope(Device):
 
     @property
     def is_trig_delay_available(self):
+        """Check if trigger delay is available.
+
+        Returns:
+            bool: True if trigger delay is available, False otherwise.
+        """
         return libtiepie.ScpHasTriggerDelay(self._dev_handle) == 1
 
     @property
     def trig_delay_max(self):
+        """Get the maximum available trigger delay in seconds.
+
+        Returns:
+            float: Maximum available trigger delay in seconds.
+        """
         return libtiepie.ScpGetTriggerDelayMax(self._dev_handle)
 
     @property
     def trig_delay(self):
+        """Get or set the current trigger delay in seconds."""
         return libtiepie.ScpGetTriggerDelay(self._dev_handle)
 
     @trig_delay.setter
@@ -432,14 +633,25 @@ class Oscilloscope(Device):
 
     @property
     def is_trig_holdoff_available(self):
+        """Check if trigger holdoff is available.
+
+        Returns:
+            bool: True if trigger holdoff is available, False otherwise.
+        """
         return libtiepie.ScpHasTriggerHoldOff(self._dev_handle) == 1
 
     @property
     def trig_holdoff_max(self):
+        """Get the maximum available trigger holdoff in seconds.
+
+        Returns:
+            float: Maximum available trigger holdoff on seconds.
+        """
         return libtiepie.ScpGetTriggerHoldOffCountMax(self._dev_handle)
 
     @property
     def trig_holdoff(self):
+        """Get or set the current trigger holdoff in seconds."""
         return libtiepie.ScpGetTriggerHoldOffCount(self._dev_handle)
 
     @trig_holdoff.setter
@@ -448,21 +660,47 @@ class Oscilloscope(Device):
 
     @property
     def is_trig_available(self):
+        """Check if trigger is available.
+
+        Returns:
+            bool: True if trigger is available, False otherwise.
+        """
         return libtiepie.ScpHasTrigger(self._dev_handle) == 1
 
     @property
     def is_connection_test_available(self):
+        """Check if connection test is available.
+
+        Returns:
+            bool: True if connection test is available, False otherwise.
+        """
         return libtiepie.ScpHasConnectionTest(self._dev_handle) == 1
 
     def start_connection_test(self):
+        """Start a connection test.
+
+        Returns:
+            bool: True if test started successfully, False otherwise.
+        """
         return libtiepie.ScpStartConnectionTest(self._dev_handle) == 1
 
     @property
     def is_connection_test_completed(self):
+        """Check if connection test is completed.
+
+        Returns:
+            bool: True if connection test is completed, False otherwise.
+        """
         return libtiepie.ScpIsConnectionTestCompleted(self._dev_handle) == 1
 
     @property
     def connection_test_data(self):
+        """Get connection test data.
+
+        Returns:
+            tuple: Tuple with the test result of each channel (key of
+                   :py:attr:`tiepie.oscilloscope.Oscilloscope.CONNECTION_STATES`)
+        """
         # Initialize uint8 array
         data = (ctypes.c_uint8 * self.channel_cnt)()
 
@@ -492,6 +730,12 @@ class Oscilloscope(Device):
         return tuple(data_evaluated)
 
     def test_connection(self):
+        """Perform a connection test.
+
+        Returns:
+            tuple: Tuple with the test result of each channel (key of
+                   :py:attr:`tiepie.oscilloscope.Oscilloscope.CONNECTION_STATES`)
+        """
         if self.is_connection_test_available:
             res = self.start_connection_test()
             if res is False:
@@ -505,6 +749,15 @@ class Oscilloscope(Device):
             return None
 
     def measure(self):
+        """Perform a single shot measurement.
+
+        Utility function which starts a measurement and forces a trigger. When measurment data is ready, it is retrieved
+        and returned.
+
+        Returns:
+            list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
+                  a list of samples.
+        """
         # Start measurement
         self.start()
         self.force_trig()
