@@ -498,7 +498,7 @@ class Oscilloscope(Device):
                 raise IOError("Connection test could not be started.")
 
             while not self.is_connection_test_completed:
-                pass
+                time.sleep(0.1)
 
             return self.connection_test_data
         else:
@@ -511,7 +511,7 @@ class Oscilloscope(Device):
 
         # Wait until measurement is finished
         while not self.is_data_ready:
-            time.sleep(0.01)
+            time.sleep(0.1)
 
         # Get data
         data = self.retrieve()
