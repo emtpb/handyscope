@@ -132,16 +132,16 @@ def test_range(osc):
             assert channel.range == range_available
 
 
-def test_trig_enabled(osc):
+def test_is_trig_enabled(osc):
     for channel in osc.channels:
         # test getter
-        assert type(channel.trig_enabled) is bool
+        assert type(channel.is_trig_enabled) is bool
 
         # test setter
-        channel.trig_enabled = True
-        assert channel.trig_enabled is True
-        channel.trig_enabled = False
-        assert channel.trig_enabled is False
+        channel.is_trig_enabled = True
+        assert channel.is_trig_enabled is True
+        channel.is_trig_enabled = False
+        assert channel.is_trig_enabled is False
 
 
 def test_trig_kinds_available(osc):
@@ -330,9 +330,9 @@ def test_trig_time(osc):
                 assert channel.trig_time == tuple(0.001 for _ in range(channel.trig_time_cnt))
 
 
-def test_trig_is_available(osc):
+def test_is_trig_available(osc):
     for channel in osc.channels:
-        assert type(channel.trig_is_available) is bool
+        assert type(channel.is_trig_available) is bool
 
 
 def test_is_available(osc):

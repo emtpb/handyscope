@@ -192,12 +192,12 @@ class OscilloscopeChannel:
         libtiepie.ScpChSetRange(self._dev_handle, self._idx, value)
 
     @property
-    def trig_enabled(self):
+    def is_trig_enabled(self):
         """Get or set if the channel trigger is enabled."""
         return libtiepie.ScpChTrGetEnabled(self._dev_handle, self._idx) == 1
 
-    @trig_enabled.setter
-    def trig_enabled(self, value):
+    @is_trig_enabled.setter
+    def is_trig_enabled(self, value):
         libtiepie.ScpChTrSetEnabled(self._dev_handle, self._idx, value)
 
     @property
@@ -352,7 +352,7 @@ class OscilloscopeChannel:
             libtiepie.ScpChTrSetTime(self._dev_handle, self._idx, idx, value)
 
     @property
-    def trig_is_available(self):
+    def is_trig_available(self):
         """Check if trigger is available.
 
         Returns:
