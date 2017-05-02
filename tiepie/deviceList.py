@@ -172,7 +172,7 @@ class DeviceList:
         """Return a list with information on all connected instruments (index, name, serial number and device types).
 
         Returns:
-            list: List of dicts with info on connected instruments
+            tuple: Tuple of dicts with info on connected instruments
         """
         instr_list = []
         for idx in range(self.device_cnt):
@@ -182,7 +182,7 @@ class DeviceList:
                           "DevTypes":   self.get_device_types(idx)}
             instr_list.append(instr_info)
 
-        return instr_list
+        return tuple(instr_list)
 
     def get_overview_str(self):
         """Return a string with information on all connected instruments (index, name, serial number and device types).
