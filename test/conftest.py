@@ -3,10 +3,15 @@ from tiepie.deviceList import DeviceList
 from tiepie.oscilloscope import Oscilloscope
 from tiepie.generator import Generator
 from tiepie.i2cHost import I2CHost
+import tiepie.deviceList
 import pytest
 
 _product_id = "HS5"
 
+
+@pytest.fixture(scope="module")
+def dev_list():
+    return tiepie.deviceList.device_list
 
 @pytest.fixture(scope="module", params=[key for key in DeviceList.DEVICE_TYPES])
 def device(request):
