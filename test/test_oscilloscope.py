@@ -633,3 +633,9 @@ def test_test_connection(default_osc):
     else:
         assert results is None
 
+
+def test_time_vector(osc):
+    assert len(osc.time_vector) == osc.record_length
+    assert osc.time_vector[0] == 0
+    assert osc.time_vector[1] == pytest.approx(1/osc.sample_freq)
+    assert osc.time_vector[-1] == 1/osc.sample_freq*(osc.record_length-1)

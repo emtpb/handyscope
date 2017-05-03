@@ -3,6 +3,7 @@ from tiepie.device import Device
 from tiepie.oscilloscopeChannel import OscilloscopeChannel
 import ctypes
 import time
+import numpy as np
 
 
 class Oscilloscope(Device):
@@ -770,3 +771,12 @@ class Oscilloscope(Device):
         data = self.retrieve()
 
         return data
+
+    @property
+    def time_vector(self):
+        """Get a time vector according to the current oscilloscope settings.
+
+        Returns:
+            :class:`numpy.ndarray`: Time vector
+        """
+        return np.linspace(0, 1/self.sample_freq*self.record_length, num=self.record_length, endpoint=False)
