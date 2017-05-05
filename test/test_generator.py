@@ -1,4 +1,5 @@
 import pytest
+import math
 
 
 def test_connector_type(default_gen_sine):
@@ -345,7 +346,7 @@ def test_burst_cnt(default_gen_burst):
 
     # Test setter
     for value in [default_gen_burst.burst_cnt_min,
-                  round((default_gen_burst.burst_cnt_max - default_gen_burst.burst_cnt_min)/2),
+                  math.ceil((default_gen_burst.burst_cnt_max - default_gen_burst.burst_cnt_min)/2),
                   default_gen_burst.burst_cnt_max]:
         default_gen_burst.burst_cnt = value
         assert default_gen_burst.burst_cnt == value
@@ -369,8 +370,8 @@ def test_burst_sample_cnt(default_gen_burst_sample):
 
     # Test setter
     for value in [default_gen_burst_sample.burst_sample_cnt_min,
-                  round((default_gen_burst_sample.burst_sample_cnt_max -
-                         default_gen_burst_sample.burst_sample_cnt_min) / 2),
+                  math.ceil((default_gen_burst_sample.burst_sample_cnt_max -
+                             default_gen_burst_sample.burst_sample_cnt_min) / 2),
                   default_gen_burst_sample.burst_sample_cnt_max]:
         default_gen_burst_sample.burst_sample_cnt = value
         assert default_gen_burst_sample.burst_sample_cnt == value
@@ -395,7 +396,7 @@ def test_burst_segment_cnt(default_gen_burst_segment):
 
     # Test setter
     for value in [default_gen_burst_segment.burst_segment_cnt_min,
-                  round((default_gen_burst_segment.burst_segment_cnt_max -
+                  math.ceil((default_gen_burst_segment.burst_segment_cnt_max -
                          default_gen_burst_segment.burst_segment_cnt_min) / 2),
                   default_gen_burst_segment.burst_segment_cnt_max]:
         default_gen_burst_segment.burst_segment_cnt = value
