@@ -272,7 +272,7 @@ def test_pulse_width(default_gen_pulse):
               default_gen_pulse.pulse_width_max]
     for value in values:
         default_gen_pulse.pulse_width = value
-        assert default_gen_pulse.pulse_width == value
+        assert default_gen_pulse.pulse_width == pytest.approx(value)
 
 
 def test_arb_data_length_min(default_gen_arb):

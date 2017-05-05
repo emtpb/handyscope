@@ -73,6 +73,7 @@ def default_gen_pulse(gen):
     gen.mode = "continuous"
     gen.offset = 0.0
     gen.amplitude = 1.0
+    gen.freq = 1000.0
 
     return gen
 
