@@ -634,6 +634,33 @@ def test_test_connection(default_osc):
         assert results is None
 
 
+def test_measure(default_osc):
+    data = default_osc.measure()
+    assert type(data) is list
+    # default_osc has only one enabled channel
+    assert len(data) == 1
+    assert type(data[0]) is list
+    for sample in data[0]:
+        assert type(sample) is float
+
+    # Check for multiple channels
+    if default_osc.channel_cnt >= 2:
+        # There is more than one channel -> disable first, enable second
+        default_osc.channels[0].is_enabled = False
+        default_osc.channels[1].is_enabled = True
+
+        data = default_osc.measure()
+
+        assert type(data) is list
+        assert len(data) == 2
+        # First channel was disabled
+        assert data[0] is None
+        # Second channel should contain data
+        assert type(data[1]) is list
+        for sample in data[1]:
+            assert type(sample) is float
+
+
 def test_time_vector(osc):
     assert len(osc.time_vector) == osc.record_length
     assert osc.time_vector[0] == 0

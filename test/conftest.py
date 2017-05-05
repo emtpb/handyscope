@@ -36,6 +36,9 @@ def default_osc(osc):
     osc.auto_resolution = "disabled"
     osc.resolution = 14
     osc.record_length = 5000
+    osc.segment_cnt = 1
+    osc.trig_delay = 0.0
+    osc.trig_holdoff = 0
 
     osc.channels[0].is_enabled = True
     for channel in osc.channels[1:]:
