@@ -1,4 +1,4 @@
-from tiepie.library import libtiepie
+from tiepie.library import libtiepie, CallbackObject
 from tiepie.deviceList import device_list
 from tiepie.triggerInput import TriggerInput
 from tiepie.triggerOutput import TriggerOutput
@@ -12,6 +12,15 @@ class Device:
     This class contains methods common to all devices of an instrument, like name and serial number. A device is e.g. an
     oscilloscope or a generator, whereas an instrument is e.g. the whole 'HS5'.
     """
+    EVENT_IDS = {'invalid': 0,
+                 'object_removed': 1,
+                 'osc_data_ready': 2,
+                 'osc_data_overflow': 3,
+                 'osc_connection_test_completed': 4,
+                 'osc_triggered': 5,
+                 'gen_burst_completed': 6,
+                 'gen_control_label_changed': 7,
+                 'osc_safe_ground_error': 9}
 
     def __init__(self, instr_id, id_kind, device_type):
         """Constructor for class Device.
@@ -30,6 +39,35 @@ class Device:
         self._trig_outs = []
         for idx in range(self.trig_out_cnt):
             self._trig_outs.append(TriggerOutput(self._dev_handle, idx))
+
+        self._obj_cb = None
+
+    def generate_object_callback(self, event_ids, cb_funtions):
+        """Generate and register callback functions for given event ids.
+
+        Args:
+            event_ids (list): Event ids for which the callback functions are given in cb_functions (see EVENT_IDS).
+            cb_funtions (list): Callback functions. Length of list has to be identical with length of event_ids.
+                                Each function has to have the following head: fun(p_data, value). 'p_data' is the data
+                                provided by the event and 'value' a single value.
+
+        Returns:
+
+        """
+        def default_cb(p_data, value):
+            pass
+        funs = {}
+        for evt_id in self.EVENT_IDS.values():
+            if evt_id in event_ids:
+                idx = event_ids.index(evt_id)
+                funs[evt_id] = cb_funtions[idx]
+            else:
+                funs[evt_id] = default_cb
+
+        def object_callback(p_data, event_id, value):
+            funs[event_id](p_data, value)
+        self._obj_cb = CallbackObject(object_callback)
+        libtiepie.ObjSetEventCallback(self._dev_handle, self._obj_cb, None)
 
     @property
     def driver_ver(self):

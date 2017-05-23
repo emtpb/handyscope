@@ -20,6 +20,7 @@ import warnings
 # Type definitions for callback usage
 Callback = CFUNCTYPE(None, c_void_p)
 CallbackDeviceList = CFUNCTYPE(None, c_void_p, c_uint32, c_uint32)
+CallbackObject = CFUNCTYPE(None, c_void_p, c_uint32, c_uint32)
 
 
 def _load_lib():
@@ -186,6 +187,9 @@ def _load_lib():
         libtiepie.LstSetMessageDeviceRemoved.restype = None
         libtiepie.LstSetMessageDeviceRemoved.argtypes = [HWND]
         libtiepie.LstSetMessageDeviceRemoved.errcheck = _check_status
+    libtiepie.ObjSetEventCallback.restype = None
+    libtiepie.ObjSetEventCallback.argtypes = [c_uint32, CallbackObject, c_void_p]
+    libtiepie.ObjSetEventCallback.errcheck = _check_status
     libtiepie.DevClose.restype = None
     libtiepie.DevClose.argtypes = [c_uint32]
     libtiepie.DevClose.errcheck = _check_status
