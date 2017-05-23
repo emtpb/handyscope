@@ -80,10 +80,14 @@ class Oscilloscope(Device):
             tuple: sample start count and valid sample count as ints
         """
         # Calc number of valid samples
-        post_sample_cnt = round((1.0 - self.pre_sample_ratio) * self.record_length)
-        valid_sample_cnt = post_sample_cnt + self.valid_pre_sample_cnt
-        # Calc sample start count
-        sample_start_cnt = self.record_length - valid_sample_cnt
+        if self.measure_mode == 'block':
+            post_sample_cnt = round((1.0 - self.pre_sample_ratio) * self.record_length)
+            valid_sample_cnt = post_sample_cnt + self.valid_pre_sample_cnt
+            # Calc sample start count
+            sample_start_cnt = self.record_length - valid_sample_cnt
+        else:
+            sample_start_cnt = 0
+            valid_sample_cnt = self.record_length
 
         return sample_start_cnt, valid_sample_cnt
 
