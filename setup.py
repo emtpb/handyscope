@@ -25,7 +25,7 @@ setup(
 
     # Additional data
     package_data={
-        'tiepie': ['bin/libtiepie.dll', ['config.json']],
+        'tiepie': ['bin/libtiepie.dll', 'config.json'],
     },
 
     # Runtime dependencies
