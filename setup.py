@@ -25,11 +25,13 @@ setup(
 
     # Additional data
     package_data={
-        'tiepie': ['bin/libtiepie.dll'],
+        'tiepie': ['bin/libtiepie.dll', ['config.json']],
     },
 
     # Runtime dependencies
     install_requires=[
+        'numpy',
+        'scipy'
     ],
 
     # Setup/build dependencies; setuptools_scm required for git-based versioning
