@@ -765,7 +765,6 @@ class Oscilloscope(Device):
         """
         # Start measurement
         self.start()
-        self.force_trig()
 
         # Wait until measurement is finished
         while not self.is_data_ready:
