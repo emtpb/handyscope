@@ -251,7 +251,7 @@ def measurement_jitter_free(gen, osz, gen_signal, n_avg, pause=0.1):
     jit_free = []
     # get the correct sync offset
     sync_offset = get_sync_offset(gen, osz)
-    for mes in range(0, 1):
+    for mes in range(0, n_avg):
         # take one measurement
         data = _measurement(gen, osz)
         # calculate jitter free signal
