@@ -756,7 +756,7 @@ class Oscilloscope(Device):
     def measure(self):
         """Perform a single shot measurement.
 
-        Utility function which starts a measurement and forces a trigger. When measurment data is ready, it is retrieved
+        Utility function which starts a measurement. When measurement data is ready, it is retrieved
         and returned.
 
         Returns:
