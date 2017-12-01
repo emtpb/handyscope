@@ -141,7 +141,7 @@ class Generator(Device):
         raw_status = libtiepie.GenGetStatus(self._dev_handle)
 
         for key, value in self.GENERATOR_STATUSES.items():
-            if raw_status & value == value:
+            if raw_status == value:
                 return key
 
         raise ValueError("Unknown generator status: %d" % raw_status)
@@ -357,7 +357,7 @@ class Generator(Device):
         raw_mode = libtiepie.GenGetFrequencyMode(self._dev_handle)
 
         for key, value in self.FREQUENCY_MODES.items():
-            if raw_mode & value == value:
+            if raw_mode == value:
                 return key
 
         raise ValueError("Unknown frequency mode: %d" % raw_mode)
