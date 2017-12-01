@@ -82,7 +82,7 @@ def _save_sync_offset_config(new_config):
 def calculate_sync_offset(gen, osz):
     """
     Calculate the sync offset between channel 1 and channel 2 for the current sample frequency of the oscilloscope
-    and save it to file. Calculation is doe with a center frequency of 1 MHz, because there is no real difference for 
+    and save it to file. Calculation is done with a center frequency of 1 MHz, because there is no real difference for
     reasonable center frequencies.  
 
     Args:
