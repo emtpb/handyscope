@@ -9,7 +9,14 @@ Contents
 .. toctree::
     :maxdepth: 2
 
-    tiepie
+    library
+    deviceList
+    device
+    generator
+    i2cHost
+    oscilloscope
+    oscilloscopeChannel
+    jitter_free
 
 
 
