@@ -498,6 +498,14 @@ class Generator(Device):
         return libtiepie.GenGetDataLength(self._dev_handle)
 
     def arb_data(self, value_list):
+        """Fill the arbitrary data buffer of the generator.
+
+        The values are normalized by the generator itself: The highest absolute value equals the set amplitude value,
+        0 corresponds to the set offset value. If value_list is empty, the buffer gets cleared.
+
+        Args:
+            value_list (list): List with arbitrary data samples
+        """
         list_len = len(value_list)
 
         if list_len == 0:
