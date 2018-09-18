@@ -30,7 +30,7 @@ def _load_lib():
         libtiepie (:py:class:`ctypes.CDLL`): instance of the library
     """
     if platform.system() == 'Linux':
-        library_name = 'libtiepie.so.0'
+        library_name = 'libtiepie.so'
     elif platform.system() == 'Windows':
         from ctypes.wintypes import HANDLE, HWND, LPARAM, WPARAM
         library_name = 'libtiepie.dll'
