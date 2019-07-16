@@ -179,7 +179,7 @@ class I2CHost(Device):
                 continue
             else:
                 try:
-                    self.write(address, [])
+                    self.write(address, [0])
                 except OSError as err:
                     # If no ACK was received, there is no device listening on this address
                     if err.args[0] == "[-15]: NO_ACKNOWLEDGE":
