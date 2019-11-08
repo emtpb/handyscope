@@ -1,12 +1,15 @@
-import datetime
 import os
+from pkg_resources import get_distribution
 import sys
-import setuptools_scm
 
 # Add source code directory to path (required for autodoc)
 sys.path.insert(0, os.path.abspath('..'))
 
-# -- General configuration
+
+# -- General configuration ---------------------------------------------
+
+# If your documentation needs a minimal Sphinx version, state it here.
+#needs_sphinx = '1.0'
 
 extensions = [
     'sphinx.ext.autodoc',
@@ -35,46 +38,71 @@ intersphinx_mapping = {
     'scipy': ('https://docs.scipy.org/doc/scipy/reference/', None),
 }
 
+# Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
+
+# The suffix of source filenames.
 source_suffix = '.rst'
+
+# The master toctree document.
 master_doc = 'index'
-language = None
-today_fmt = '%Y-%m-%d'
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-pygments_style = 'sphinx'
-todo_include_todos = False
 
-# -- Project-specific configuration
+# List of patterns, relative to source directory, that match files and
+# directories to ignore when looking for source files.
+exclude_patterns = ['_build']
 
-project = 'TiePie'
-description = 'TiePie provides a Python interface to the mobile USB-oscilloscopes made by TiePie.'
-author = 'Tim Hetkaemper'
-copyright = '{year}, {author}'.format(year=datetime.date.today().year,
-                                      author=author)
-project_without_spaces = ''.join(c for c in project if c.isalnum())
+
+# -- Project-specific configuration ------------------------------------
+project = 'tiepie'
+copyright = "2019, Measurement Engineering Group"
 
 # Get version number from git via setuptools_scm
-# Do not differentiate between shortened version and full release numbers
-version = setuptools_scm.get_version(root='..', relative_to=__file__)
-release = version
+release = get_distribution('tiepie').version
+version = '.'.join(release.split('.')[:3])
 
-# -- Options for HTML output
+today_fmt = '%Y-%m-%d'
 
-html_theme = 'alabaster'
-html_theme_options = {
-    'description': description
-}
-html_sidebars = {
-    '**': ['about.html', 'navigation.html', 'searchbox.html']
-}
-htmlhelp_basename = '{0}doc'.format(project)
+# -- Options for HTML output -------------------------------------------
 
-# -- Options for LaTeX output
+html_theme = 'sphinx_rtd_theme'
+
+#html_theme_options = {}
+#html_logo = None
+#html_favicon = None
+
+#html_static_path = ['_static']
+
+# Custom sidebar templates, maps document names to template names.
+#html_sidebars = {}
+
+# Output file base name for HTML help builder.
+htmlhelp_basename = 'tiepiedoc'
+
+
+# -- Options for LaTeX output ------------------------------------------
+
+latex_engine = 'pdflatex'
 
 latex_elements = {
-     'papersize': 'a4paper',
+    # The paper size ('letterpaper' or 'a4paper').
+    'papersize': 'a4paper',
+
+    # The font size ('10pt', '11pt' or '12pt').
+    #'pointsize': '10pt',
+
+    # Additional stuff for the LaTeX preamble.
+    #'preamble': '',
 }
+
 latex_documents = [
-    (master_doc, '{0}.tex'.format(project_without_spaces),
-     '{0} Documentation'.format(project), author, 'manual'),
+    ('index', 'tiepie.tex',
+     'tiepie Documentation',
+     'Measurement Engineering Group', 'manual'),
 ]
+
+# The name of an image file (relative to this directory) to place at
+# the top of the title page.
+#latex_logo = None
+
+# If true, show page references after internal links.
+#latex_show_pagerefs = False

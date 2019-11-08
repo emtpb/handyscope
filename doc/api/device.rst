@@ -1,8 +1,6 @@
-tiepie.device
-=============
-
 Device
-------
+======
+
 .. autoclass:: tiepie.device.Device
 
 

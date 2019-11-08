@@ -1,28 +1,25 @@
-Welcome to TiePie's documentation!
-==================================
+**********************************
+Welcome to tiepie's documentation!
+**********************************
 
-Version: |version| (|today|)
+TiePie provides a Python interface to the mobile USB-oscilloscopes made by TiePie.
+
 
 Contents
---------
+========
 
 .. toctree::
-    :maxdepth: 2
+   :maxdepth: 2
 
-    library
-    deviceList
-    device
-    generator
-    i2cHost
-    oscilloscope
-    oscilloscopeChannel
-    jitter_free
-
+   readme
+   usage
+   api
+   authors
 
 
 Indices and tables
-------------------
+==================
 
 * :ref:`genindex`
 * :ref:`modindex`
-
+* :ref:`search`
