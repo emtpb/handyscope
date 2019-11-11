@@ -3,4 +3,7 @@ Authors
 =======
 Authors of TiePie, in chronological order:
 
-* Tim Hetkaemper <timh1@mail.uni-paderborn.de>
+* Tim Hetkämper <hetkaemper@emt.uni-paderborn.de>
+* Johannes Deuse-Kleinsteuber
+* Fabian Woitschek
+* Leander Claes <claes@emt.uni-paderborn.de>
