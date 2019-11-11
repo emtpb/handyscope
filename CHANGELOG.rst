@@ -9,10 +9,13 @@ This project follows the guidelines of `Keep a changelog`_ and adheres to
 .. _Semantic versioning: https://semver.org/
 
 
-[Unreleased]
-============
+`1.0.0`_ 2019-11-11
+===================
 
 Added
 -----
 * Initial implementation as already used in production.
 * libtiepie version 0.6.3.
+
+
+.. _1.0.0: https://atuin.emt.uni-paderborn.de/git/emt/tiepie/src/1.0.0
