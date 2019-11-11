@@ -33,7 +33,10 @@ def _load_lib():
         library_name = 'libtiepie.so'
     elif platform.system() == 'Windows':
         from ctypes.wintypes import HANDLE, HWND, LPARAM, WPARAM
-        library_name = 'libtiepie.dll'
+        if sizeof(c_voidp) == 4:
+            library_name = 'libtiepie32.dll'
+        if sizeof(c_voidp) == 8:
+            library_name = 'libtiepie64.dll'
     else:
         raise Exception('Can\'t determine library name, unknown platform.system(): ' + platform.system())
 
