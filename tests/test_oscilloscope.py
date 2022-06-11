@@ -563,7 +563,7 @@ def test_trig_holdoff(default_osc):
     assert default_osc.trig_holdoff >= 0
 
     # Test setter
-    holdoffs = [0, 1, 100, default_osc.trig_holdoff_max]
+    holdoffs = [0, 1, 100, default_osc.trig_holdoff_max, default_osc.TRIG_HOLDOFF_ALL_PRE_SAMPLES]
     for holdoff in holdoffs:
         default_osc.trig_holdoff = holdoff
         assert default_osc.trig_holdoff == holdoff

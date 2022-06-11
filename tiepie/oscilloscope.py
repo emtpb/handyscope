@@ -38,6 +38,8 @@ class Oscilloscope(Device):
                          "connected":    1,
                          "disconnected": 2}
 
+    TRIG_HOLDOFF_ALL_PRE_SAMPLES = 0xffffffffffffffff
+
     _device_type = "Osc"
 
     def __init__(self, instr_id, id_kind="product id"):
@@ -573,7 +575,10 @@ class Oscilloscope(Device):
         """Get or set the pre sample ratio.
 
         The pre sample ratio is a float between 0 and 1 and defines how many samples should be recorded before the
-        trigger point."""
+        trigger point. To ensure all pre samples are recorded, set 
+        :py:attr:`tiepie.oscilloscope.Oscilloscope.trig_holdoff` to 
+        :py:attr:`tiepie.oscilloscope.Oscilloscope.TRIG_HOLDOFF_ALL_PRE_SAMPLES`.
+        """
         return libtiepie.ScpGetPreSampleRatio(self._dev_handle)
 
     @pre_sample_ratio.setter
@@ -647,16 +652,20 @@ class Oscilloscope(Device):
 
     @property
     def trig_holdoff_max(self):
-        """Get the maximum available trigger holdoff in seconds.
+        """Get the maximum available trigger holdoff as number of samples.
 
         Returns:
-            float: Maximum available trigger holdoff on seconds.
+            float: Maximum available trigger holdoff as number of samples.
         """
         return libtiepie.ScpGetTriggerHoldOffCountMax(self._dev_handle)
 
     @property
     def trig_holdoff(self):
-        """Get or set the current trigger holdoff in seconds."""
+        """Get or set the current trigger holdoff as number of samples.
+        
+        Use :py:attr:`tiepie.oscilloscope.Oscilloscope.TRIG_HOLDOFF_ALL_PRE_SAMPLES` 
+        to ensure all pre samples are recorded if pre_sample_ratio is set.
+        """
         return libtiepie.ScpGetTriggerHoldOffCount(self._dev_handle)
 
     @trig_holdoff.setter
