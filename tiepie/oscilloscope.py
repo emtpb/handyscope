@@ -791,4 +791,18 @@ class Oscilloscope(Device):
         Returns:
             :class:`numpy.ndarray`: Time vector
         """
-        return np.linspace(0, 1/self.sample_freq*self.record_length, num=self.record_length, endpoint=False)
+        if self.pre_sample_ratio == 0:
+            return np.linspace(0, 1/self.sample_freq*self.record_length, num=self.record_length, endpoint=False)
+        else:
+            # If it is ensured all pre samples are valid, the time vector just needs to be shifted
+            if self.trig_holdoff == self.TRIG_HOLDOFF_ALL_PRE_SAMPLES:
+                time_vec = np.linspace(0, 1/self.sample_freq*self.record_length, num=self.record_length, endpoint=False)
+                trig_idx = int(self.pre_sample_ratio*len(time_vec))
+                return time_vec - time_vec[trig_idx]
+            else:
+                # Theoretically it is possible to calculate a fitting time vector with the help of
+                # self.valid_pre_sample_cnt. Practically, for most use cases the user expects signals of the same
+                # length for repeated measurements, which is why an error is raised instead.
+                raise ValueError("trig_holdoff is not set to record all pre samples. This may lead to varying signal "
+                                 "lengths due to the possibility of multiple triggers occuring. Please set "
+                                 "trig_holdoff to TRIG_HOLDOFF_ALL_PRE_SAMPLES to get a predictable time vector.")

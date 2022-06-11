@@ -661,8 +661,22 @@ def test_measure(default_osc):
             assert type(sample) is float
 
 
-def test_time_vector(osc):
-    assert len(osc.time_vector) == osc.record_length
-    assert osc.time_vector[0] == 0
-    assert osc.time_vector[1] == pytest.approx(1/osc.sample_freq)
-    assert osc.time_vector[-1] == 1/osc.sample_freq*(osc.record_length-1)
+def test_time_vector(default_osc):
+    default_osc.pre_sample_ratio = 0
+    assert len(default_osc.time_vector) == default_osc.record_length
+    assert default_osc.time_vector[0] == 0
+    assert default_osc.time_vector[1] == pytest.approx(1/default_osc.sample_freq)
+    assert default_osc.time_vector[-1] == 1/default_osc.sample_freq*(default_osc.record_length-1)
+
+    default_osc.pre_sample_ratio = 0.5
+    # Without configuring trigger holdoff, value error should be raised
+    with pytest.raises(ValueError) as err:
+        default_osc.time_vector
+    # With correctly configured pre samples, it should work
+    default_osc.trig_holdoff = default_osc.TRIG_HOLDOFF_ALL_PRE_SAMPLES
+    assert len(default_osc.time_vector) == default_osc.record_length
+    trig_idx = int(default_osc.record_length * default_osc.pre_sample_ratio)
+    assert default_osc.time_vector[trig_idx] == 0
+    assert default_osc.time_vector[trig_idx+1] == pytest.approx(1/default_osc.sample_freq)
+    assert default_osc.time_vector[-1] == 1/default_osc.sample_freq*(default_osc.record_length-trig_idx-1)
+    assert default_osc.time_vector[0] == -1/default_osc.sample_freq*(trig_idx)
