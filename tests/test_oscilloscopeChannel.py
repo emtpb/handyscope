@@ -199,12 +199,47 @@ def test_trig_lvl(osc):
                 assert type(element) is float
 
             # Test setter
+            # Assuming the default trig_lvl_mode "relative", values range from 0 to 1
             channel.trig_lvl = tuple(0.0 for _ in range(channel.trig_lvl_cnt))
             assert channel.trig_lvl == tuple(0.0 for _ in range(channel.trig_lvl_cnt))
             channel.trig_lvl = tuple(0.5 for _ in range(channel.trig_lvl_cnt))
             assert channel.trig_lvl == tuple(0.5 for _ in range(channel.trig_lvl_cnt))
             channel.trig_lvl = tuple(1.0 for _ in range(channel.trig_lvl_cnt))
             assert channel.trig_lvl == tuple(1.0 for _ in range(channel.trig_lvl_cnt))
+
+
+def test_trig_lvl_modes_available(osc):
+    for channel in osc.channels:
+        for mode in channel.trig_lvl_modes_available:
+            assert mode in channel.TRIGGER_LVL_MODES
+
+
+def test_trig_lvl_mode(osc):
+    for channel in osc.channels:
+        # Test getter
+        # If there are multiple modes available, the mode can be retrieved.
+        if channel.trig_lvl_modes_available != ("unknown", ):
+            assert channel.trig_lvl_mode in channel.TRIGGER_LVL_MODES
+        # Else (no known modes), accessing the chosen kind raises an OSError.
+        else:
+            with pytest.raises(OSError) as err:
+                channel.trig_lvl_mode
+            assert err.value.args[0] == "[-2]: NOT_SUPPORTED"
+
+        # Test setter
+        # If there are multiple modes available, the mode can be set.
+        if channel.trig_lvl_modes_available != ("unknown", ):
+            # Test every available mode
+            for mode in channel.trig_lvl_modes_available:
+                # Set the value
+                channel.trig_lvl_mode = mode
+                # Read it back & compare
+                assert channel.trig_lvl_mode == mode
+        # Else (no known modes), setting the mode raises an OSError.
+        else:
+            with pytest.raises(OSError) as err:
+                channel.trig_lvl_mode = "unknown"
+            assert err.value.args[0] == "[-2]: NOT_SUPPORTED"
 
 
 def test_trig_hysteresis_cnt(osc):

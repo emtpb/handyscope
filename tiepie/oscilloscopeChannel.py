@@ -43,6 +43,10 @@ class OscilloscopeChannel:
                           "smaller": 2,
                           "larger":  4}
 
+    TRIGGER_LVL_MODES = {"unknown":  0,
+                         "relative": 1,
+                         "absolute": 2}
+
     def __init__(self, dev_handle, ch_idx):
         """Constructor for an oscilloscope channel.
 
@@ -252,7 +256,11 @@ class OscilloscopeChannel:
 
     @property
     def trig_lvl(self):
-        """Get or set the trigger levels."""
+        """Get or set the trigger levels.
+
+        Value range depends on
+        :py:attr:`tiepie.oscilloscopeChannel.OscilloscopeChannel.trig_lvl_mode`.
+        """
         _lvls = []
         for idx in range(self.trig_lvl_cnt):
             _lvls.append(libtiepie.ScpChTrGetLevel(self._dev_handle, self._idx, idx))
@@ -262,6 +270,50 @@ class OscilloscopeChannel:
     def trig_lvl(self, iterable):
         for idx, value in enumerate(iterable):
             libtiepie.ScpChTrSetLevel(self._dev_handle, self._idx, idx, value)
+
+    @property
+    def trig_lvl_modes_available(self):
+        """Get the available trigger level modes.
+
+        Returns:
+            tuple: Available trigger level modes (keys of
+                   :py:attr:`tiepie.oscilloscopeChannel.OscilloscopeChannel.TRIGGER_LVL_MODES`)
+        """
+        raw_modes = libtiepie.ScpChTrGetLevelModes(self._dev_handle, self._idx)
+        _modes = []
+
+        # If no trigger level modes are available, return unknown
+        if raw_modes == self.TRIGGER_LVL_MODES["unknown"]:
+            _modes.append("unknown")
+        # Else do a detailed analysis...
+        else:
+            # ...by iterating over every possible kind ...
+            for key in self.TRIGGER_LVL_MODES:
+                # ...and ignoring "unknown" (already handled above)
+                if key == "unknown":
+                    pass
+                elif raw_modes & self.TRIGGER_LVL_MODES[key] == self.TRIGGER_LVL_MODES[key]:
+                    _modes.append(key)
+
+        return tuple(_modes)
+
+    @property
+    def trig_lvl_mode(self):
+        """Get or set the current trigger level mode.
+
+        Possible trigger level modes are the keys of
+        :py:attr:`tiepie.oscilloscopeChannel.OscilloscopeChannel.TRIGGER_LVL_MODES`.
+        """
+        raw_mode = libtiepie.ScpChTrGetLevelMode(self._dev_handle, self._idx)
+        for key, value in self.TRIGGER_LVL_MODES.items():
+            if raw_mode == value:
+                return key
+
+        raise ValueError("Unknown trigger level mode: %d" % raw_mode)
+
+    @trig_lvl_mode.setter
+    def trig_lvl_mode(self, value):
+        libtiepie.ScpChTrSetLevelMode(self._dev_handle, self._idx, self.TRIGGER_LVL_MODES[value])
 
     @property
     def trig_hysteresis_cnt(self):

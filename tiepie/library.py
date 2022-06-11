@@ -419,6 +419,15 @@ def _load_lib():
     libtiepie.ScpChTrSetLevel.restype = c_double
     libtiepie.ScpChTrSetLevel.argtypes = [c_uint32, c_uint16, c_uint32, c_double]
     libtiepie.ScpChTrSetLevel.errcheck = _check_status
+    libtiepie.ScpChTrGetLevelModes.argtypes = [c_uint32, c_uint16]
+    libtiepie.ScpChTrGetLevelModes.restype = c_uint32
+    libtiepie.ScpChTrGetLevelModes.errcheck = _check_status
+    libtiepie.ScpChTrGetLevelMode.argtypes = [c_uint32, c_uint16]
+    libtiepie.ScpChTrGetLevelMode.restype = c_uint32
+    libtiepie.ScpChTrGetLevelMode.errcheck = _check_status
+    libtiepie.ScpChTrSetLevelMode.argtypes = [c_uint32, c_uint16, c_uint32]
+    libtiepie.ScpChTrSetLevelMode.restype = c_uint32
+    libtiepie.ScpChTrSetLevelMode.errcheck = _check_status
     libtiepie.ScpChTrGetHysteresisCount.restype = c_uint32
     libtiepie.ScpChTrGetHysteresisCount.argtypes = [c_uint32, c_uint16]
     libtiepie.ScpChTrGetHysteresisCount.errcheck = _check_status
