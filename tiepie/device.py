@@ -188,6 +188,120 @@ class Device:
         return dev_name
 
     @property
+    def vendor_id(self):
+        """Get the vendor id of the device.
+
+        Returns:
+            int: Vendor id of the device.
+        """
+        return libtiepie.DevGetVendorId(self._dev_handle)
+
+    @property
+    def ipv4_address(self):
+        """Get the IPv4 address of the device.
+
+        Not tested.
+
+        Returns:
+            str: IPv4 address of the device.
+        """
+        return libtiepie.DevGetIPv4Address(self._dev_handle)
+
+    @property
+    def ip_port(self):
+        """Get the IP Port number of the device.
+
+        Returns:
+            int: IP Port number of the device.
+        """
+        return libtiepie.DevGetIPPort(self._dev_handle)
+
+    @property
+    def calibration_token(self):
+        """Get the calibration token of the device.
+
+         Returns:
+             str: calibration token of the device.
+         """
+
+        # get length of calibration token string
+        str_len = libtiepie.DevGetCalibrationToken(self._dev_handle, None, 0)
+
+        # initialize mutable string buffer
+        str_buffer = ctypes.create_string_buffer(str_len)
+
+        # write the actual calibration token to the buffer
+        libtiepie.DevGetNameShortest(self._dev_handle, str_buffer, str_len)
+
+        # convert to a normal python string
+        token = str_buffer.value.decode('utf-8')
+
+        return token
+
+    @property
+    def has_battery(self):
+        """Check whether the device has a battery.
+
+        Returns:
+            bool: True if the device has a battery.
+        """
+        return libtiepie.DevHasBattery(self._dev_handle) == 1
+
+    @property
+    def battery_charge(self):
+        """Get the current charge of the battery in percent.
+
+        Returns:
+            int: Battery charge in percent.
+        """
+        return libtiepie.DevGetBatteryCharge(self._dev_handle)
+
+    @property
+    def battery_time_to_empty(self):
+        """Get the battery time until it is empty in minutes.
+
+        Returns:
+            int: Battery time in minutes.
+        """
+        return libtiepie.DevGetBatteryTimeToEmpty(self._dev_handle)
+
+    @property
+    def battery_time_to_full(self):
+        """Get the battery time until it is fully charged in minutes .
+
+        Returns:
+            int: Battery time in minutes.
+        """
+        return libtiepie.DevGetBatteryTimeToFull(self._dev_handle)
+
+    @property
+    def battery_charger_connected(self):
+        """Check whether the charger is connected to the device.
+
+        Returns:
+            bool: True if the charger is connected to the device.
+        """
+        return libtiepie.DevIsBatteryChargerConnected(self._dev_handle) == 1
+
+    @property
+    def battery_charging(self):
+        """Check whether the battery is charging.
+
+        Returns:
+            bool: True if the battery is getting charged.
+        """
+        return libtiepie.DevIsBatteryCharging(self._dev_handle) == 1
+
+    @property
+    def battery_broken(self):
+        """Check whether the device battery is broken.
+
+        Returns:
+            bool: True if the device battery is broken.
+        """
+        return libtiepie.DevIsBatteryBroken(self._dev_handle) == 1
+
+    @property
     def short_name(self):
         """Get the short name of the device.
 
@@ -215,12 +329,11 @@ class Device:
         Returns:
             bool: True if removed, False otherwise.
         """
-        return libtiepie.DevIsRemoved(self._dev_handle) == 1
+        return libtiepie.ObjIsRemoved(self._dev_handle) == 1
 
-    def dev_close(self):
-        """Close the device.
-        """
-        libtiepie.DevClose(self._dev_handle)
+    def close(self):
+        """Close the device."""
+        libtiepie.ObjClose(self._dev_handle)
 
     @property
     def trig_ins(self):
