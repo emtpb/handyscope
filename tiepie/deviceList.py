@@ -22,6 +22,7 @@ class DeviceList:
                    "HP3":       18,
                    "HS4D":      20,
                    "HS5":       22,
+                   "HS6":       24,
                    "HS6D":      25}
 
     DEVICE_TYPES = {"Osc": 1,
@@ -141,6 +142,13 @@ class DeviceList:
         serial_no = libtiepie.LstDevGetSerialNumber(id_kind_int, instr_id)
 
         return serial_no
+
+    def get_ipv4_address(self, instr_id, id_kind="index"):
+        id_kind_int = self.ID_KINDS[id_kind]
+
+        ip_v4_addr = libtiepie.LstDevGetIPv4Address(id_kind_int, instr_id)
+
+        return ip_v4_addr
 
     def get_device_types(self, instr_id, id_kind="index"):
         """Get the the device types of an instrument.
