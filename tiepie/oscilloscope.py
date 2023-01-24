@@ -535,6 +535,62 @@ class Oscilloscope(Device):
         libtiepie.ScpSetClockOutput(self._dev_handle, self.CLOCK_OUTPUTS[value])
 
     @property
+    def clock_source_frequencies_available(self):
+        """Get the available frequencies for the clock source."""
+        frequencies_len = libtiepie.ScpGetClockSourceFrequencies(
+            self._dev_handle,
+            None,
+            0)
+
+        # Initialize double array
+        frequencies = (ctypes.c_double * frequencies_len)()
+
+        # Write the actual data to the array
+        libtiepie.ScpGetClockSourceFrequencies(self._dev_handle, self._idx, ctypes.byref(frequencies), frequencies_len)
+
+        # Convert to a normal python list
+        frequencies = tuple(frequencies)
+
+        return frequencies
+
+    @property
+    def clock_source_frequency(self):
+        """Get or set the clock source frequency in Hz."""
+        return libtiepie.ScpGetClockSourceFrequency(self._dev_handle)
+
+    @clock_source_frequency.setter
+    def clock_source_frequency(self, value):
+        libtiepie.ScpSetClockSourceFrequency(self._dev_handle, value)
+
+    @property
+    def clock_output_frequencies_available(self):
+        """Get the available frequencies for the clock output."""
+        frequencies_len = libtiepie.ScpGetClockOutputFrequencies(
+            self._dev_handle,
+            None,
+            0)
+
+        # Initialize double array
+        frequencies = (ctypes.c_double * frequencies_len)()
+
+        # Write the actual data to the array
+        libtiepie.ScpGetClockOutputFrequencies(self._dev_handle, self._idx, ctypes.byref(frequencies), frequencies_len)
+
+        # Convert to a normal python list
+        frequencies = tuple(frequencies)
+
+        return frequencies
+
+    @property
+    def clock_output_frequency(self):
+        """Get or set the clock source frequency in Hz."""
+        return libtiepie.ScpGetClockOutputFrequency(self._dev_handle)
+
+    @clock_output_frequency.setter
+    def clock_output_frequency(self, value):
+        libtiepie.ScpSetClockOutputFrequency(self._dev_handle, value)
+
+    @property
     def sample_freq_max(self):
         """Get the maximum sample frequency in Hz.
 
@@ -551,6 +607,18 @@ class Oscilloscope(Device):
     @sample_freq.setter
     def sample_freq(self, value):
         libtiepie.ScpSetSampleFrequency(self._dev_handle, value)
+
+    def verify_sample_freq(self, sample_frequency):
+        """Verify a sample frequency without setting it in the hardware.
+
+        Args:
+            sample_frequency (float): The sample frequency to verify.
+        Returns:
+            float: The sample frequency the hardware would set. (The hardware
+                   might not set the desired sample frequency due to clipping.)
+        """
+        return libtiepie.ScpVerifySampleFrequency(self._dev_handle,
+                                                  sample_frequency)
 
     @property
     def record_length_max(self):
@@ -569,6 +637,18 @@ class Oscilloscope(Device):
     @record_length.setter
     def record_length(self, value):
         libtiepie.ScpSetRecordLength(self._dev_handle, value)
+
+    def verify_record_length(self, record_length):
+        """Verify a record length without setting it in the hardware.
+
+        Args:
+            record_length (int): The record length to verify.
+        Returns:
+            int: The record length the hardware would set. (The hardware
+                 might not set the desired record length due to clipping.)
+        """
+        return libtiepie.ScpVerifyRecordLength(self._dev_handle,
+                                               record_length)
 
     @property
     def pre_sample_ratio(self):
@@ -603,6 +683,18 @@ class Oscilloscope(Device):
     def segment_cnt(self, value):
         libtiepie.ScpSetSegmentCount(self._dev_handle, value)
 
+    def verify_segment_cnt(self, segment_cnt):
+        """Verify a segment count without setting it in the hardware.
+
+        Args:
+            segment_cnt (int): The segment count to verify.
+        Returns:
+            int: The segment count the hardware would set. (The hardware
+                 might not set the desired segment count due to clipping.)
+        """
+        return libtiepie.ScpVerifySegmentCount(self._dev_handle,
+                                               segment_cnt)
+
     @property
     def trig_timeout(self):
         """Get or set the trigger timeout in seconds.
@@ -613,6 +705,18 @@ class Oscilloscope(Device):
     @trig_timeout.setter
     def trig_timeout(self, value):
         libtiepie.ScpSetTriggerTimeOut(self._dev_handle, value)
+
+    def verify_trig_timeout(self, trig_timeout):
+        """Verify a trigger timeout without setting it in the hardware.
+
+        Args:
+            trig_timeout (float): The trigger timeout to verify.
+        Returns:
+            float: The trigger timeout the hardware would set. (The hardware
+                   might not set the desired trigger timeout due to clipping.)
+        """
+        return libtiepie.ScpVerifyTriggerTimeOut(self._dev_handle,
+                                                 trig_timeout)
 
     @property
     def is_trig_delay_available(self):
@@ -640,6 +744,18 @@ class Oscilloscope(Device):
     @trig_delay.setter
     def trig_delay(self, value):
         libtiepie.ScpSetTriggerDelay(self._dev_handle, value)
+
+    def verify_trig_delay(self, trig_delay):
+        """Verify a trigger delay without setting it in the hardware.
+
+        Args:
+            trig_delay (float): The trigger delay to verify.
+        Returns:
+            float: The trigger delay the hardware would set. (The hardware
+                   might not set the desired trigger delay due to clipping.)
+        """
+        return libtiepie.ScpVerifyTriggerDelay(self._dev_handle,
+                                               trig_delay)
 
     @property
     def is_trig_holdoff_available(self):
