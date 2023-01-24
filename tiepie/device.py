@@ -239,7 +239,7 @@ class Device:
         return token
 
     @property
-    def has_battery(self):
+    def is_battery_available(self):
         """Check whether the device has a battery.
 
         Returns:

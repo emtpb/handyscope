@@ -90,7 +90,7 @@ class OscilloscopeChannel:
         libtiepie.ScpChSetBandwidth(self._dev_handle, self._idx, value)
 
     @property
-    def has_safe_ground(self):
+    def is_safe_ground_available(self):
         """Check whether the channel has a safe ground.
 
         Returns:
@@ -132,13 +132,14 @@ class OscilloscopeChannel:
                                               value)
 
     def verify_safe_ground_threshold(self, threshold):
-        """Verify if a threshold can be set.
+        """Verify a safe ground threshold without setting it in the hardware.
 
         Args:
-            threshold: Threshold to verify in Ampere.
-
+            threshold (float): The safe ground threshold to verify.
         Returns:
-            float: safe ground current that will be set.
+            float: The safe ground threshold the hardware would set.
+                   (The hardware might not set the safe ground threshold
+                    due to clipping.)
         """
         return libtiepie.ScpChVerifySafeGroundThreshold(self._dev_handle, self._idx,
                                                         threshold)
@@ -256,7 +257,7 @@ class OscilloscopeChannel:
         """Get available ranges in V.
 
         Returns:
-            tuple: Available ranges in V
+            tuple: Available ranges in V.
         """
         # Get length of list
         ranges_len = libtiepie.ScpChGetRanges(self._dev_handle, self._idx, None, 0)
@@ -500,10 +501,14 @@ class OscilloscopeChannel:
             libtiepie.ScpChTrSetTime(self._dev_handle, self._idx, idx, value)
 
     def verify_trig_time(self, trigger_times):
-        """Verify if the desired trigger times can be set.
+        """Verify trigger times without setting it in the hardware.
 
+        Args:
+            trigger_times (iterable): The trigger times to verify.
         Returns:
-            tuple: Trigger times which have been set by the device.
+            float: The trigger times the hardware would set.
+                   (The hardware might not set the trigger times due to
+                   clipping.)
         """
         set_trigger_times = []
         for idx, value in enumerate(trigger_times):
