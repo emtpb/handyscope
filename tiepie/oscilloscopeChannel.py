@@ -58,6 +58,92 @@ class OscilloscopeChannel:
         self._idx = ch_idx
 
     @property
+    def bandwidths_available(self):
+        """Get available input bandwidths in Hz.
+
+        Returns:
+            tuple: Available input bandwidths in Hz.
+        """
+        # Get length of list
+        ranges_len = libtiepie.ScpChGetBandwidths(self._dev_handle,
+                                                  self._idx, None, 0)
+
+        # Initialize double array
+        bandwidths = (ctypes.c_double * ranges_len)()
+
+        # Write the actual data to the array
+        libtiepie.ScpChGetBandwidths(self._dev_handle, self._idx,
+                                     ctypes.byref(bandwidths), ranges_len)
+
+        # Convert to a normal python list
+        bandwidths = tuple(bandwidths)
+
+        return bandwidths
+
+    @property
+    def bandwidth(self):
+        """Get or set the input bandwidth."""
+        return libtiepie.ScpChGetBandwidth(self._dev_handle, self._idx)
+
+    @bandwidth.setter
+    def bandwidth(self, value):
+        libtiepie.ScpChSetBandwidth(self._dev_handle, self._idx, value)
+
+    @property
+    def has_safe_ground(self):
+        """Check whether the channel has a safe ground.
+
+        Returns:
+            bool: True if the channel has a safe ground.
+        """
+        return libtiepie.ScpChHasSafeGround(self._dev_handle, self._idx) == 1
+
+    @property
+    def safe_ground_enabled(self):
+        """Get or set whether the safe ground is enabled."""
+        return libtiepie.ScpChGetSafeGroundEnabled(self._dev_handle,
+                                                   self._idx) == 1
+
+    @safe_ground_enabled.setter
+    def safe_ground_enabled(self, value):
+        libtiepie.ScpChSetSafeGroundEnabled(self._dev_handle, self._idx, value)
+
+    @property
+    def safe_ground_threshold_min(self):
+        """Get the minimum safe ground threshold current."""
+        return libtiepie.ScpChGetSafeGroundThresholdMin(self._dev_handle,
+                                                        self._idx)
+
+    @property
+    def safe_ground_threshold_max(self):
+        """Get the maximum safe ground threshold current."""
+        return libtiepie.ScpChGetSafeGroundThresholdMax(self._dev_handle,
+                                                        self._idx)
+
+    @property
+    def safe_ground_threshold(self):
+        """Get or set the safe ground threshold current."""
+        return libtiepie.ScpChGetSafeGroundThreshold(self._dev_handle,
+                                                     self._idx)
+
+    @safe_ground_threshold.setter
+    def safe_ground_threshold(self, value):
+        libtiepie.ScpChSetSafeGroundThreshold(self._dev_handle, self._idx,
+                                              value)
+
+    def verify_safe_ground_threshold(self, threshold):
+        """Verify if a threshold can be set.
+
+        Args:
+            threshold: Threshold to verify in Ampere.
+
+        Returns:
+            float: safe ground current that will be set.
+        """
+        return libtiepie.ScpChVerifySafeGroundThreshold(self._dev_handle, self._idx,
+                                                        threshold)
+
+    @property
     def connector_type(self):
         """Get the connector type.
 
@@ -194,6 +280,16 @@ class OscilloscopeChannel:
     @range.setter
     def range(self, value):
         libtiepie.ScpChSetRange(self._dev_handle, self._idx, value)
+
+    @property
+    def is_max_range_reachable(self):
+        """Check whether the maximum of the range is reachable.
+
+        Returns:
+            bool: True, if the maximum of the range is reachable,
+                  False otherwise.
+        """
+        return libtiepie.ScpChIsRangeMaxReachable(self._dev_handle, self._idx) == 1
 
     @property
     def is_trig_enabled(self):
@@ -403,6 +499,19 @@ class OscilloscopeChannel:
         for idx, value in enumerate(iterable):
             libtiepie.ScpChTrSetTime(self._dev_handle, self._idx, idx, value)
 
+    def verify_trig_time(self, trigger_times):
+        """Verify if the desired trigger times can be set.
+
+        Returns:
+            tuple: Trigger times which have been set by the device.
+        """
+        set_trigger_times = []
+        for idx, value in enumerate(trigger_times):
+            trigger_time = libtiepie.ScpChTrVerifyTime(self._dev_handle,
+                                                       self._idx, idx, value)
+            set_trigger_times.append(trigger_time)
+        return set_trigger_times
+
     @property
     def is_trig_available(self):
         """Check if trigger is available.
@@ -417,6 +526,15 @@ class OscilloscopeChannel:
         settings_ok = libtiepie.ScpChTrIsAvailable(self._dev_handle, self._idx) == 1
 
         return measure_mode_ok & settings_ok
+
+    @property
+    def is_triggered(self):
+        """Check if the channel has been triggered.
+
+        Returns:
+            bool: True, if the channel has been triggered, False otherwise.
+        """
+        return libtiepie.ScpChTrIsTriggered(self._dev_handle, self._idx) == 1
 
     @property
     def is_available(self):
