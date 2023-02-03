@@ -51,6 +51,18 @@ class Generator(Device):
                        "burst sample count output":      512,
                        "burst segment count":           1024,
                        "burst segment count output":    2048}
+
+    RAW_DATA_TYPES = {"unknown":    0,
+                      "int8":       1,
+                      "int16":      2,
+                      "int32":      4,
+                      "int64":      8,
+                      "uint8":     16,
+                      "uint16":    32,
+                      "uint32":    64,
+                      "uint64":   128,
+                      "float32":  256,
+                      "float64":  512}
     
     _device_type = "Gen"
 
@@ -156,6 +168,11 @@ class Generator(Device):
         libtiepie.GenSetOutputOn(self._dev_handle, value)
 
     @property
+    def is_out_inv_available(self):
+        """Get whether the generator output is invertible."""
+        return libtiepie.GenHasOutputInvert(self._dev_handle) == 1
+
+    @property
     def is_out_inv(self):
         """Get or set if the generator output is inverted."""
         return libtiepie.GenGetOutputInvert(self._dev_handle) == 1
@@ -179,6 +196,11 @@ class Generator(Device):
             bool: True if successful, False otherwise.
         """
         return libtiepie.GenStop(self._dev_handle) == 1
+
+    @property
+    def is_running(self):
+        """Check whether the generator is running."""
+        return libtiepie.GenIsRunning(self._dev_handle) == 1
 
     @property
     def signal_types_available(self):
@@ -215,6 +237,11 @@ class Generator(Device):
     @signal_type.setter
     def signal_type(self, value):
         libtiepie.GenSetSignalType(self._dev_handle, self.SIGNAL_TYPES[value])
+
+    @property
+    def is_amplitude_available(self):
+        """Get whether setting the amplitude is available."""
+        return libtiepie.GenHasAmplitude(self._dev_handle) == 1
 
     @property
     def amplitude_min(self):
@@ -276,6 +303,23 @@ class Generator(Device):
     def is_amplitude_autorange(self, value):
         libtiepie.GenSetAmplitudeAutoRanging(self._dev_handle, value)
 
+    def verify_amplitude(self, amplitude):
+        """Verify an amplitude without setting it in the hardware.
+
+            Args:
+                amplitude (float): The amplitude to verify.
+            Returns:
+                float: The amplitude the hardware would set.
+                       (The hardware might not set the amplitude
+                        due to clipping.)
+            """
+        return libtiepie.GenVerifyAmplitude(self._dev_handle, amplitude)
+
+    @property
+    def is_offset_available(self):
+        """Get whether setting the offset is available."""
+        return libtiepie.GenHasOffset(self._dev_handle) == 1
+
     @property
     def offset_min(self):
         """Get the minumum available offset.
@@ -303,6 +347,23 @@ class Generator(Device):
     def offset(self, value):
         libtiepie.GenSetOffset(self._dev_handle, value)
 
+    def verify_offset(self, offset):
+        """Verify an offset without setting it in the hardware.
+
+            Args:
+                offset (float): The offset to verify.
+            Returns:
+                float: The offset the hardware would set.
+                       (The hardware might not set the offset
+                        due to clipping.)
+            """
+        return libtiepie.GenVerifyOffset(self._dev_handle, offset)
+
+    @property
+    def is_frequency_available(self):
+        """Get whether setting the frequency is available."""
+        return libtiepie.GenHasFrequency(self._dev_handle) == 1
+
     @property
     def freq_min(self):
         """Get the minumum available frequency.
@@ -329,6 +390,18 @@ class Generator(Device):
     @freq.setter
     def freq(self, value):
         libtiepie.GenSetFrequency(self._dev_handle, value)
+
+    def verify_frequency(self, frequency):
+        """Verify a frequency without setting it in the hardware.
+
+            Args:
+                frequency (float): The frequency to verify.
+            Returns:
+                float: The frequency the hardware would set.
+                       (The hardware might not set the frequency
+                        due to clipping.)
+            """
+        return libtiepie.GenVerifyFrequency(self._dev_handle, frequency)
 
     @property
     def freq_modes_available(self):
@@ -367,6 +440,11 @@ class Generator(Device):
         libtiepie.GenSetFrequencyMode(self._dev_handle, self.FREQUENCY_MODES[value])
 
     @property
+    def is_phase_available(self):
+        """Get whether setting the phase is available."""
+        return libtiepie.GenHasPhase(self._dev_handle) == 1
+
+    @property
     def phase_min(self):
         """Get the minumum available signal phase.
 
@@ -392,6 +470,23 @@ class Generator(Device):
     @phase.setter
     def phase(self, value):
         libtiepie.GenSetPhase(self._dev_handle, value/360)
+
+    def verify_phase(self, phase):
+        """Verify a phase without setting it in the hardware.
+
+        Args:
+            phase (float): The phase to verify.
+        Returns:
+            float: The phase the hardware would set.
+                   (The hardware might not set the phase
+                    due to clipping.)
+        """
+        return libtiepie.GenVerifyPhase(self._dev_handle, phase)
+
+    @property
+    def is_symmetry_available(self):
+        """Get whether setting the symmetry is available."""
+        return libtiepie.GenHasSymmetry(self._dev_handle) == 1
 
     @property
     def symmetry_min(self):
@@ -430,6 +525,23 @@ class Generator(Device):
     def symmetry(self, value):
         libtiepie.GenSetSymmetry(self._dev_handle, value)
 
+    def verify_symmetry(self, symmetry):
+        """Verify a symmetry without setting it in the hardware.
+
+        Args:
+            symmetry (float): The symmetry to verify.
+        Returns:
+            float: The symmetry the hardware would set.
+                   (The hardware might not set the symmetry
+                    due to clipping.)
+        """
+        return libtiepie.GenVerifySymmetry(self._dev_handle, symmetry)
+
+    @property
+    def is_pulse_width_available(self):
+        """Get whether setting the pulse width is available."""
+        return libtiepie.GenHasWidth(self._dev_handle) == 1
+
     @property
     def pulse_width_min(self):
         """Get the minimum available pulse width.
@@ -464,6 +576,111 @@ class Generator(Device):
     def pulse_width(self, value):
         libtiepie.GenSetWidth(self._dev_handle, value)
 
+    def verify_pulse_width(self, pulse_width):
+        """Verify a pulse width without setting it in the hardware.
+
+        Args:
+            pulse_width (float): The pulse width to verify.
+        Returns:
+            float: The pulse width the hardware would set.
+                   (The hardware might not set the pulse width
+                    due to clipping.)
+        """
+        return libtiepie.GenVerifyWidth(self._dev_handle, pulse_width)
+
+    @property
+    def leading_edge_time_min(self):
+        """Get the minimum available leading edge time.
+
+        Available for signal type "pulse".
+        """
+        return libtiepie.GenGetLeadingEdgeTimeMin(self._dev_handle)
+
+    @property
+    def leading_edge_time_max(self):
+        """Get the maximum available leading edge time.
+
+        Available for signal type "pulse".
+        """
+        return libtiepie.GenGetLeadingEdgeTimeMax(self._dev_handle)
+
+    @property
+    def leading_edge_time(self):
+        """Get or set the available leading edge time.
+
+        Available for signal type "pulse".
+        """
+        return libtiepie.GenGetLeadingEdgeTime(self._dev_handle)
+
+    @leading_edge_time.setter
+    def leading_edge_time(self, value):
+        libtiepie.GenSetLeadingEdgeTime(self._dev_handle, value)
+
+    def verify_leading_edge_time(self, leading_edge_time):
+        """Verify a leading edge time without setting it in the hardware.
+
+        Available for signal type "pulse".
+
+        Args:
+            leading_edge_time (float): The leading edge time to verify.
+        Returns:
+            float: The leading edge time the hardware would set.
+                   (The hardware might not set the leading edge time
+                    due to clipping.)
+        """
+        return libtiepie.GenVerifyLeadingEdgeTime(self._dev_handle,
+                                                  leading_edge_time)
+
+    @property
+    def trailing_edge_time_min(self):
+        """Get the minimum available trailing edge time.
+
+        Available for signal type "pulse".
+        """
+        return libtiepie.GenGetTrailingEdgeTimeMin(self._dev_handle)
+
+    @property
+    def trailing_edge_time_max(self):
+        """Get the maximum available trailing edge time.
+
+        Available for signal type "pulse".
+        """
+        return libtiepie.GenGetTrailingEdgeTimeMax(self._dev_handle)
+
+    @property
+    def trailing_edge_time(self):
+        """Get or set the available trailing edge time.
+
+        Available for signal type "pulse".
+        """
+        return libtiepie.GenGetTrailingEdgeTime(self._dev_handle)
+
+    @trailing_edge_time.setter
+    def trailing_edge_time(self, value):
+        libtiepie.GenSetTrailingEdgeTime(self._dev_handle, value)
+
+    def verify_trailing_edge_time(self, trailing_edge_time):
+        """Verify a trailing edge time without setting it in the hardware.
+
+        Available for signal type "pulse".
+
+        Args:
+            trailing_edge_time (float): The trailing edge time to verify.
+        Returns:
+            float: The trailing edge time the hardware would set.
+                   (The hardware might not set the trailing edge time
+                    due to clipping.)
+        """
+        return libtiepie.GenVerifyTrailingEdgeTime(self._dev_handle,
+                                                   trailing_edge_time)
+
+    @property
+    def is_arb_data_available(self):
+        """Get whether the current signal type supports controlling the
+        arbitrary waveform buffer.
+        """
+        return libtiepie.GenHasData(self._dev_handle)
+
     @property
     def arb_data_length_min(self):
         """Get the minimum length (number of samples) of arbitrary data.
@@ -497,6 +714,23 @@ class Generator(Device):
         """
         return libtiepie.GenGetDataLength(self._dev_handle)
 
+    @property
+    def verify_arb_data_length(self, arb_data_length):
+        """Verify a length for arbitrary data without setting it in the
+        hardware.
+
+        Available for signal type "arbitrary".
+
+        Args:
+            arb_data_length (int): The length to verify.
+        Returns:
+            int: The length the hardware would set.
+                 (The hardware might not set the length
+                 due to clipping.)
+        """
+        return libtiepie.GenVerifyDataLength(self._dev_handle,
+                                             arb_data_length)
+
     def arb_data(self, value_list):
         """Fill the arbitrary data buffer of the generator.
 
@@ -515,6 +749,82 @@ class Generator(Device):
             pointer = ctypes.byref(buffer)
 
         libtiepie.GenSetData(self._dev_handle, pointer, list_len)
+
+    @property
+    def arb_raw_type(self):
+        """Get the data type for setting raw arbitrary values."""
+        raw_type = libtiepie.GenGetDataRawType(self._dev_handle)
+
+        for key, value in self.RAW_DATA_TYPES.items():
+            if raw_type == value:
+                return key
+
+    @property
+    def arb_data_raw_range(self):
+        """Get the minimum, zero and maximum raw value of the arbitrary
+        data buffer range as int.
+
+        Returns:
+            tuple: Minimum, zero, maximum raw value for the arbitrary data
+                   buffer range as int.
+        """
+        minimum = ctypes.c_uint64()
+        zero = ctypes.c_uint64()
+        maximum = ctypes.c_uint64()
+
+        libtiepie.GenGetDataRawValueRange(self._dev_handle,
+                                          ctypes.byref(minimum),
+                                          ctypes.byref(zero),
+                                          ctypes.byref(maximum))
+
+        return minimum.value, zero.value, maximum.value
+
+    @property
+    def arb_data_raw_min(self):
+        """Get the minimum raw value for the arbitrary data buffer which
+        corresponds to the current amplitude value.
+
+        Returns:
+            int: Minimum raw value for the arbitrary data buffer.
+        """
+        return libtiepie.GenGetDataRawValueMin(self._dev_handle)
+
+    @property
+    def arb_data_raw_max(self):
+        """Get the maximum raw value for the arbitrary data buffer which
+        corresponds to the current amplitude value.
+
+        Returns:
+            int: Maximum raw value for the arbitrary data buffer.
+        """
+        return libtiepie.GenGetDataRawValueMax(self._dev_handle)
+
+    @property
+    def arb_data_raw_zero(self):
+        """Get the raw value which corresponds to zero in the arbitrary
+        data buffer.
+
+        Returns:
+            int: Raw value which corresponds to zero in the arbitrary
+                 data buffer.
+        """
+        return libtiepie.GenGetDataRawValueZero(self._dev_handle)
+
+    def arb_data_raw(self, value_list):
+        """Fill the arbitrary data buffer of the generator with raw values.
+
+         Args:
+             value_list (list): List with arbitrary data samples
+         """
+        list_len = len(value_list)
+
+        if list_len == 0:
+            pointer = None
+        else:
+            buffer = (ctypes.c_float * list_len)(*value_list)
+            pointer = ctypes.byref(buffer)
+
+        libtiepie.GenSetDataRaw(self._dev_handle, pointer, list_len)
 
     @property
     def modes_native_available(self):
@@ -688,3 +998,18 @@ class Generator(Device):
     @burst_segment_cnt.setter
     def burst_segment_cnt(self, value):
         libtiepie.GenSetBurstSegmentCount(self._dev_handle, value)
+
+    @property
+    def verify_burst_segment_cnt(self, burst_segment_cnt):
+        """Verify a burst segment count without setting it in the
+        hardware.
+
+        Args:
+            burst_segment_cnt (int): The burst segment count to verify.
+        Returns:
+            int: The burst segment count the hardware would set.
+                 (The hardware might not set the burst segment count
+                 due to clipping.)
+        """
+        return libtiepie.GenVerifyBurstSegmentCount(self._dev_handle,
+                                                    burst_segment_cnt)
