@@ -322,7 +322,7 @@ class Generator(Device):
 
     @property
     def offset_min(self):
-        """Get the minumum available offset.
+        """Get the minimum available offset.
 
         Returns:
             float: Minimum available offset in Volt.
@@ -366,7 +366,7 @@ class Generator(Device):
 
     @property
     def freq_min(self):
-        """Get the minumum available frequency.
+        """Get the minimum available frequency.
 
         Returns:
             float: Minimum available frequency in Hz.
@@ -446,7 +446,7 @@ class Generator(Device):
 
     @property
     def phase_min(self):
-        """Get the minumum available signal phase.
+        """Get the minimum available signal phase.
 
         Returns:
             float: Minimum available signal phase in degree.
@@ -963,7 +963,7 @@ class Generator(Device):
 
     @burst_sample_cnt.setter
     def burst_sample_cnt(self, value):
-        libtiepie.GenSetBurstSegmentCount(self._dev_handle, value)
+        libtiepie.GenSetBurstSampleCount(self._dev_handle, value)
 
     @property
     def burst_segment_cnt_min(self):
