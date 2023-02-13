@@ -37,6 +37,20 @@ class I2CHost(Device):
     def clock_freq(self, value):
         libtiepie.I2CSetSpeed(self._dev_handle, value)
 
+    def verify_clock_freq(self, clock_freq):
+        """Verify a clock frequency without setting it in the
+        hardware.
+
+        Args:
+            clock_freq (int): The clock frequency to verify.
+        Returns:
+            int: The clock frequency the hardware would set.
+                 (The hardware might not set the clock frequency
+                 due to clipping.)
+        """
+        return libtiepie.I2CVerifySpeed(self._dev_handle,
+                                        clock_freq)
+
     def is_internal_address(self, address):
         """Check if given address is used internally.
 
@@ -47,6 +61,30 @@ class I2CHost(Device):
             bool: True, if given address is internally used; False otherwise.
         """
         return libtiepie.I2CIsInternalAddress(self._dev_handle, address) == 1
+
+    @property
+    def internal_adresses(self):
+        """Get internally used addresses.
+
+        Returns:
+            tuple: Used adresses.
+        """
+        # Get length of list
+        adresses_len = libtiepie.I2CGetInternalAddresses(self._dev_handle,
+                                                         None, 0)
+
+        # Initialize double array
+        adresses = (ctypes.c_uint16 * adresses_len)()
+
+        # Write the actual data to the array
+        libtiepie.I2CGetInternalAddresses(self._dev_handle,
+                                          ctypes.byref(adresses),
+                                          adresses_len)
+
+        # Convert to a normal python list
+        adresses = tuple(adresses)
+
+        return adresses
 
     def read(self, address, no_bytes, send_stop=True):
         """Read the given number of bytes from the given address.
@@ -105,6 +143,22 @@ class I2CHost(Device):
         result = libtiepie.I2CWrite(self._dev_handle, address, ctypes.byref(buffer), data_len, send_stop)
 
         return result == 1
+
+    def write_read(self, address, data, no_bytes):
+        """Write and read data to/from the address.
+
+        Args:
+            address (int): I2C address.
+            data (list of int): List of bytes to be written
+            no_bytes  (int):  Number of bytes to read
+        """
+        data_len = len(data)
+        write_buffer = (ctypes.c_uint8 * data_len)(*data)
+        read_buffer = (ctypes.c_ubyte * no_bytes)()
+        libtiepie.I2CWriteRead(self._dev_handle, address,
+                               ctypes.byref(write_buffer),
+                               data_len, ctypes.byref(read_buffer))
+        return list(read_buffer)
 
     def write_byte(self, address, data_byte):
         """Write the given byte to the address.
