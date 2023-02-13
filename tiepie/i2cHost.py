@@ -132,7 +132,7 @@ class I2CHost(Device):
 
         Args:
             address     (int):          I2C address
-            data        (list of int):  List of bytes to be writen
+            data        (list of int):  List of bytes to be written
             send_stop   (bool):         Whether to send a stop bit (defaults to True).
 
         Returns:
@@ -165,7 +165,7 @@ class I2CHost(Device):
 
         Args:
             address   (int): I2C address
-            data_byte (int): Data byte to be writen
+            data_byte (int): Data byte to be written
 
         Returns:
             bool: True if write succeeded, False otherwise.
@@ -179,13 +179,14 @@ class I2CHost(Device):
 
         Args:
             address    (int): I2C address
-            data_byte1 (int): First byte to be writen
-            data_byte2 (int): Second byte to be writen
+            data_byte1 (int): First byte to be written
+            data_byte2 (int): Second byte to be written
 
         Returns:
             bool: True if write succeeded, False otherwise.
         """
-        result = libtiepie.I2CWriteByteByte(self._dev_handle, address, data_byte1, data_byte2)
+        result = libtiepie.I2CWriteByteByte(self._dev_handle, address,
+                                            data_byte1, data_byte2)
 
         return result == 1
 
