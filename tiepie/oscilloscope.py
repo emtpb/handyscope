@@ -38,6 +38,17 @@ class Oscilloscope(Device):
                          "connected":    1,
                          "disconnected": 2}
 
+    DATA_TYPES = {"int8":    ctypes.c_int8,
+                  "int16":   ctypes.c_int16,
+                  "int32":   ctypes.c_int32,
+                  "int64":   ctypes.c_int64,
+                  "uint8":   ctypes.c_uint8,
+                  "uint16":  ctypes.c_uint16,
+                  "uint32":  ctypes.c_uint32,
+                  "uint64":  ctypes.c_uint64,
+                  "float32": ctypes.c_float,
+                  "float64": ctypes.c_double}
+
     TRIG_HOLDOFF_ALL_PRE_SAMPLES = 0xffffffffffffffff
 
     _device_type = "Osc"
@@ -93,7 +104,7 @@ class Oscilloscope(Device):
 
         return sample_start_cnt, valid_sample_cnt
 
-    def retrieve(self, channel_nos=None):
+    def retrieve(self, channel_nos=None, raw=False):
         """Retrieve measured samples.
 
         Previously to retrieving data, a measurement has to be started.
@@ -101,6 +112,7 @@ class Oscilloscope(Device):
 
         Args:
             channel_nos (list): (optional) iterable with channel numbers to retrieve, or None
+            raw (bool): True, if raw data should be returned.
 
         Returns:
             list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
@@ -132,10 +144,18 @@ class Oscilloscope(Device):
         pointer_array = libtiepie.HlpPointerArrayNew(channel_cnt)
         for idx in range(channel_cnt):
             if idx+1 in channel_nos:
-                buffers[idx] = (ctypes.c_float * valid_sample_cnt)()
+                if raw:
+                    raw_type = self.channels[idx].raw_data_type
+                    c_type = self.DATA_TYPES[raw_type]
+                else:
+                    c_type = ctypes.c_float
+                buffers[idx] = (c_type * valid_sample_cnt)()
                 libtiepie.HlpPointerArraySet(pointer_array, idx, ctypes.byref(buffers[idx]))
 
-        libtiepie.ScpGetData(self._dev_handle, pointer_array, channel_cnt, sample_start_cnt, valid_sample_cnt)
+        if raw:
+            libtiepie.ScpGetDataRaw(self._dev_handle, pointer_array, channel_cnt, sample_start_cnt, valid_sample_cnt)
+        else:
+            libtiepie.ScpGetData(self._dev_handle, pointer_array, channel_cnt, sample_start_cnt, valid_sample_cnt)
 
         # Free pointer array
         libtiepie.HlpPointerArrayDelete(pointer_array)
@@ -171,7 +191,7 @@ class Oscilloscope(Device):
         else:
             return [None]
 
-    def retrieve_ch1_ch2(self):
+    def retrieve_ch1_to_ch2(self):
         """Retrieve measured samples of channel 1 and 2.
 
         Previously to retrieving data, a measurement has to be started.
@@ -199,8 +219,8 @@ class Oscilloscope(Device):
 
         return data
 
-    def retrieve_ch1_ch2_ch3(self):
-        """Retrieve measured samples of channel 1, 2 and 3.
+    def retrieve_ch1_to_ch3(self):
+        """Retrieve measured samples of channel 1 to 3.
 
         Previously to retrieving data, a measurement has to be started.
 
@@ -211,7 +231,7 @@ class Oscilloscope(Device):
         # Get number of valid samples
         sample_start_cnt, valid_sample_cnt = self._get_sample_cnts()
 
-        # Init buffers list for channel 1 & 2
+        # Init buffers list for channel 1 to 3
         buffers = [None] * 3
 
         for idx in range(len(buffers)):
@@ -227,8 +247,8 @@ class Oscilloscope(Device):
 
         return data
 
-    def retrieve_ch1_ch2_ch3_ch4(self):
-        """Retrieve measured samples of channel 1, 2, 3 and 4.
+    def retrieve_ch1_to_ch4(self):
+        """Retrieve measured samples of channel 1 to 4.
 
         Previously to retrieving data, a measurement has to be started.
 
@@ -239,7 +259,7 @@ class Oscilloscope(Device):
         # Get number of valid samples
         sample_start_cnt, valid_sample_cnt = self._get_sample_cnts()
 
-        # Init buffers list for channel 1 & 2
+        # Init buffers list for channel 1 to 4
         buffers = [None] * 4
 
         for idx in range(len(buffers)):
@@ -249,6 +269,118 @@ class Oscilloscope(Device):
                     buffers[idx] = (ctypes.c_float * valid_sample_cnt)()
 
         libtiepie.ScpGetData4Ch(self._dev_handle, *buffers, sample_start_cnt, valid_sample_cnt)
+
+        # Cast ctypes float array to normal python lists
+        data = [None if channel_data is None else list(channel_data) for channel_data in buffers]
+
+        return data
+
+    def retrieve_ch1_to_ch5(self):
+        """Retrieve measured samples of channel 1 to 5.
+
+        Previously to retrieving data, a measurement has to be started.
+
+        Returns:
+            list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
+                  a list of samples.
+        """
+        # Get number of valid samples
+        sample_start_cnt, valid_sample_cnt = self._get_sample_cnts()
+
+        # Init buffers list for channel 1 to 5
+        buffers = [None] * 5
+
+        for idx in range(len(buffers)):
+            # Check availability
+            if idx < len(self.channels):
+                if self.channels[idx].is_enabled:
+                    buffers[idx] = (ctypes.c_float * valid_sample_cnt)()
+
+        libtiepie.ScpGetData5Ch(self._dev_handle, *buffers, sample_start_cnt, valid_sample_cnt)
+
+        # Cast ctypes float array to normal python lists
+        data = [None if channel_data is None else list(channel_data) for channel_data in buffers]
+
+        return data
+
+    def retrieve_ch1_to_ch6(self):
+        """Retrieve measured samples of channel 1 to 6.
+
+        Previously to retrieving data, a measurement has to be started.
+
+        Returns:
+            list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
+                  a list of samples.
+        """
+        # Get number of valid samples
+        sample_start_cnt, valid_sample_cnt = self._get_sample_cnts()
+
+        # Init buffers list for channel 1 to 6
+        buffers = [None] * 6
+
+        for idx in range(len(buffers)):
+            # Check availability
+            if idx < len(self.channels):
+                if self.channels[idx].is_enabled:
+                    buffers[idx] = (ctypes.c_float * valid_sample_cnt)()
+
+        libtiepie.ScpGetData6Ch(self._dev_handle, *buffers, sample_start_cnt, valid_sample_cnt)
+
+        # Cast ctypes float array to normal python lists
+        data = [None if channel_data is None else list(channel_data) for channel_data in buffers]
+
+        return data
+
+    def retrieve_ch1_to_ch7(self):
+        """Retrieve measured samples of channel 1 to 7.
+
+        Previously to retrieving data, a measurement has to be started.
+
+        Returns:
+            list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
+                  a list of samples.
+        """
+        # Get number of valid samples
+        sample_start_cnt, valid_sample_cnt = self._get_sample_cnts()
+
+        # Init buffers list for channel 1 to 7
+        buffers = [None] * 7
+
+        for idx in range(len(buffers)):
+            # Check availability
+            if idx < len(self.channels):
+                if self.channels[idx].is_enabled:
+                    buffers[idx] = (ctypes.c_float * valid_sample_cnt)()
+
+        libtiepie.ScpGetData7Ch(self._dev_handle, *buffers, sample_start_cnt, valid_sample_cnt)
+
+        # Cast ctypes float array to normal python lists
+        data = [None if channel_data is None else list(channel_data) for channel_data in buffers]
+
+        return data
+
+    def retrieve_ch1_to_ch8(self):
+        """Retrieve measured samples of channel 1 to 8.
+
+        Previously to retrieving data, a measurement has to be started.
+
+        Returns:
+            list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
+                  a list of samples.
+        """
+        # Get number of valid samples
+        sample_start_cnt, valid_sample_cnt = self._get_sample_cnts()
+
+        # Init buffers list for channel 1 to 8
+        buffers = [None] * 8
+
+        for idx in range(len(buffers)):
+            # Check availability
+            if idx < len(self.channels):
+                if self.channels[idx].is_enabled:
+                    buffers[idx] = (ctypes.c_float * valid_sample_cnt)()
+
+        libtiepie.ScpGetData8Ch(self._dev_handle, *buffers, sample_start_cnt, valid_sample_cnt)
 
         # Cast ctypes float array to normal python lists
         data = [None if channel_data is None else list(channel_data) for channel_data in buffers]

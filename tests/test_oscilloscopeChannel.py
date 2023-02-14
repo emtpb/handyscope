@@ -390,9 +390,9 @@ def test_data_range(osc):
 
 def test_data_range_min(osc):
     for channel in osc.channels:
-        assert type(channel.data_range_min) is float
+        assert type(channel.data_value_min) is float
 
 
 def test_data_range_max(osc):
     for channel in osc.channels:
-        assert type(channel.data_range_max) is float
+        assert type(channel.data_value_max) is float

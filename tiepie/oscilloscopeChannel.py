@@ -47,6 +47,18 @@ class OscilloscopeChannel:
                          "relative": 1,
                          "absolute": 2}
 
+    RAW_DATA_TYPES = {"unknown":    0,
+                      "int8":       1,
+                      "int16":      2,
+                      "int32":      4,
+                      "int64":      8,
+                      "uint8":     16,
+                      "uint16":    32,
+                      "uint32":    64,
+                      "uint64":   128,
+                      "float32":  256,
+                      "float64":  512}
+
     def __init__(self, dev_handle, ch_idx):
         """Constructor for an oscilloscope channel.
 
@@ -577,7 +589,7 @@ class OscilloscopeChannel:
         return range_min.value, range_max.value
 
     @property
-    def data_range_min(self):
+    def data_value_min(self):
         """Get the minimum value of the input range of the measured data.
 
         Returns:
@@ -586,10 +598,70 @@ class OscilloscopeChannel:
         return libtiepie.ScpChGetDataValueMin(self._dev_handle, self._idx)
 
     @property
-    def data_range_max(self):
+    def data_value_max(self):
         """Get the maximum value of the input range of the measured data.
 
         Returns:
             float: Maximum value of the input range
         """
         return libtiepie.ScpChGetDataValueMax(self._dev_handle, self._idx)
+
+    @property
+    def raw_data_type(self):
+        """Get the raw type of measured data.
+
+        Returns:
+            str: Raw data type of the measured data.
+        """
+        raw_type = libtiepie.ScpChGetDataRawType(self._dev_handle, self._idx)
+        for key, value in self.RAW_DATA_TYPES.items():
+            if raw_type == value:
+                return key
+        return key
+
+    @property
+    def raw_data_range(self):
+        """Get the minimum, zero and maximum raw value of the input range
+        of the measured data.
+
+        Returns:
+            tuple: Minimum, zero, maximum raw values.
+        """
+        minimum = ctypes.c_uint64()
+        zero = ctypes.c_uint64()
+        maximum = ctypes.c_uint64()
+
+        libtiepie.ScpChGetDataRawValueRange(self._dev_handle, self._idx,
+                                            ctypes.byref(minimum),
+                                            ctypes.byref(zero),
+                                            ctypes.byref(maximum))
+
+        return minimum.value, zero.value, maximum.value
+
+    @property
+    def raw_value_min(self):
+        """Get the minimum raw value for the input range of the measured data.
+
+        Returns:
+            int: Minimum raw value for the input range.
+        """
+        return libtiepie.ScpChGetDataRawValueMin(self._dev_handle, self._idx)
+
+    @property
+    def raw_value_max(self):
+        """Get the maximum raw value of the input range of the measured data.
+
+        Returns:
+            int: Maximum raw value of the input range.
+        """
+        return libtiepie.ScpChGetDataRawValueMax(self._dev_handle, self._idx)
+
+    @property
+    def raw_value_zero(self):
+        """Get the raw value which corresponds to zero for the input range
+        of the measured data.
+
+        Returns:
+            int: Raw value which corresponds to zero for the input range.
+        """
+        return libtiepie.ScpChGetDataRawValueZero(self._dev_handle, self._idx)
