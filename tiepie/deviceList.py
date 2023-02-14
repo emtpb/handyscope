@@ -1,4 +1,6 @@
 from tiepie.library import libtiepie
+
+from datetime import date
 import ctypes
 
 
@@ -43,6 +45,221 @@ class DeviceList:
             int: device count
         """
         return libtiepie.LstGetCount()
+
+    def can_open_device(self, instr_id, id_kind="index", device_type="Osc"):
+        """Check whether a device (of device_type) of an instrument
+        (with given id) and return the device handle.
+
+        Args:
+            instr_id (int or str): Device list index, product ID
+                                   (listed in dict PRODUCT_IDS) or
+                                   serial number.
+            id_kind (str): The kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device
+                           list index.
+            device_type (str): The type of the device
+                               (listed in dict DEVICE_TYPES),
+                               defaults to oscilloscope.
+
+        Returns:
+            handle (:py:class:`ctypes.c_uint32`): device handle
+        """
+        # translate id kind & device type str to int
+        id_kind_int = self.ID_KINDS[id_kind]
+        device_type_int = self.DEVICE_TYPES[device_type]
+
+        # Translate instr_id to int, if it is a product id str
+        if id_kind == "product id":
+            instr_id_int = self.PRODUCT_IDS[instr_id]
+        else:
+            instr_id_int = instr_id
+
+        return libtiepie.LstDevCanOpen(id_kind_int,
+                                       instr_id_int, device_type_int) == 1
+
+    def get_vendor_id(self, instr_id, id_kind="index"):
+        """Get the vendor id of the device.
+
+        Args:
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                           index
+
+        Returns:
+            int: vendor id
+        """
+        # translate id kind str to int
+        id_kind_int = self.ID_KINDS[id_kind]
+
+        # Translate instr_id to int, if it is a product id str
+        if id_kind == "product id":
+            instr_id_int = self.PRODUCT_IDS[instr_id]
+        else:
+            instr_id_int = instr_id
+        # get the vendor id
+        vendor_id = libtiepie.LstDevGetVendorId(id_kind_int, instr_id_int)
+
+        return vendor_id
+
+    def get_product_id(self, instr_id, id_kind="index"):
+        """Get the product id of the device.
+
+        Args:
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                           index
+
+        Returns:
+            int: product id
+        """
+        # translate id kind str to int
+        id_kind_int = self.ID_KINDS[id_kind]
+
+        # Translate instr_id to int, if it is a product id str
+        if id_kind == "product id":
+            instr_id_int = self.PRODUCT_IDS[instr_id]
+        else:
+            instr_id_int = instr_id
+        # get the product id
+        product_id = libtiepie.LstDevGetProductId(id_kind_int, instr_id_int)
+
+        return product_id
+
+    def get_driver_version(self, instr_id, id_kind="index"):
+        """Get the driver version of the device.
+
+        Args:
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                           index
+
+        Returns:
+            str: driver version
+        """
+        # translate id kind str to int
+        id_kind_int = self.ID_KINDS[id_kind]
+
+        # Translate instr_id to int, if it is a product id str
+        if id_kind == "product id":
+            instr_id_int = self.PRODUCT_IDS[instr_id]
+        else:
+            instr_id_int = instr_id
+        # get the driver version
+        driver_version = libtiepie.LstDevGetDriverVersion(id_kind_int, instr_id_int)
+
+        return version_to_str(driver_version)
+
+    def get_recommended_driver_version(self, instr_id, id_kind="index"):
+        """Get the recommended driver version of the device.
+
+        Args:
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                           index
+
+        Returns:
+            str: recommended driver version
+        """
+        # translate id kind str to int
+        id_kind_int = self.ID_KINDS[id_kind]
+
+        # Translate instr_id to int, if it is a product id str
+        if id_kind == "product id":
+            instr_id_int = self.PRODUCT_IDS[instr_id]
+        else:
+            instr_id_int = instr_id
+        # get the driver version
+        driver_version = libtiepie.LstDevGetRecommendedDriverVersion(id_kind_int, instr_id_int)
+
+        return version_to_str(driver_version)
+
+    def get_firmware_version(self, instr_id, id_kind="index"):
+        """Get the firmware version of the device.
+
+        Args:
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                           index
+
+        Returns:
+            str: firmware version
+        """
+        # translate id kind str to int
+        id_kind_int = self.ID_KINDS[id_kind]
+
+        # Translate instr_id to int, if it is a product id str
+        if id_kind == "product id":
+            instr_id_int = self.PRODUCT_IDS[instr_id]
+        else:
+            instr_id_int = instr_id
+        # get the firmware version
+        firmware_version = libtiepie.LstDevGetFirmwareVersion(id_kind_int, instr_id_int)
+
+        return version_to_str(firmware_version)
+
+    def get_recommended_firmware_version(self, instr_id, id_kind="index"):
+        """Get the recommended firmware version of the device.
+
+        Args:
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                           index
+
+        Returns:
+            str: recommended firmware version
+        """
+        # translate id kind str to int
+        id_kind_int = self.ID_KINDS[id_kind]
+
+        # Translate instr_id to int, if it is a product id str
+        if id_kind == "product id":
+            instr_id_int = self.PRODUCT_IDS[instr_id]
+        else:
+            instr_id_int = instr_id
+        # get the firmware version
+        firmware_version = libtiepie.LstDevGetRecommendedFirmwareVersion(id_kind_int, instr_id_int)
+
+        return version_to_str(firmware_version)
+
+    def get_calibration_date(self, instr_id, id_kind="index"):
+        """Get the calibration date of the device.
+
+        Args:
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                           index
+
+        Returns:
+            :py:class:`datetime.date`: calibration date
+        """
+        # translate id kind str to int
+        id_kind_int = self.ID_KINDS[id_kind]
+
+        # Translate instr_id to int, if it is a product id str
+        if id_kind == "product id":
+            instr_id_int = self.PRODUCT_IDS[instr_id]
+        else:
+            instr_id_int = instr_id
+
+        # get the calibration date
+        raw_date = libtiepie.LstDevGetCalibrationDate(id_kind_int, instr_id_int)
+
+        split_date = date(raw_date >> 16, (raw_date >> 8) & 0xff, raw_date & 0xff)
+        return split_date
 
     def get_device_name(self, instr_id, id_kind="index"):
         """Get the full name of the device.
@@ -143,15 +360,101 @@ class DeviceList:
 
         return serial_no
 
-    def get_ipv4_address(self, instr_id, id_kind="index"):
+    def get_contained_serial_no(self, instr_id, id_kind="index"):
+        """Get serial numbers of devices in a contained devices.
+
+        Args:
+            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
+            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index
+
+        Returns:
+            str: Serial number of the devices
+        """
+        # translate id kind str to int
         id_kind_int = self.ID_KINDS[id_kind]
 
-        ip_v4_addr = libtiepie.LstDevGetIPv4Address(id_kind_int, instr_id)
+        # get length of list
+        serial_len = libtiepie.LstDevGetContainedSerialNumbers(id_kind_int,
+                                                               instr_id,
+                                                               None, 0)
+        # initialize uint32 array
+        serial_numbers = (ctypes.c_uint32 * serial_len)()
+
+        # write the actual data to the array
+        libtiepie.LstDevGetContainedSerialNumbers(id_kind_int, instr_id,
+                                                  serial_numbers, serial_len)
+
+        # convert to a normal python list
+        serial_numbers = list(serial_numbers)
+
+        return tuple(serial_numbers)
+
+    def get_ipv4_address(self, instr_id, id_kind="index"):
+        """Get the IP address of an instrument.
+
+        Args:
+            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
+            id_kind (str): the kind of the given id (listed in dict ID_KINDS), defaults to device list index
+
+        Returns:
+            int: IP address
+        """
+        id_kind_int = self.ID_KINDS[id_kind]
+
+        # Translate instr_id to int, if it is a product id str
+        if id_kind == "product id":
+            instr_id_int = self.PRODUCT_IDS[instr_id]
+        else:
+            instr_id_int = instr_id
+
+        ip_v4_addr = libtiepie.LstDevGetIPv4Address(id_kind_int, instr_id_int)
 
         return ip_v4_addr
 
+    def get_ip_port(self, instr_id, id_kind="index"):
+        """Get the IP Port number of the instrument.
+
+        Args:
+            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
+            id_kind (str): the kind of the given id (listed in dict ID_KINDS), defaults to device list index
+
+        Returns:
+            int: IP port
+        """
+        id_kind_int = self.ID_KINDS[id_kind]
+
+        # Translate instr_id to int, if it is a product id str
+        if id_kind == "product id":
+            instr_id_int = self.PRODUCT_IDS[instr_id]
+        else:
+            instr_id_int = instr_id
+
+        ip_port = libtiepie.LstDevGetIPPort(id_kind_int, instr_id_int)
+
+        return ip_port
+
+    def is_connected_to_server(self, instr_id, id_kind="index"):
+        """Get whether the device is connected to a server.
+
+        Args:
+            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
+            id_kind (str): the kind of the given id (listed in dict ID_KINDS), defaults to device list index
+
+        Returns:
+            bool: True, if the device is connected to a server
+        """
+        id_kind_int = self.ID_KINDS[id_kind]
+
+        # Translate instr_id to int, if it is a product id str
+        if id_kind == "product id":
+            instr_id_int = self.PRODUCT_IDS[instr_id]
+        else:
+            instr_id_int = instr_id
+
+        return libtiepie.LstDevHasServer(id_kind_int, instr_id_int) == 1
+
     def get_device_types(self, instr_id, id_kind="index"):
-        """Get the the device types of an instrument.
+        """Get the device types of an instrument.
 
         Args:
             instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
@@ -235,6 +538,19 @@ class DeviceList:
             instr_id_int = instr_id
 
         return libtiepie.LstOpenDevice(id_kind_int, instr_id_int, device_type_int)
+
+
+def version_to_str(raw_version):
+    """Convert a raw version int in TiePie's format to a nice string.
+
+    Args:
+        raw_version (int): concatenated version numbers as int in TiePie's format
+
+    Returns:
+        str: version number as str
+    """
+    return '.'.join([str((raw_version >> (idx * 16)) & 0xffff) for idx in range(3, -1, -1)])
+
 
 # Instantiate class to make it available via import. Thus only one instance exists (singleton design pattern).
 device_list = DeviceList()
