@@ -42,30 +42,28 @@ class Device:
 
         self._obj_cb = None
 
-    def generate_object_callback(self, event_ids, cb_funtions):
-        """Generate and register callback functions for given event ids.
+    def generate_object_callback(self, events, cb_functions):
+        """Generate and register callback functions for given events.
 
         Args:
-            event_ids (list): Event ids for which the callback functions are given in cb_functions (see EVENT_IDS).
-            cb_funtions (list): Callback functions. Length of list has to be identical with length of event_ids.
+            events (list): Events as a list of strings to bind events to
+                           callback functions. Available events are given in
+                           EVENT_IDS.
+            cb_functions (list): Callback functions. Length of list has to be identical with length of events.
                                 Each function has to have the following head: fun(p_data, value). 'p_data' is the data
                                 provided by the event and 'value' a single value.
-
-        Returns:
-
         """
         def default_cb(p_data, value):
             pass
-        funs = {}
-        for evt_id in self.EVENT_IDS.values():
-            if evt_id in event_ids:
-                idx = event_ids.index(evt_id)
-                funs[evt_id] = cb_funtions[idx]
-            else:
-                funs[evt_id] = default_cb
+        # Fill the dict with default functions
+        function_map = {event_id: default_cb for event_id in self.EVENT_IDS.values()}
+        # Set all the desired events with the callback functions
+        for event, function in zip(events, cb_functions):
+            event_id = self.EVENT_IDS[event]
+            function_map[event_id] = function
 
         def object_callback(p_data, event_id, value):
-            funs[event_id](p_data, value)
+            function_map[event_id](p_data, value)
         self._obj_cb = CallbackObject(object_callback)
         libtiepie.ObjSetEventCallback(self._dev_handle, self._obj_cb, None)
 
