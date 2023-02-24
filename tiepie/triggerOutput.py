@@ -6,7 +6,11 @@ class TriggerOutput:
     TRIGGER_EVENTS = {"unknown":              0,
                       "Generator start":      1,
                       "Generator stop":       2,
-                      "Generator new period": 4}
+                      "Generator new period": 4,
+                      "Oscilloscope running": 8,
+                      "Oscilloscope triggered": 16,
+                      "manual": 32,
+                      }
 
     # see api doc, macro "TRIGGER_IO_ID"
     TRIGGER_IDS = {"EXT 1": 0 << 24 | 3 << 20 | 1 << 8 | 0,
