@@ -6,23 +6,32 @@ from tiepie.i2cHost import I2CHost
 import tiepie.deviceList
 import pytest
 
-_product_id = "HS5"
+
+def pytest_addoption(parser):
+    parser.addoption("--product_id", action="store", default="HS5")
+
+
+def pytest_generate_tests(metafunc):
+    option_value = metafunc.config.option.product_id
+    if 'product_id' in metafunc.fixturenames and option_value is not None:
+        metafunc.parametrize("product_id", [option_value], scope="module")
 
 
 @pytest.fixture(scope="module")
 def dev_list():
     return tiepie.deviceList.device_list
 
+
 @pytest.fixture(scope="module", params=[key for key in DeviceList.DEVICE_TYPES])
-def device(request):
-    dev_instance = Device(_product_id, "product id", request.param)
+def device(product_id, request):
+    dev_instance = Device(product_id, "product id", request.param)
     yield dev_instance
     dev_instance.close()
 
 
 @pytest.fixture(scope="module")
-def osc():
-    osc_instance = Oscilloscope(_product_id)
+def osc(product_id):
+    osc_instance = Oscilloscope(product_id)
     yield osc_instance
     osc_instance.close()
 
@@ -48,8 +57,8 @@ def default_osc(osc):
 
 
 @pytest.fixture(scope="module")
-def gen():
-    gen_instance = Generator(_product_id)
+def gen(product_id):
+    gen_instance = Generator(product_id)
     yield gen_instance
     gen_instance.close()
 
@@ -125,7 +134,7 @@ def default_gen_burst_segment(gen):
 
 
 @pytest.fixture(scope="module")
-def i2c():
-    i2c_instance = I2CHost(_product_id)
+def i2c(product_id):
+    i2c_instance = I2CHost(product_id)
     yield i2c_instance
     i2c_instance.close()
