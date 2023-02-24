@@ -113,6 +113,7 @@ def default_gen_burst(gen):
 def default_gen_burst_sample(gen):
     gen.is_amplitude_autorange = True
     gen.signal_type = "arbitrary"
+    gen.freq_mode = "sample"
     gen.arb_data([0.0, 1.0, 2.0, 3.0, 4.0])
     gen.mode = "burst sample count"
     gen.offset = 0.0

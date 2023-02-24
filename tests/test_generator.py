@@ -363,6 +363,9 @@ def test_burst_sample_cnt_max(default_gen_burst_sample):
 
 
 def test_burst_sample_cnt(default_gen_burst_sample):
+    # Burst sample count is initially always 0 even though it is not
+    # in the range. Setting it to some value sets or clips it accordingly
+    default_gen_burst_sample.burst_sample_cnt = 2
     # Test getter
     assert type(default_gen_burst_sample.burst_sample_cnt) is int
     assert default_gen_burst_sample.burst_sample_cnt >= default_gen_burst_sample.burst_sample_cnt_min
