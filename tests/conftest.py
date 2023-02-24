@@ -17,14 +17,14 @@ def dev_list():
 def device(request):
     dev_instance = Device(_product_id, "product id", request.param)
     yield dev_instance
-    dev_instance.dev_close()
+    dev_instance.close()
 
 
 @pytest.fixture(scope="module")
 def osc():
     osc_instance = Oscilloscope(_product_id)
     yield osc_instance
-    osc_instance.dev_close()
+    osc_instance.close()
 
 
 @pytest.fixture(scope="function")
@@ -51,7 +51,7 @@ def default_osc(osc):
 def gen():
     gen_instance = Generator(_product_id)
     yield gen_instance
-    gen_instance.dev_close()
+    gen_instance.close()
 
 
 @pytest.fixture(scope="function")
@@ -128,4 +128,4 @@ def default_gen_burst_segment(gen):
 def i2c():
     i2c_instance = I2CHost(_product_id)
     yield i2c_instance
-    i2c_instance.dev_close()
+    i2c_instance.close()

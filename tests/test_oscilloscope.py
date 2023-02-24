@@ -120,7 +120,7 @@ def test_retrieve_ch1(osc):
         assert data == [None]
 
 
-def test_retrieve_ch1_ch2(osc):
+def test_retrieve_ch1_to_ch2(osc):
     # --- Try to retrieve all channels
     # Enable all available channels
     for channel in osc.channels:
@@ -128,7 +128,7 @@ def test_retrieve_ch1_ch2(osc):
     osc.start()
     while not osc.is_data_ready:
         time.sleep(0.05)
-    data = osc.retrieve_ch1_ch2()
+    data = osc.retrieve_ch1_to_ch2()
     assert type(data) is list
     assert len(data) == 2
     for idx, channel_data in enumerate(data):
@@ -150,7 +150,7 @@ def test_retrieve_ch1_ch2(osc):
         osc.start()
         while not osc.is_data_ready:
             time.sleep(0.05)
-        data = osc.retrieve_ch1_ch2()
+        data = osc.retrieve_ch1_to_ch2()
         assert type(data) is list
         assert len(data) == 2
         # First channel was disabled
@@ -161,7 +161,7 @@ def test_retrieve_ch1_ch2(osc):
             assert type(sample) is float
 
 
-def test_retrieve_ch1_ch2_ch3(osc):
+def test_retrieve_ch1_to_ch3(osc):
     # --- Try to retrieve all channels
     # Enable available channels
     for channel in osc.channels:
@@ -169,7 +169,7 @@ def test_retrieve_ch1_ch2_ch3(osc):
     osc.start()
     while not osc.is_data_ready:
         time.sleep(0.05)
-    data = osc.retrieve_ch1_ch2_ch3()
+    data = osc.retrieve_ch1_to_ch3()
     assert type(data) is list
     assert len(data) == 3
     for idx, channel_data in enumerate(data):
@@ -191,7 +191,7 @@ def test_retrieve_ch1_ch2_ch3(osc):
         osc.start()
         while not osc.is_data_ready:
             time.sleep(0.05)
-        data = osc.retrieve_ch1_ch2_ch3()
+        data = osc.retrieve_ch1_to_ch3()
 
         assert type(data) is list
         assert len(data) == 3
@@ -210,7 +210,7 @@ def test_retrieve_ch1_ch2_ch3(osc):
                 assert channel_data is None
 
 
-def test_retrieve_ch1_ch2_ch3_ch4(osc):
+def test_retrieve_ch1_to_ch4(osc):
     # --- Try to retrieve all channels
     # Enable available channels
     for channel in osc.channels:
@@ -218,7 +218,7 @@ def test_retrieve_ch1_ch2_ch3_ch4(osc):
     osc.start()
     while not osc.is_data_ready:
         time.sleep(0.05)
-    data = osc.retrieve_ch1_ch2_ch3_ch4()
+    data = osc.retrieve_ch1_to_ch4()
     assert type(data) is list
     assert len(data) == 4
     for idx, channel_data in enumerate(data):
@@ -240,7 +240,7 @@ def test_retrieve_ch1_ch2_ch3_ch4(osc):
         osc.start()
         while not osc.is_data_ready:
             time.sleep(0.05)
-        data = osc.retrieve_ch1_ch2_ch3_ch4()
+        data = osc.retrieve_ch1_to_ch4()
 
         assert type(data) is list
         assert len(data) == 4
