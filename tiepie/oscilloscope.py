@@ -4,6 +4,7 @@ from tiepie.oscilloscopeChannel import OscilloscopeChannel
 import ctypes
 import time
 import numpy as np
+import warnings
 
 
 class Oscilloscope(Device):
@@ -786,10 +787,14 @@ class Oscilloscope(Device):
     def pre_sample_ratio(self):
         """Get or set the pre sample ratio.
 
-        The pre sample ratio is a float between 0 and 1 and defines how many samples should be recorded before the
-        trigger point. To ensure all pre samples are recorded, set 
+        The pre sample ratio is a float between 0 and 1 and defines how many
+        samples should be recorded before the trigger point. To ensure all
+        pre samples are recorded, set
         :py:attr:`tiepie.oscilloscope.Oscilloscope.trig_holdoff` to 
-        :py:attr:`tiepie.oscilloscope.Oscilloscope.TRIG_HOLDOFF_ALL_PRE_SAMPLES`.
+        :py:attr:`tiepie.oscilloscope.Oscilloscope.TRIG_HOLDOFF_ALL_PRE_SAMPLES`
+        or set :py:attr:`tiepie.oscilloscope.Oscilloscope.trig_holdoff` to equal
+        or greater than
+        `tiepie.oscilloscope.Oscilloscope.record_length`* pre_sample_ratio.
         """
         return libtiepie.ScpGetPreSampleRatio(self._dev_handle)
 
@@ -893,6 +898,9 @@ class Oscilloscope(Device):
     def is_trig_holdoff_available(self):
         """Check if trigger holdoff is available.
 
+        The trigger holdoff sets how many samples need to be recorded until
+        a trigger can happen.
+
         Returns:
             bool: True if trigger holdoff is available, False otherwise.
         """
@@ -902,6 +910,9 @@ class Oscilloscope(Device):
     def trig_holdoff_max(self):
         """Get the maximum available trigger holdoff as number of samples.
 
+        The trigger holdoff sets how many samples need to be recorded until
+        a trigger can happen.
+
         Returns:
             float: Maximum available trigger holdoff as number of samples.
         """
@@ -910,6 +921,9 @@ class Oscilloscope(Device):
     @property
     def trig_holdoff(self):
         """Get or set the current trigger holdoff as number of samples.
+
+        The trigger holdoff sets how many samples need to be recorded until
+        a trigger can happen.
         
         Use :py:attr:`tiepie.oscilloscope.Oscilloscope.TRIG_HOLDOFF_ALL_PRE_SAMPLES` 
         to ensure all pre samples are recorded if pre_sample_ratio is set.
@@ -1010,16 +1024,38 @@ class Oscilloscope(Device):
         else:
             return None
 
-    def measure(self):
+    def measure(self, safe=True):
         """Perform a single shot measurement.
 
-        Utility function which starts a measurement. When measurement data is ready, it is retrieved
-        and returned.
+        Utility function which starts a measurement. When measurement data is
+        ready, it is retrieved and returned.
+
+        Args:
+            safe(bool): This is only relevant when using presamples.
+                        If at the start of the measurement the trigger occurs
+                        before even enough samples have been recorded for
+                        the pre samples, the desired record length will not
+                        match to the actual returned data length. Make sure to
+                        set the trig_holdoff accordingly. If set to True, an
+                        exception will be raised if not all samples could have
+                        been collected. If set to False or no trig_holdoff is
+                        available warning will be raised.
+
 
         Returns:
-            list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
-                  a list of samples.
+            list: List with entries for each channel. An entry contains None,
+                  if the channel is disabled, otherwise a list of samples.
         """
+
+        if self.measure_mode == "block" and self.pre_sample_ratio > 0:
+            if self.is_trig_holdoff_available and self.trig_holdoff < self.pre_sample_ratio*self.record_length:
+                    warnings.warn("trig_holdoff is not set to record all pre"
+                                  " samples. This may lead to varying signal "
+                                  "lengths due to triggers occuring before "
+                                  "enough samples have been stored."
+                                  " Please set trig_holdoff to "
+                                  "TRIG_HOLDOFF_ALL_PRE_SAMPLES to get a "
+                                  "predictable time vector.", UserWarning)
         # Start measurement
         self.start()
 
@@ -1027,6 +1063,13 @@ class Oscilloscope(Device):
         while not self.is_data_ready:
             time.sleep(0.1)
 
+        if self.measure_mode == "block":
+            if self.valid_pre_sample_cnt < self.record_length * self.pre_sample_ratio:
+                if safe and self.is_trig_holdoff_available:
+                    raise ValueError("Not all presamples have been collected")
+                else:
+                    warnings.warn("Not all presamples have been collected",
+                                  UserWarning)
         # Get data
         data = self.retrieve()
 
@@ -1039,18 +1082,10 @@ class Oscilloscope(Device):
         Returns:
             :class:`numpy.ndarray`: Time vector
         """
-        if self.pre_sample_ratio == 0:
-            return np.linspace(0, 1/self.sample_freq*self.record_length, num=self.record_length, endpoint=False)
+        time_vec = np.linspace(0, 1/self.sample_freq*self.record_length,
+                               num=self.record_length, endpoint=False)
+        if self.measure_mode == "block":
+            trig_idx = int(self.pre_sample_ratio*len(time_vec))
+            return time_vec - time_vec[trig_idx]
         else:
-            # If it is ensured all pre samples are valid, the time vector just needs to be shifted
-            if self.trig_holdoff == self.TRIG_HOLDOFF_ALL_PRE_SAMPLES:
-                time_vec = np.linspace(0, 1/self.sample_freq*self.record_length, num=self.record_length, endpoint=False)
-                trig_idx = int(self.pre_sample_ratio*len(time_vec))
-                return time_vec - time_vec[trig_idx]
-            else:
-                # Theoretically it is possible to calculate a fitting time vector with the help of
-                # self.valid_pre_sample_cnt. Practically, for most use cases the user expects signals of the same
-                # length for repeated measurements, which is why an error is raised instead.
-                raise ValueError("trig_holdoff is not set to record all pre samples. This may lead to varying signal "
-                                 "lengths due to the possibility of multiple triggers occuring. Please set "
-                                 "trig_holdoff to TRIG_HOLDOFF_ALL_PRE_SAMPLES to get a predictable time vector.")
+            return time_vec
