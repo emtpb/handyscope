@@ -48,6 +48,6 @@ def test_force_trig(device):
     for trig_out in device.trig_outs:
         trig_out.is_enabled = True
         # HS5 doesn't support forced output triggers
-        with pytest.raises(IOError) as err:
+        with pytest.raises(OSError) as err:
             trig_out.force_trig()
-            assert str(err) == "[-2]: NOT_SUPPORTED"
+        assert err.value.args[0] == "[-2]: NOT_SUPPORTED"
