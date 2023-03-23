@@ -213,7 +213,7 @@ def _load_lib():
         libtiepie.LstSetMessageDeviceRemoved.errcheck = _check_status
         libtiepie.LstSetMessageDeviceCanOpenChanged.restype = None
         libtiepie.LstSetMessageDeviceCanOpenChanged.argtypes = [HWND]
-        libtiepie.LstSetMessageDeviceCanOpenChanged.errcheck = None
+        libtiepie.LstSetMessageDeviceCanOpenChanged.errcheck = _check_status
     libtiepie.NetGetAutoDetectEnabled.restype = c_uint8
     libtiepie.NetGetAutoDetectEnabled.argtypes = []
     libtiepie.NetGetAutoDetectEnabled.errcheck = _check_status
