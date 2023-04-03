@@ -24,7 +24,7 @@ class I2CHost(Device):
         """Get the maximum available clock frequency of the I2C clock line.
 
         Returns:
-            int: maximum clock frequency in Hz
+            float: maximum clock frequency in Hz
         """
         return libtiepie.I2CGetSpeedMax(self._dev_handle)
 
@@ -42,9 +42,9 @@ class I2CHost(Device):
         hardware.
 
         Args:
-            clock_freq (int): The clock frequency to verify.
+            clock_freq (float): The clock frequency to verify.
         Returns:
-            int: The clock frequency the hardware would set.
+            float: The clock frequency the hardware would set.
                  (The hardware might not set the clock frequency
                  due to clipping.)
         """
