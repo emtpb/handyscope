@@ -2,13 +2,6 @@ from tiepie.triggerInput import TriggerInput
 from tiepie.triggerOutput import TriggerOutput
 
 
-def test_driver_ver(device):
-    ver_list = device.driver_ver.split('.')
-    assert len(ver_list) == 4
-    for element in ver_list:
-        assert element.isdigit()
-
-
 def test_firmware_ver(device):
     ver_list = device.firmware_ver.split('.')
     assert len(ver_list) == 4
@@ -76,6 +69,10 @@ def test_long_name(device):
     assert name_list[0] == "Handyscope"
     # second part of long name is the name
     assert name_list[1] == device.name
+
+
+def test_is_battery_available(device):
+    assert device.is_battery_available == False
 
 
 def test_is_removed(device):

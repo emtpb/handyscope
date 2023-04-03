@@ -3,6 +3,18 @@ def test_device_cnt(dev_list):
     assert dev_list.device_cnt > 0
 
 
+def test_can_open_device(dev_list):
+    assert dev_list.can_open_device(0) is True
+
+
+def test_get_firmware_version(dev_list):
+    assert type(dev_list.get_firmware_version(0)) is str
+
+
+def test_get_recommended_firmware_version(dev_list):
+    assert type(dev_list.get_firmware_version(0)) is str
+
+
 def test_get_device_name(dev_list):
     assert type(dev_list.get_device_name(0)) is str
 

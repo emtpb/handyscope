@@ -48,6 +48,13 @@ def test_is_out_on(default_gen_sine):
         assert default_gen_sine.is_out_on is value
 
 
+def test_is_out_inv_available(default_gen_sine):
+    # Test type
+    assert type(default_gen_sine.is_out_inv_available) is bool
+    # Test value
+    assert default_gen_sine.is_out_inv_available is True
+
+
 def test_is_out_inv(default_gen_sine):
     # Test getter
     assert type(default_gen_sine.is_out_inv) is bool
@@ -65,6 +72,11 @@ def test_start(default_gen_sine):
 def test_stop(default_gen_sine):
     default_gen_sine.start()
     assert default_gen_sine.stop() is True
+
+
+def test_is_running(default_gen_sine):
+    default_gen_sine.start()
+    assert default_gen_sine.is_running is True
 
 
 def test_signal_types_available(default_gen_sine):
@@ -131,6 +143,23 @@ def test_is_amplitude_autorange(default_gen_sine):
         assert default_gen_sine.is_amplitude_autorange == value
 
 
+def test_verify_amplitude(default_gen_sine):
+    # Test type
+    assert type(default_gen_sine.verify_amplitude(1)) is float
+    # Test verify
+    for ampl in [default_gen_sine.amplitude_min,
+                 (default_gen_sine.amplitude_max-default_gen_sine.amplitude_min)/2,
+                 default_gen_sine.amplitude_max]:
+        default_gen_sine.verify_amplitude(ampl)
+    # Test if amplitude clips
+    assert default_gen_sine.verify_amplitude(default_gen_sine.amplitude_max+1.0) == default_gen_sine.amplitude_max
+
+
+def test_is_offset_available(default_gen_sine):
+    assert type(default_gen_sine.is_offset_available) is bool
+    assert default_gen_sine.is_offset_available is True
+
+
 def test_offset_min(default_gen_sine):
     assert type(default_gen_sine.offset_min) is float
     assert default_gen_sine.offset_min < 0
@@ -152,6 +181,21 @@ def test_offset(default_gen_sine):
     for value in [low_limit, (high_limit-low_limit)/2, high_limit]:
         default_gen_sine.offset = value
         assert default_gen_sine.offset == pytest.approx(value)
+
+
+def test_verify_offset(default_gen_sine):
+    # Test type
+    assert type(default_gen_sine.verify_offset(default_gen_sine.offset_max/2)) is float
+    # Test verify
+    for offset in [default_gen_sine.offset_min,
+                   (default_gen_sine.offset_max-default_gen_sine.offset_min)/2,
+                   default_gen_sine.offset_max]:
+        default_gen_sine.verify_offset(offset)
+
+
+def test_is_frequency_available(default_gen_sine):
+    assert type(default_gen_sine.is_frequency_available) is bool
+    assert default_gen_sine.is_frequency_available is True
 
 
 def test_freq_min(default_gen_sine):
@@ -180,6 +224,16 @@ def test_freq(default_gen_sine):
         assert default_gen_sine.freq == pytest.approx(freq)
 
 
+def test_verify_frequency(default_gen_sine):
+    # Test type
+    assert type(default_gen_sine.verify_frequency(default_gen_sine.freq_max/2)) is float
+    # Test verify
+    assert default_gen_sine.verify_frequency(
+        default_gen_sine.freq_max/2) == default_gen_sine.freq_max/2
+    # Test if the frequency clips
+    assert default_gen_sine.verify_frequency(default_gen_sine.freq_max+1.0) == default_gen_sine.freq_max
+
+
 def test_freq_modes_available(default_gen_sine):
     assert type(default_gen_sine.freq_modes_available) is tuple
     for freq_mode in default_gen_sine.freq_modes_available:
@@ -194,6 +248,11 @@ def test_freq_mode(default_gen_sine):
     for mode in default_gen_sine.freq_modes_available:
         default_gen_sine.freq_mode = mode
         assert default_gen_sine.freq_mode == mode
+
+
+def test_is_phase_available(default_gen_sine):
+    assert type(default_gen_sine.is_phase_available) is bool
+    assert default_gen_sine.is_phase_available is True
 
 
 def test_phase_min(default_gen_sine):
@@ -222,6 +281,22 @@ def test_phase(default_gen_sine):
         assert default_gen_sine.phase == phase
 
 
+def test_verify_phase(default_gen_sine):
+    # Test type
+    assert type(default_gen_sine.verify_phase(default_gen_sine.phase_max/2)) is float
+    # Test verify
+    assert default_gen_sine.verify_phase(
+        default_gen_sine.phase_max / 2) == default_gen_sine.phase_max / 2
+    # Test if the phase overruns
+    assert default_gen_sine.verify_phase(
+        default_gen_sine.phase_max + 1.0) == default_gen_sine.phase_max
+
+
+def test_is_symmetry_available(default_gen_sine):
+    assert type(default_gen_sine.is_symmetry_available) is bool
+    assert default_gen_sine.is_symmetry_available is True
+
+
 def test_symmetry_min(default_gen_sine):
     assert type(default_gen_sine.symmetry_min) is float
     assert default_gen_sine.symmetry_min >= 0
@@ -246,6 +321,22 @@ def test_symmetry(default_gen_sine):
     for value in values:
         default_gen_sine.symmetry = value
         assert default_gen_sine.symmetry == value
+
+
+def test_verify_symmetry(default_gen_sine):
+    # Test type
+    assert type(default_gen_sine.verify_symmetry(default_gen_sine.symmetry_max/2)) is float
+    # Test verify
+    assert default_gen_sine.verify_symmetry(
+        default_gen_sine.symmetry_max / 2) == default_gen_sine.symmetry_max / 2
+    # Test if the symmetry clips
+    assert default_gen_sine.verify_symmetry(
+        default_gen_sine.symmetry_max + 1.0) == default_gen_sine.symmetry_max
+
+
+def test_is_pulse_width_available(default_gen_pulse):
+    assert type(default_gen_pulse.is_pulse_width_available) is bool
+    assert default_gen_pulse.is_pulse_width_available is True
 
 
 def test_pulse_width_min(default_gen_pulse):
@@ -275,6 +366,22 @@ def test_pulse_width(default_gen_pulse):
         assert default_gen_pulse.pulse_width == pytest.approx(value)
 
 
+def test_verify_pulse_width(default_gen_pulse):
+    # Test type
+    assert type(default_gen_pulse.verify_pulse_width(default_gen_pulse.pulse_width_max/2)) is float
+    # Test verify
+    assert default_gen_pulse.verify_pulse_width(
+        default_gen_pulse.pulse_width_max / 2) == default_gen_pulse.pulse_width_max / 2
+    # Test if the pulse width clips
+    assert default_gen_pulse.verify_pulse_width(
+        default_gen_pulse.pulse_width_max + 1.0) == default_gen_pulse.pulse_width_max
+
+
+def test_is_arb_data_available(default_gen_arb):
+    assert type(default_gen_arb.is_arb_data_available) is bool
+    assert default_gen_arb.is_arb_data_available is True
+
+
 def test_arb_data_length_min(default_gen_arb):
     assert type(default_gen_arb.arb_data_length_min) is int
     assert default_gen_arb.arb_data_length_min > 0
@@ -291,6 +398,14 @@ def test_arb_data_length(default_gen_arb):
     assert default_gen_arb.arb_data_length <= default_gen_arb.arb_data_length_max
 
 
+def test_verify_arb_data_length(default_gen_arb):
+    # Test type
+    assert type(default_gen_arb.verify_arb_data_length(default_gen_arb.arb_data_length_max // 2)) is int
+    # Test verify
+    assert default_gen_arb.verify_arb_data_length(
+        default_gen_arb.arb_data_length_max // 2) == default_gen_arb.arb_data_length_max // 2
+
+
 def test_arb_data(default_gen_arb):
     # Test with empty list
     default_gen_arb.arb_data([])
@@ -299,6 +414,41 @@ def test_arb_data(default_gen_arb):
     # Test with data
     default_gen_arb.arb_data([0.0, 1.0, 2.0, 3.0, 4.0])
     assert default_gen_arb.arb_data_length == 5
+
+
+def test_arb_data_raw_type(default_gen_arb):
+    assert type(default_gen_arb.arb_raw_type) is str
+    assert default_gen_arb.arb_raw_type in default_gen_arb.RAW_DATA_TYPES.keys()
+
+
+def test_arb_data_raw_min(default_gen_arb):
+    assert type(default_gen_arb.arb_data_raw_min) is int
+    assert default_gen_arb.arb_data_raw_min >= 0
+
+
+def test_arb_data_raw_max(default_gen_arb):
+    assert type(default_gen_arb.arb_data_raw_max) is int
+    assert default_gen_arb.arb_data_raw_max >= 0
+    assert default_gen_arb.arb_data_raw_max >= default_gen_arb.arb_data_raw_min
+
+
+def test_arb_data_raw_max(default_gen_arb):
+    assert type(default_gen_arb.arb_data_raw_max) is int
+    assert default_gen_arb.arb_data_raw_max >= 0
+    assert default_gen_arb.arb_data_raw_max >= default_gen_arb.arb_data_raw_min
+
+
+def test_arb_data_raw_zero(default_gen_arb):
+    assert type(default_gen_arb.arb_data_raw_zero) is int
+    assert default_gen_arb.arb_data_raw_zero >= default_gen_arb.arb_data_raw_min
+    assert default_gen_arb.arb_data_raw_zero <= default_gen_arb.arb_data_raw_max
+
+
+def test_arb_data_raw_range(default_gen_arb):
+    assert type(default_gen_arb.arb_data_raw_range) is tuple
+    assert default_gen_arb.arb_data_raw_range[0] == default_gen_arb.arb_data_raw_min
+    assert default_gen_arb.arb_data_raw_range[1] == default_gen_arb.arb_data_raw_zero
+    assert default_gen_arb.arb_data_raw_range[2] == default_gen_arb.arb_data_raw_max
 
 
 def test_modes_native_available(default_gen_sine):
@@ -404,3 +554,14 @@ def test_burst_segment_cnt(default_gen_burst_segment):
                   default_gen_burst_segment.burst_segment_cnt_max]:
         default_gen_burst_segment.burst_segment_cnt = value
         assert default_gen_burst_segment.burst_segment_cnt == value
+
+
+def test_verify_burst_segment_cnt(default_gen_burst_segment):
+    # Test type
+    assert type(default_gen_burst_segment.verify_burst_segment_cnt(default_gen_burst_segment.burst_segment_cnt_max//2)) is int
+    # Test verify
+    assert default_gen_burst_segment.verify_burst_segment_cnt(
+        default_gen_burst_segment.burst_segment_cnt_max // 2) == default_gen_burst_segment.burst_segment_cnt_max // 2
+    # Test if the burst segment count clips
+    assert default_gen_burst_segment.verify_burst_segment_cnt(
+        default_gen_burst_segment.burst_segment_cnt_max + 1) == default_gen_burst_segment.burst_segment_cnt_max

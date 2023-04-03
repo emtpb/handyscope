@@ -70,3 +70,8 @@ def test_trigger_id(device):
     for trig_in in device.trig_ins:
         trig_id = trig_in.trigger_id
         assert trig_id in TriggerInput.TRIGGER_IDS
+
+
+def test_is_triggered(device):
+    for trig_in in device.trig_ins:
+        assert type(trig_in.is_triggered) is bool

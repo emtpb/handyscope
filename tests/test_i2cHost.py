@@ -20,6 +20,10 @@ def test_clock_freq(i2c):
         assert i2c.clock_freq == freq
 
 
+def test_verify_clock_freq(i2c):
+    assert type(i2c.verify_clock_freq(i2c.clock_freq_max)) is float
+
+
 def test_is_internal_address(i2c):
     # Check if at least one address is internal
     assert any(i2c.is_internal_address(addr) for addr in range(0x08, 0x77))

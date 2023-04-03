@@ -2,6 +2,22 @@ from tiepie.oscilloscopeChannel import OscilloscopeChannel
 import pytest
 
 
+def test_bandwidths_available(osc):
+    for channel in osc.channels:
+        assert type(channel.bandwidths_available) is tuple
+
+
+def test_bandwidth(osc):
+    for channel in osc.channels:
+        assert type(channel.bandwidth) is float
+        assert channel.bandwidth >= 0
+
+
+def test_is_safe_ground_available(osc):
+    for channel in osc.channels:
+        assert type(channel.is_safe_ground_available) is bool
+
+
 def test_connector_type(osc):
     for channel in osc.channels:
         assert channel.connector_type in OscilloscopeChannel.CONNECTOR_TYPES
@@ -396,3 +412,37 @@ def test_data_range_min(osc):
 def test_data_range_max(osc):
     for channel in osc.channels:
         assert type(channel.data_value_max) is float
+
+
+def test_raw_data_type(osc):
+    for channel in osc.channels:
+        assert type(channel.raw_data_type) is str
+        assert channel.raw_data_type in channel.RAW_DATA_TYPES.keys()
+
+
+def test_raw_value_min(osc):
+    for channel in osc.channels:
+        assert type(channel.raw_value_min) is int
+        assert channel.raw_value_min >= 0
+
+
+def test_raw_value_max(osc):
+    for channel in osc.channels:
+        assert type(channel.raw_value_max) is int
+        assert channel.raw_value_max >= 0
+        assert channel.raw_value_max >= channel.raw_value_min
+
+
+def test_raw_value_zero(osc):
+    for channel in osc.channels:
+        assert type(channel.raw_value_zero) is int
+        assert channel.raw_value_zero >= channel.raw_value_min
+        assert channel.raw_value_zero <= channel.raw_value_max
+
+
+def test_raw_data_range(osc):
+    for channel in osc.channels:
+        assert type(channel.raw_data_range) is tuple
+        assert channel.raw_data_range[0] == channel.raw_value_min
+        assert channel.raw_data_range[1] == channel.raw_value_zero
+        assert channel.raw_data_range[2] == channel.raw_value_max

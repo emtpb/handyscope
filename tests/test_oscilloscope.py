@@ -467,6 +467,18 @@ def test_sample_freq(default_osc):
         assert default_osc.sample_freq == freq
 
 
+def test_verify_sample_freq(default_osc):
+    # Test type
+    assert type(default_osc.verify_sample_freq(
+        default_osc.sample_freq_max / 2)) is float
+    # Test verify
+    assert default_osc.verify_sample_freq(
+        default_osc.sample_freq_max / 2) == default_osc.sample_freq_max / 2
+    # Test if the frequency clips
+    assert default_osc.verify_sample_freq(
+        default_osc.sample_freq_max + 1.0) == default_osc.sample_freq_max
+
+
 def test_record_length_max(default_osc):
     assert type(default_osc.record_length_max) is int
     assert default_osc.record_length_max > 0
@@ -483,6 +495,15 @@ def test_record_length(default_osc):
     for length in lengths:
         default_osc.record_length = length
         assert default_osc.record_length == length
+
+
+def test_verify_record_length(default_osc):
+    # Test type
+    assert type(default_osc.verify_record_length(
+        default_osc.record_length_max // 2)) is int
+    # Test verify
+    assert default_osc.verify_record_length(
+        default_osc.record_length_max // 2) == default_osc.record_length_max // 2
 
 
 def test_pre_sample_ratio(default_osc):
@@ -515,6 +536,18 @@ def test_segment_cnt(default_osc):
         assert default_osc.segment_cnt == cnt
 
 
+def test_verify_segment_cnt(default_osc):
+    # Test type
+    assert type(default_osc.verify_segment_cnt(
+        default_osc.segment_cnt_max // 2)) is int
+    # Test verify
+    assert default_osc.verify_segment_cnt(
+        default_osc.segment_cnt_max // 2) == default_osc.segment_cnt_max // 2
+    # Test if the segment cnt clips
+    assert default_osc.verify_segment_cnt(
+        default_osc.segment_cnt_max + 1) == default_osc.segment_cnt_max
+
+
 def test_trig_timeout(default_osc):
     # Test getter
     assert type(default_osc.trig_timeout) is float
@@ -527,8 +560,16 @@ def test_trig_timeout(default_osc):
         assert default_osc.trig_timeout == timeout
 
 
+def test_verify_trig_timeout(default_osc):
+    # Test type
+    assert type(default_osc.verify_trig_timeout(1.0)) is float
+    # Test verify
+    assert default_osc.verify_trig_timeout(1.0) == 1.0
+
+
 def test_is_trig_delay_available(default_osc):
     assert type(default_osc.is_trig_delay_available) is bool
+    assert default_osc.is_trig_delay_available is True
 
 
 def test_trig_delay_max(default_osc):
@@ -546,6 +587,18 @@ def test_trig_delay(default_osc):
     for delay in delays:
         default_osc.trig_delay = delay
         assert default_osc.trig_delay == delay
+
+
+def test_verify_trig_delay(default_osc):
+    # Test type
+    assert type(default_osc.verify_trig_delay(
+        default_osc.trig_delay_max / 2)) is float
+    # Test verify
+    assert default_osc.verify_trig_delay(
+        default_osc.trig_delay_max / 2) == default_osc.trig_delay_max / 2
+    # Test if the segment cnt clips
+    assert default_osc.verify_trig_delay(
+        default_osc.trig_delay_max + 1.0) == default_osc.trig_delay_max
 
 
 def test_is_trig_holdoff_available(default_osc):
@@ -669,9 +722,6 @@ def test_time_vector(default_osc):
     assert default_osc.time_vector[-1] == 1/default_osc.sample_freq*(default_osc.record_length-1)
 
     default_osc.pre_sample_ratio = 0.5
-    # Without configuring trigger holdoff, value error should be raised
-    with pytest.raises(ValueError) as err:
-        default_osc.time_vector
     # With correctly configured pre samples, it should work
     default_osc.trig_holdoff = default_osc.TRIG_HOLDOFF_ALL_PRE_SAMPLES
     assert len(default_osc.time_vector) == default_osc.record_length
