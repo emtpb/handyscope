@@ -481,7 +481,7 @@ class Generator(Device):
                    (The hardware might not set the phase
                     due to clipping.)
         """
-        return libtiepie.GenVerifyPhase(self._dev_handle, phase)
+        return libtiepie.GenVerifyPhase(self._dev_handle, phase/360) * 360
 
     @property
     def is_symmetry_available(self):
@@ -679,7 +679,7 @@ class Generator(Device):
         """Get whether the current signal type supports controlling the
         arbitrary waveform buffer.
         """
-        return libtiepie.GenHasData(self._dev_handle)
+        return libtiepie.GenHasData(self._dev_handle) == 1
 
     @property
     def arb_data_length_min(self):
@@ -714,7 +714,6 @@ class Generator(Device):
         """
         return libtiepie.GenGetDataLength(self._dev_handle)
 
-    @property
     def verify_arb_data_length(self, arb_data_length):
         """Verify a length for arbitrary data without setting it in the
         hardware.
@@ -999,7 +998,6 @@ class Generator(Device):
     def burst_segment_cnt(self, value):
         libtiepie.GenSetBurstSegmentCount(self._dev_handle, value)
 
-    @property
     def verify_burst_segment_cnt(self, burst_segment_cnt):
         """Verify a burst segment count without setting it in the
         hardware.
