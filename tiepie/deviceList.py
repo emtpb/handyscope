@@ -539,6 +539,260 @@ class DeviceList:
 
         return libtiepie.LstOpenDevice(id_kind_int, instr_id_int, device_type_int)
 
+    def get_channel_count_cb(self, instr_id, contained_serial_no,
+                             id_kind="index"):
+        """Get the amount of channels of a contained oscilloscope in
+        a combined instrument.
+
+        Args:
+            instr_id (int or str): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number.
+            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index.
+            contained_serial_no (int): Serial number of the desired device contained in the combined device.
+        """
+        # translate id kind & device type str to int
+        id_kind_int = self.ID_KINDS[id_kind]
+        # Translate instr_id to int, if it is a product id str
+        if id_kind == "product id":
+            instr_id_int = self.PRODUCT_IDS[instr_id]
+        else:
+            instr_id_int = instr_id
+
+        return libtiepie.LstCbScpGetChannelCount(id_kind_int, instr_id_int,
+                                                 contained_serial_no)
+
+    def get_product_id_cb(self, instr_id, contained_serial_no,
+                          id_kind="index"):
+        """Get the product id of a contained device in a combined instrument.
+
+        Args:
+            instr_id (int or str): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number.
+            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index.
+            contained_serial_no (int): Serial number of the desired device contained in the combined device.
+        """
+        # translate id kind & device type str to int
+        id_kind_int = self.ID_KINDS[id_kind]
+        # Translate instr_id to int, if it is a product id str
+        if id_kind == "product id":
+            instr_id_int = self.PRODUCT_IDS[instr_id]
+        else:
+            instr_id_int = instr_id
+
+        return libtiepie.LstCbDevGetProductId(id_kind_int, instr_id_int,
+                                              contained_serial_no)
+
+    def get_vendor_id_cb(self, instr_id, contained_serial_no,
+                         id_kind="index"):
+        """Get the vendor_id of a contained device in a combined instrument.
+
+        Args:
+            instr_id (int or str): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number.
+            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index.
+            contained_serial_no (int): Serial number of the desired device contained in the combined device.
+        """
+        # translate id kind & device type str to int
+        id_kind_int = self.ID_KINDS[id_kind]
+        # Translate instr_id to int, if it is a product id str
+        if id_kind == "product id":
+            instr_id_int = self.PRODUCT_IDS[instr_id]
+        else:
+            instr_id_int = instr_id
+
+        return libtiepie.LstCbDevGetVendorId(id_kind_int, instr_id_int,
+                                             contained_serial_no)
+
+    def get_device_name_cb(self, instr_id, contained_serial_no,
+                           id_kind="index"):
+        """Get the full name of a contained device in a combined instrument.
+
+        Args:
+            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number.
+            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index.
+            contained_serial_no (int): Serial number of the desired device contained in the combined device.
+
+        Returns:
+            str: full device name
+        """
+        # translate id kind str to int
+        id_kind_int = self.ID_KINDS[id_kind]
+
+        # get length of device name string
+        str_len = libtiepie.LstCbDevGetName(id_kind_int, instr_id,
+                                            contained_serial_no, None, 0)
+
+        # initialize mutable string buffer
+        str_buffer = ctypes.create_string_buffer(str_len)
+
+        # write the actual device name to the buffer
+        libtiepie.LstCbDevGetName(id_kind_int, instr_id, contained_serial_no,
+                                  str_buffer, str_len)
+
+        # convert to a normal python string
+        dev_name = str_buffer.value.decode('utf-8')
+
+        return dev_name
+
+    def get_device_name_short_cb(self, instr_id, contained_serial_no,
+                              id_kind="index"):
+        """Get the short name of a contained device in a combined instrument.
+
+        Args:
+            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number.
+            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index.
+            contained_serial_no (int): Serial number of the desired device contained in the combined device.
+
+        Returns:
+            str: short device name
+        """
+        # translate id kind str to int
+        id_kind_int = self.ID_KINDS[id_kind]
+
+        # get length of device name string
+        str_len = libtiepie.LstCbDevGetNameShort(id_kind_int, instr_id,
+                                                 contained_serial_no, None, 0)
+
+        # initialize mutable string buffer
+        str_buffer = ctypes.create_string_buffer(str_len)
+
+        # write the actual device name to the buffer
+        libtiepie.LstCbDevGetNameShort(id_kind_int, instr_id, contained_serial_no,
+                                       str_buffer, str_len)
+
+        # convert to a normal python string
+        dev_name = str_buffer.value.decode('utf-8')
+
+        return dev_name
+
+    def get_device_name_shortest_cb(self, instr_id, contained_serial_no,
+                                 id_kind="index"):
+        """Get the shortest name of a contained device in a combined instrument.
+
+        Args:
+            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number.
+            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index.
+            contained_serial_no (int): Serial number of the desired device contained in the combined device.
+
+        Returns:
+            str: shortest device name
+        """
+        # translate id kind str to int
+        id_kind_int = self.ID_KINDS[id_kind]
+
+        # get length of device name string
+        str_len = libtiepie.LstCbDevGetNameShortest(id_kind_int, instr_id,
+                                                    contained_serial_no,
+                                                    None, 0)
+
+        # initialize mutable string buffer
+        str_buffer = ctypes.create_string_buffer(str_len)
+
+        # write the actual device name to the buffer
+        libtiepie.LstCbDevGetNameShortest(id_kind_int, instr_id,
+                                          contained_serial_no, str_buffer,
+                                          str_len)
+
+        # convert to a normal python string
+        dev_name = str_buffer.value.decode('utf-8')
+
+        return dev_name
+
+    def get_driver_version_cb(self, instr_id, contained_serial_no,
+                              id_kind="index"):
+        """Get the driver version of a contained device in a combined
+        instrument.
+
+        Not tested.
+
+        Args:
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number.
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                           index.
+            contained_serial_no (int): Serial number of the desired device
+                                       contained in the combined device.
+        Returns:
+            str: driver version
+        """
+        # translate id kind str to int
+        id_kind_int = self.ID_KINDS[id_kind]
+
+        # Translate instr_id to int, if it is a product id str
+        if id_kind == "product id":
+            instr_id_int = self.PRODUCT_IDS[instr_id]
+        else:
+            instr_id_int = instr_id
+        # get the driver version
+        driver_version = libtiepie.LstCbDevGetDriverVersion(id_kind_int,
+                                                            instr_id_int,
+                                                            contained_serial_no)
+
+        return version_to_str(driver_version)
+
+    def get_firmware_version_cb(self, instr_id, contained_serial_no,
+                             id_kind="index"):
+        """Get the firmware version of a contained device in a combined
+        instrument.
+
+        Args:
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number.
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                           index.
+            contained_serial_no (int): Serial number of the desired device
+                           contained in the combined device.
+
+        Returns:
+            str: firmware version
+        """
+        # translate id kind str to int
+        id_kind_int = self.ID_KINDS[id_kind]
+
+        # Translate instr_id to int, if it is a product id str
+        if id_kind == "product id":
+            instr_id_int = self.PRODUCT_IDS[instr_id]
+        else:
+            instr_id_int = instr_id
+        # get the firmware version
+        firmware_version = libtiepie.LstCbDevGetFirmwareVersion(id_kind_int,
+                                                                instr_id_int,
+                                                                contained_serial_no)
+
+        return version_to_str(firmware_version)
+
+    def get_calibration_date_cb(self, instr_id, contained_serial_no,
+                                id_kind="index"):
+        """Get the calibration date of the device.
+
+        Args:
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                           index
+            contained_serial_no (int): Serial number of the desired device
+                                       contained in the combined device.
+
+        Returns:
+            :py:class:`datetime.date`: calibration date
+        """
+        # translate id kind str to int
+        id_kind_int = self.ID_KINDS[id_kind]
+
+        # Translate instr_id to int, if it is a product id str
+        if id_kind == "product id":
+            instr_id_int = self.PRODUCT_IDS[instr_id]
+        else:
+            instr_id_int = instr_id
+
+        # get the calibration date
+        raw_date = libtiepie.LstCbDevGetCalibrationDate(id_kind_int,
+                                                        instr_id_int,
+                                                        contained_serial_no)
+
+        split_date = date(raw_date >> 16, (raw_date >> 8) & 0xff, raw_date & 0xff)
+        return split_date
+
 
 def version_to_str(raw_version):
     """Convert a raw version int in TiePie's format to a nice string.
