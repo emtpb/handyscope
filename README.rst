@@ -4,6 +4,52 @@ TiePie
 
 TiePie provides a Python interface to the mobile USB-oscilloscopes made by TiePie.
 
+This package is inspired by `python-libtiepie <https://github.com/TiePie/python-libtiepie>`_
+and acts as an alternativ. The main differences are the following:
+
+
+1. When using **python-libtiepie** non-numerical settings are get and set using binary values which can be mapped constants. In **TiePie**, those binary values are internally mapped to strings and an overview of the available strings is provided in an additional property.
+2. The error check is performed automatically after every method call.   
+3. More trivial way of opening of devices.
+
+Example of setting and getting the signal type in **python-libtiepie**::
+
+    # Set the signal type to triangle
+    gen.signal_type = libtiepie.ST_TRIANGLE
+    # Prints 0x00000010
+    print(gen.signal_type)
+
+Example of setting and getting the signal type in **TiePie**::
+
+    # Prints the tuple ('sine', 'triangle', 'square', 'DC', 'noise', 'arbitrary', 'pulse')
+    print(gen.signal_types_available)
+    # Set the signal type to triangle
+    gen.signal_type = "triangle"
+    # Prints "triangle"
+    print(gen.signal_type)
+    
+Example of opening a generator device from the **python-libtiepie** repository::
+
+    import libtiepie
+
+    # Search for devices:
+    libtiepie.device_list.update()
+
+    # Try to open a generator:
+    gen = None
+    for item in libtiepie.device_list:
+        if item.can_open(libtiepie.DEVICETYPE_GENERATOR):
+            gen = item.open_generator()
+            if gen:
+                break
+
+Example of opening a generator device using **TiePie**::
+
+    from tiepie import Generator
+
+    gen = Generator("HS5") 
+
+
 Features
 --------
 
