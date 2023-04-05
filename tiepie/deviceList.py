@@ -32,8 +32,7 @@ class DeviceList:
                     "I2C": 4}
 
     def __init__(self):
-        """Constructor for class DeviceList.
-        """
+        """Constructor for class DeviceList."""
         # Fill the device list
         libtiepie.LstUpdate()
 
@@ -47,8 +46,8 @@ class DeviceList:
         return libtiepie.LstGetCount()
 
     def can_open_device(self, instr_id, id_kind="index", device_type="Osc"):
-        """Check whether a device (of device_type) of an instrument
-        (with given id) and return the device handle.
+        """Check whether a device (of device_type) of an instrument (with given
+        id) and return the device handle.
 
         Args:
             instr_id (int or str): Device list index, product ID
@@ -82,10 +81,10 @@ class DeviceList:
 
         Args:
             instr_id (int): Device list index, product ID
-                            (listed in dict PRODUCT_IDS) or serial number
+                            (listed in dict PRODUCT_IDS) or serial number.
             id_kind (str): the kind of the given instr_id
                            (listed in dict ID_KINDS), defaults to device list
-                           index
+                           index.
 
         Returns:
             int: vendor id
@@ -108,10 +107,10 @@ class DeviceList:
 
         Args:
             instr_id (int): Device list index, product ID
-                            (listed in dict PRODUCT_IDS) or serial number
+                            (listed in dict PRODUCT_IDS) or serial number.
             id_kind (str): the kind of the given instr_id
                            (listed in dict ID_KINDS), defaults to device list
-                           index
+                           index.
 
         Returns:
             int: product id
@@ -134,10 +133,10 @@ class DeviceList:
 
         Args:
             instr_id (int): Device list index, product ID
-                            (listed in dict PRODUCT_IDS) or serial number
+                            (listed in dict PRODUCT_IDS) or serial number.
             id_kind (str): the kind of the given instr_id
                            (listed in dict ID_KINDS), defaults to device list
-                           index
+                           index.
 
         Returns:
             str: driver version
@@ -160,10 +159,10 @@ class DeviceList:
 
         Args:
             instr_id (int): Device list index, product ID
-                            (listed in dict PRODUCT_IDS) or serial number
+                            (listed in dict PRODUCT_IDS) or serial number.
             id_kind (str): the kind of the given instr_id
                            (listed in dict ID_KINDS), defaults to device list
-                           index
+                           index.
 
         Returns:
             str: recommended driver version
@@ -186,10 +185,10 @@ class DeviceList:
 
         Args:
             instr_id (int): Device list index, product ID
-                            (listed in dict PRODUCT_IDS) or serial number
+                            (listed in dict PRODUCT_IDS) or serial number.
             id_kind (str): the kind of the given instr_id
                            (listed in dict ID_KINDS), defaults to device list
-                           index
+                           index.
 
         Returns:
             str: firmware version
@@ -212,10 +211,10 @@ class DeviceList:
 
         Args:
             instr_id (int): Device list index, product ID
-                            (listed in dict PRODUCT_IDS) or serial number
+                            (listed in dict PRODUCT_IDS) or serial number.
             id_kind (str): the kind of the given instr_id
                            (listed in dict ID_KINDS), defaults to device list
-                           index
+                           index.
 
         Returns:
             str: recommended firmware version
@@ -238,10 +237,10 @@ class DeviceList:
 
         Args:
             instr_id (int): Device list index, product ID
-                            (listed in dict PRODUCT_IDS) or serial number
+                            (listed in dict PRODUCT_IDS) or serial number.
             id_kind (str): the kind of the given instr_id
                            (listed in dict ID_KINDS), defaults to device list
-                           index
+                           index.
 
         Returns:
             :py:class:`datetime.date`: calibration date
@@ -265,8 +264,11 @@ class DeviceList:
         """Get the full name of the device.
 
         Args:
-            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
-            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number.
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                            index.
 
         Returns:
             str: full device name
@@ -292,8 +294,11 @@ class DeviceList:
         """Get the short name of the device.
 
         Args:
-            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
-            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number.
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                            index.
 
         Returns:
             str: short device name
@@ -319,8 +324,11 @@ class DeviceList:
         """Get the shortest name of the device.
 
         Args:
-            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
-            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number.
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                            index.
 
         Returns:
             str: shortest device name
@@ -346,8 +354,11 @@ class DeviceList:
         """Get the serial number of the device.
 
         Args:
-            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
-            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number.
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                            index.
 
         Returns:
             int: serial number
@@ -364,11 +375,14 @@ class DeviceList:
         """Get serial numbers of devices in a contained devices.
 
         Args:
-            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
-            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number.
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                            index.
 
         Returns:
-            str: Serial number of the devices
+            tuple: serial numbers of the devices
         """
         # translate id kind str to int
         id_kind_int = self.ID_KINDS[id_kind]
@@ -393,8 +407,11 @@ class DeviceList:
         """Get the IP address of an instrument.
 
         Args:
-            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
-            id_kind (str): the kind of the given id (listed in dict ID_KINDS), defaults to device list index
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number.
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                            index.
 
         Returns:
             int: IP address
@@ -415,8 +432,11 @@ class DeviceList:
         """Get the IP Port number of the instrument.
 
         Args:
-            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
-            id_kind (str): the kind of the given id (listed in dict ID_KINDS), defaults to device list index
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number.
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                            index.
 
         Returns:
             int: IP port
@@ -437,11 +457,14 @@ class DeviceList:
         """Get whether the device is connected to a server.
 
         Args:
-            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
-            id_kind (str): the kind of the given id (listed in dict ID_KINDS), defaults to device list index
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number.
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                            index.
 
         Returns:
-            bool: True, if the device is connected to a server
+            bool: True, if the device is connected to a server.
         """
         id_kind_int = self.ID_KINDS[id_kind]
 
@@ -457,11 +480,14 @@ class DeviceList:
         """Get the device types of an instrument.
 
         Args:
-            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
-            id_kind (str): the kind of the given id (listed in dict ID_KINDS), defaults to device list index
+            instr_id (int): Device list index, product ID
+                            (listed in dict PRODUCT_IDS) or serial number.
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS), defaults to device list
+                            index.
 
         Returns:
-            dict: key: type (as listed in DEVICE_TYPES), value: True/False
+            dict: key: type (as listed in DEVICE_TYPES), value: True/False.
         """
         # translate id kind str to int
         id_kind_int = self.ID_KINDS[id_kind]
@@ -480,10 +506,11 @@ class DeviceList:
         return type_dict
 
     def get_overview(self):
-        """Return a list with information on all connected instruments (index, name, serial number and device types).
+        """Return a list with information on all connected instruments (index,
+        name, serial number and device types).
 
         Returns:
-            tuple: Tuple of dicts with info on connected instruments
+            tuple: Tuple of dicts with info on connected instruments.
         """
         instr_list = []
         for idx in range(self.device_cnt):
@@ -496,10 +523,11 @@ class DeviceList:
         return tuple(instr_list)
 
     def get_overview_str(self):
-        """Return a string with information on all connected instruments (index, name, serial number and device types).
+        """Return a string with information on all connected instruments
+        (index, name, serial number and device types).
 
         Returns:
-            str: Information on connected instruments
+            str: Information on connected instruments.
         """
         instr_str = ""
         for instr_info in self.get_overview():
@@ -509,20 +537,25 @@ class DeviceList:
         return instr_str
 
     def __str__(self):
-        """Return a (more or less) human-readable representation of the instruments in the device list.
+        """Return a (more or less) human-readable representation of the
+        instruments in the device list.
 
         Returns:
-            str: Instruments in the device list and info on them
+            str: Instruments in the device list and info on them.
         """
         return self.get_overview_str()
 
     def open_device(self, instr_id, id_kind="index", device_type="Osc"):
-        """Open a device (of device_type) of an instrument (with given id) and return the device handle.
+        """Open a device (of device_type) of an instrument (with given id) and
+        return the device handle.
 
         Args:
-            instr_id (int or str): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
-            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index
-            device_type (str): the type of the device (listed in dict DEVICE_TYPES), defaults to oscilloscope
+            instr_id (int or str): Device list index, product ID (listed
+                                   in dict PRODUCT_IDS) or serial number.
+            id_kind (str): the kind of the given instr_id (listed in
+                           dict ID_KINDS), defaults to device list index.
+            device_type (str): the type of the device (listed in dict
+                               DEVICE_TYPES), defaults to oscilloscope.
 
         Returns:
             handle (:py:class:`ctypes.c_uint32`): device handle
@@ -541,13 +574,19 @@ class DeviceList:
 
     def get_channel_count_cb(self, instr_id, contained_serial_no,
                              id_kind="index"):
-        """Get the amount of channels of a contained oscilloscope in
-        a combined instrument.
+        """Get the amount of channels of a contained oscilloscope in a combined
+        instrument.
 
         Args:
-            instr_id (int or str): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number.
-            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index.
-            contained_serial_no (int): Serial number of the desired device contained in the combined device.
+            instr_id (int or str): Device list index, product ID (listed
+                                   in dict PRODUCT_IDS) or serial number.
+            id_kind (str): The kind of the given instr_id (listed in dict
+                           ID_KINDS), defaults to device list index.
+            contained_serial_no (int): Serial number of the desired device
+                                       contained in the combined device.
+
+        Returns:
+            int: Channel count of the device
         """
         # translate id kind & device type str to int
         id_kind_int = self.ID_KINDS[id_kind]
@@ -565,9 +604,14 @@ class DeviceList:
         """Get the product id of a contained device in a combined instrument.
 
         Args:
-            instr_id (int or str): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number.
-            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index.
-            contained_serial_no (int): Serial number of the desired device contained in the combined device.
+            instr_id (int or str): Device list index, product ID (listed
+                                   in dict PRODUCT_IDS) or serial number.
+            id_kind (str): The kind of the given instr_id (listed in dict
+                           ID_KINDS), defaults to device list index.
+            contained_serial_no (int): Serial number of the desired device
+                                       contained in the combined device.
+
+        Returns: Product id of the device.
         """
         # translate id kind & device type str to int
         id_kind_int = self.ID_KINDS[id_kind]
@@ -585,9 +629,15 @@ class DeviceList:
         """Get the vendor_id of a contained device in a combined instrument.
 
         Args:
-            instr_id (int or str): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number.
-            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index.
-            contained_serial_no (int): Serial number of the desired device contained in the combined device.
+            instr_id (int or str): Device list index, product ID (listed
+                                   in dict PRODUCT_IDS) or serial number.
+            id_kind (str): The kind of the given instr_id (listed in dict
+                           ID_KINDS), defaults to device list index.
+            contained_serial_no (int): Serial number of the desired device
+                                       contained in the combined device.
+
+        Returns:
+            int: vendor id of the device.
         """
         # translate id kind & device type str to int
         id_kind_int = self.ID_KINDS[id_kind]
@@ -605,12 +655,15 @@ class DeviceList:
         """Get the full name of a contained device in a combined instrument.
 
         Args:
-            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number.
-            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index.
-            contained_serial_no (int): Serial number of the desired device contained in the combined device.
+            instr_id (int or str): Device list index, product ID (listed
+                                   in dict PRODUCT_IDS) or serial number.
+            id_kind (str): The kind of the given instr_id (listed in dict
+                           ID_KINDS), defaults to device list index.
+            contained_serial_no (int): Serial number of the desired device
+                                       contained in the combined device.
 
         Returns:
-            str: full device name
+            str: full device name of the device
         """
         # translate id kind str to int
         id_kind_int = self.ID_KINDS[id_kind]
@@ -632,13 +685,16 @@ class DeviceList:
         return dev_name
 
     def get_device_name_short_cb(self, instr_id, contained_serial_no,
-                              id_kind="index"):
+                                 id_kind="index"):
         """Get the short name of a contained device in a combined instrument.
 
         Args:
-            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number.
-            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index.
-            contained_serial_no (int): Serial number of the desired device contained in the combined device.
+            instr_id (int or str): Device list index, product ID (listed
+                                   in dict PRODUCT_IDS) or serial number.
+            id_kind (str): The kind of the given instr_id (listed in dict
+                           ID_KINDS), defaults to device list index.
+            contained_serial_no (int): Serial number of the desired device
+                                       contained in the combined device.
 
         Returns:
             str: short device name
@@ -663,16 +719,19 @@ class DeviceList:
         return dev_name
 
     def get_device_name_shortest_cb(self, instr_id, contained_serial_no,
-                                 id_kind="index"):
-        """Get the shortest name of a contained device in a combined instrument.
+                                    id_kind="index"):
+        """Get the shortest name of a contained device in a combined
+        instrument.
 
         Args:
-            instr_id (int): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number.
-            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS), defaults to device list index.
-            contained_serial_no (int): Serial number of the desired device contained in the combined device.
-
+            instr_id (int or str): Device list index, product ID (listed
+                                   in dict PRODUCT_IDS) or serial number.
+            id_kind (str): The kind of the given instr_id (listed in dict
+                           ID_KINDS), defaults to device list index.
+            contained_serial_no (int): Serial number of the desired device
+                                       contained in the combined device.
         Returns:
-            str: shortest device name
+            str: shortest device name of the device
         """
         # translate id kind str to int
         id_kind_int = self.ID_KINDS[id_kind]
@@ -711,7 +770,7 @@ class DeviceList:
             contained_serial_no (int): Serial number of the desired device
                                        contained in the combined device.
         Returns:
-            str: driver version
+            str: driver version of the device
         """
         # translate id kind str to int
         id_kind_int = self.ID_KINDS[id_kind]
@@ -740,10 +799,10 @@ class DeviceList:
                            (listed in dict ID_KINDS), defaults to device list
                            index.
             contained_serial_no (int): Serial number of the desired device
-                           contained in the combined device.
+                                       contained in the combined device.
 
         Returns:
-            str: firmware version
+            str: firmware version of the device
         """
         # translate id kind str to int
         id_kind_int = self.ID_KINDS[id_kind]
@@ -774,7 +833,7 @@ class DeviceList:
                                        contained in the combined device.
 
         Returns:
-            :py:class:`datetime.date`: calibration date
+            :py:class:`datetime.date`: calibration date of the device
         """
         # translate id kind str to int
         id_kind_int = self.ID_KINDS[id_kind]

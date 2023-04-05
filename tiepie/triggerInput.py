@@ -42,13 +42,15 @@ class TriggerInput:
     @property
     def name(self):
         # get length of name string
-        str_len = libtiepie.DevTrInGetName(self._dev_handle, self._idx, None, 0)
+        str_len = libtiepie.DevTrInGetName(
+            self._dev_handle, self._idx, None, 0)
 
         # initialize mutable string buffer
         str_buffer = ctypes.create_string_buffer(str_len)
 
         # write the actual name to the buffer
-        libtiepie.DevTrInGetName(self._dev_handle, self._idx, str_buffer, str_len)
+        libtiepie.DevTrInGetName(
+            self._dev_handle, self._idx, str_buffer, str_len)
 
         # convert to a normal python string
         name = str_buffer.value.decode('utf-8')
@@ -86,7 +88,8 @@ class TriggerInput:
 
     @kind.setter
     def kind(self, value):
-        libtiepie.DevTrInSetKind(self._dev_handle, self._idx, self.TRIGGER_KINDS[value])
+        libtiepie.DevTrInSetKind(
+            self._dev_handle, self._idx, self.TRIGGER_KINDS[value])
 
     @property
     def is_enabled(self):
@@ -100,13 +103,16 @@ class TriggerInput:
     def is_triggered(self):
         """Check if the oscilloscope trigger input caused a trigger.
 
-        Only valid for oscilloscope trigger inputs, otherwise always False is returned.
+        Only valid for oscilloscope trigger inputs, otherwise always False
+        is returned.
 
         Returns:
-            bool: True if trigger input belongs to an oscilloscope and is triggered, false otherwise.
+            bool: True if trigger input belongs to an oscilloscope and is
+                  triggered, false otherwise.
         """
         try:
-            result = libtiepie.ScpTrInIsTriggered(self._dev_handle, self._idx) == 1
+            result = libtiepie.ScpTrInIsTriggered(
+                self._dev_handle, self._idx) == 1
         except IOError as err:
             if str(err) == "[-3]: INVALID_HANDLE":
                 result = False

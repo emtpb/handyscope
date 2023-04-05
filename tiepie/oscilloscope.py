@@ -1,52 +1,59 @@
-from tiepie.library import libtiepie
-from tiepie.device import Device
-from tiepie.oscilloscopeChannel import OscilloscopeChannel
 import ctypes
 import time
-import numpy as np
 import warnings
+
+import numpy as np
+
+from tiepie.device import Device
+from tiepie.library import libtiepie
+from tiepie.oscilloscopeChannel import OscilloscopeChannel
 
 
 class Oscilloscope(Device):
     """Class for an oscilloscope.
 
     Attributes:
-        MEASURE_MODES (dict): dict which maps measure modes as strs to their libtiepie int version
-        AUTO_RESOLUTIONS (dict): dict which maps auto resolutions as strs to their libtiepie int version
-        CLOCK_SOURCES (dict): dict which maps clock sources as strs to their libtiepie int version
-        CLOCK_OUTPUTS (dict): dict which maps clock outputs as strs to their libtiepie int version
-        CONNECTION_STATES (dict): dict which maps connection states as strs to their libtiepie int version
+        MEASURE_MODES (dict): dict which maps measure modes as strs to their
+                              libtiepie int version
+        AUTO_RESOLUTIONS (dict): dict which maps auto resolutions as strs to
+                                 their libtiepie int version
+        CLOCK_SOURCES (dict): dict which maps clock sources as strs to their
+                              libtiepie int version
+        CLOCK_OUTPUTS (dict): dict which maps clock outputs as strs to their
+                              libtiepie int version
+        CONNECTION_STATES (dict): dict which maps connection states as strs to
+                                  their libtiepie int version
     """
     MEASURE_MODES = {"unknown": 0,
-                     "stream":  1,
-                     "block":   2}
+                     "stream": 1,
+                     "block": 2}
 
-    AUTO_RESOLUTIONS = {"unknown":     0,
-                        "disabled":    1,
+    AUTO_RESOLUTIONS = {"unknown": 0,
+                        "disabled": 1,
                         "native only": 2,
-                        "all":         4}
+                        "all": 4}
 
-    CLOCK_SOURCES = {"unknown":  0,
+    CLOCK_SOURCES = {"unknown": 0,
                      "external": 1,
                      "internal": 2}
 
-    CLOCK_OUTPUTS = {"unknown":  0,
+    CLOCK_OUTPUTS = {"unknown": 0,
                      "disabled": 1,
-                     "sample":   2,
-                     "fixed":    4}
+                     "sample": 2,
+                     "fixed": 4}
 
-    CONNECTION_STATES = {"undefined":    0,
-                         "connected":    1,
+    CONNECTION_STATES = {"undefined": 0,
+                         "connected": 1,
                          "disconnected": 2}
 
-    DATA_TYPES = {"int8":    ctypes.c_int8,
-                  "int16":   ctypes.c_int16,
-                  "int32":   ctypes.c_int32,
-                  "int64":   ctypes.c_int64,
-                  "uint8":   ctypes.c_uint8,
-                  "uint16":  ctypes.c_uint16,
-                  "uint32":  ctypes.c_uint32,
-                  "uint64":  ctypes.c_uint64,
+    DATA_TYPES = {"int8": ctypes.c_int8,
+                  "int16": ctypes.c_int16,
+                  "int32": ctypes.c_int32,
+                  "int64": ctypes.c_int64,
+                  "uint8": ctypes.c_uint8,
+                  "uint16": ctypes.c_uint16,
+                  "uint32": ctypes.c_uint32,
+                  "uint64": ctypes.c_uint64,
                   "float32": ctypes.c_float,
                   "float64": ctypes.c_double}
 
@@ -58,13 +65,17 @@ class Oscilloscope(Device):
         """Constructor for an oscilloscope.
 
         Args:
-            instr_id (int or str): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
-            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS)
+            instr_id (int or str): Device list index, product ID (listed in dict
+                                   PRODUCT_IDS) or serial number
+            id_kind (str): the kind of the given instr_id
+                          (listed in dict ID_KINDS)
         """
         super().__init__(instr_id, id_kind, self._device_type)
 
         # Initialize channels
-        self._channels = tuple(OscilloscopeChannel(self._dev_handle, ch_idx) for ch_idx in range(self.channel_cnt))
+        self._channels = tuple(
+            OscilloscopeChannel(self._dev_handle, ch_idx) for ch_idx in
+            range(self.channel_cnt))
 
     @property
     def channel_cnt(self):
@@ -80,22 +91,26 @@ class Oscilloscope(Device):
         """Tuple of all channels.
 
         Returns:
-            tuple: Tuple of oscilloscope channels (:py:class:`tiepie.oscilloscopeChannel.OscilloscopeChannel`)
+            tuple: Tuple of oscilloscope channels 
+                   (:py:class:`tiepie.oscilloscopeChannel.OscilloscopeChannel`)
         """
         return self._channels
 
     def _get_sample_cnts(self):
         """Get information on the sample counts.
 
-        The recorded samples are divided in pre and post samples. If multiple triggers occur in a short time, not all
-        pre samples might be valid. This method calculates the start count and the total number of valid samples.
+        The recorded samples are divided in pre and post samples. If multiple
+        triggers occur in a short time, not all pre samples might be valid.
+        This method calculates the start count and the total number of valid
+        samples.
 
         Returns:
             tuple: sample start count and valid sample count as ints
         """
         # Calc number of valid samples
         if self.measure_mode == 'block':
-            post_sample_cnt = round((1.0 - self.pre_sample_ratio) * self.record_length)
+            post_sample_cnt = round(
+                (1.0 - self.pre_sample_ratio) * self.record_length)
             valid_sample_cnt = post_sample_cnt + self.valid_pre_sample_cnt
             # Calc sample start count
             sample_start_cnt = self.record_length - valid_sample_cnt
@@ -112,12 +127,13 @@ class Oscilloscope(Device):
         If no channel numbers are given, all enabled channels are retrieved.
 
         Args:
-            channel_nos (list): (optional) iterable with channel numbers to retrieve, or None
+            channel_nos (list): (optional) iterable with channel numbers to
+                                retrieve, or None
             raw (bool): True, if raw data should be returned.
 
         Returns:
-            list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
-                  a list of samples.
+            list: List with entries for each channel. An entry contains None,
+                  if the channel is disabled, otherwise a list of samples.
         """
         # If no channel numbers are given, get the active ones
         if channel_nos is None:
@@ -128,13 +144,15 @@ class Oscilloscope(Device):
         # Else check that the given channels are enabled
         else:
             for channel_no in channel_nos:
-                if self.channels[channel_no-1].is_enabled is False:
-                    raise ValueError("The given channel %d is not enabled. It has to be enabled before " % channel_no
-                                     + "oscilloscope.start() is called to get valid values!")
+                if self.channels[channel_no - 1].is_enabled is False:
+                    raise ValueError(
+                        "The given channel %d is not enabled. It has to be enabled before " % channel_no
+                        + "oscilloscope.start() is called to get valid values!")
 
         # Check that there is at least one entry in channel_nos
         if not channel_nos:
-            raise ValueError("No channel is enabled for measurement or the supplied channel number list is empty.")
+            raise ValueError(
+                "No channel is enabled for measurement or the supplied channel number list is empty.")
 
         # Get number of valid samples
         sample_start_cnt, valid_sample_cnt = self._get_sample_cnts()
@@ -144,25 +162,30 @@ class Oscilloscope(Device):
         buffers = [None] * channel_cnt
         pointer_array = libtiepie.HlpPointerArrayNew(channel_cnt)
         for idx in range(channel_cnt):
-            if idx+1 in channel_nos:
+            if idx + 1 in channel_nos:
                 if raw:
                     raw_type = self.channels[idx].raw_data_type
                     c_type = self.DATA_TYPES[raw_type]
                 else:
                     c_type = ctypes.c_float
                 buffers[idx] = (c_type * valid_sample_cnt)()
-                libtiepie.HlpPointerArraySet(pointer_array, idx, ctypes.byref(buffers[idx]))
+                libtiepie.HlpPointerArraySet(pointer_array, idx,
+                                             ctypes.byref(buffers[idx]))
 
         if raw:
-            libtiepie.ScpGetDataRaw(self._dev_handle, pointer_array, channel_cnt, sample_start_cnt, valid_sample_cnt)
+            libtiepie.ScpGetDataRaw(self._dev_handle, pointer_array,
+                                    channel_cnt, sample_start_cnt,
+                                    valid_sample_cnt)
         else:
-            libtiepie.ScpGetData(self._dev_handle, pointer_array, channel_cnt, sample_start_cnt, valid_sample_cnt)
+            libtiepie.ScpGetData(self._dev_handle, pointer_array, channel_cnt,
+                                 sample_start_cnt, valid_sample_cnt)
 
         # Free pointer array
         libtiepie.HlpPointerArrayDelete(pointer_array)
 
         # Cast ctypes float array to normal python lists
-        data = [None if channel_data is None else list(channel_data) for channel_data in buffers]
+        data = [None if channel_data is None else list(channel_data) for
+                channel_data in buffers]
 
         return data
 
@@ -172,8 +195,8 @@ class Oscilloscope(Device):
         Previously to retrieving data, a measurement has to be started.
 
         Returns:
-            list: List with an entry for channel 1. The entry contains None, if channel 1 is disabled, otherwise
-                  a list of samples.
+            list: List with an entry for channel 1. The entry contains None,
+                  if channel 1 is disabled, otherwise a list of samples.
         """
         # Check availability
         if self.channels[0].is_enabled:
@@ -183,7 +206,8 @@ class Oscilloscope(Device):
             # Init buffer
             buffer = (ctypes.c_float * valid_sample_cnt)()
 
-            libtiepie.ScpGetData1Ch(self._dev_handle, buffer, sample_start_cnt, valid_sample_cnt)
+            libtiepie.ScpGetData1Ch(self._dev_handle, buffer, sample_start_cnt,
+                                    valid_sample_cnt)
 
             # Cast ctypes float array to normal python list
             data = list(buffer)
@@ -196,10 +220,10 @@ class Oscilloscope(Device):
         """Retrieve measured samples of channel 1 and 2.
 
         Previously to retrieving data, a measurement has to be started.
-
+        
         Returns:
-            list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
-                  a list of samples.
+            list: List with entries for each channel. An entry contains None,
+                  if the channel is disabled, otherwise a list of samples.
         """
         # Get number of valid samples
         sample_start_cnt, valid_sample_cnt = self._get_sample_cnts()
@@ -213,10 +237,12 @@ class Oscilloscope(Device):
                 if self.channels[idx].is_enabled:
                     buffers[idx] = (ctypes.c_float * valid_sample_cnt)()
 
-        libtiepie.ScpGetData2Ch(self._dev_handle, *buffers, sample_start_cnt, valid_sample_cnt)
+        libtiepie.ScpGetData2Ch(self._dev_handle, *buffers, sample_start_cnt,
+                                valid_sample_cnt)
 
         # Cast ctypes float array to normal python lists
-        data = [None if channel_data is None else list(channel_data) for channel_data in buffers]
+        data = [None if channel_data is None else list(channel_data) for
+                channel_data in buffers]
 
         return data
 
@@ -226,8 +252,8 @@ class Oscilloscope(Device):
         Previously to retrieving data, a measurement has to be started.
 
         Returns:
-            list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
-                  a list of samples.
+            list: List with entries for each channel. An entry contains None,
+                  if the channel is disabled, otherwise a list of samples.
         """
         # Get number of valid samples
         sample_start_cnt, valid_sample_cnt = self._get_sample_cnts()
@@ -241,10 +267,12 @@ class Oscilloscope(Device):
                 if self.channels[idx].is_enabled:
                     buffers[idx] = (ctypes.c_float * valid_sample_cnt)()
 
-        libtiepie.ScpGetData3Ch(self._dev_handle, *buffers, sample_start_cnt, valid_sample_cnt)
+        libtiepie.ScpGetData3Ch(self._dev_handle, *buffers, sample_start_cnt,
+                                valid_sample_cnt)
 
         # Cast ctypes float array to normal python lists
-        data = [None if channel_data is None else list(channel_data) for channel_data in buffers]
+        data = [None if channel_data is None else list(channel_data) for
+                channel_data in buffers]
 
         return data
 
@@ -254,8 +282,8 @@ class Oscilloscope(Device):
         Previously to retrieving data, a measurement has to be started.
 
         Returns:
-            list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
-                  a list of samples.
+            list: List with entries for each channel. An entry contains None,
+                  if the channel is disabled, otherwise a list of samples.
         """
         # Get number of valid samples
         sample_start_cnt, valid_sample_cnt = self._get_sample_cnts()
@@ -269,10 +297,12 @@ class Oscilloscope(Device):
                 if self.channels[idx].is_enabled:
                     buffers[idx] = (ctypes.c_float * valid_sample_cnt)()
 
-        libtiepie.ScpGetData4Ch(self._dev_handle, *buffers, sample_start_cnt, valid_sample_cnt)
+        libtiepie.ScpGetData4Ch(self._dev_handle, *buffers, sample_start_cnt,
+                                valid_sample_cnt)
 
         # Cast ctypes float array to normal python lists
-        data = [None if channel_data is None else list(channel_data) for channel_data in buffers]
+        data = [None if channel_data is None else list(channel_data) for
+                channel_data in buffers]
 
         return data
 
@@ -282,8 +312,8 @@ class Oscilloscope(Device):
         Previously to retrieving data, a measurement has to be started.
 
         Returns:
-            list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
-                  a list of samples.
+            list: List with entries for each channel. An entry contains None,
+                  if the channel is disabled, otherwise a list of samples.
         """
         # Get number of valid samples
         sample_start_cnt, valid_sample_cnt = self._get_sample_cnts()
@@ -297,10 +327,12 @@ class Oscilloscope(Device):
                 if self.channels[idx].is_enabled:
                     buffers[idx] = (ctypes.c_float * valid_sample_cnt)()
 
-        libtiepie.ScpGetData5Ch(self._dev_handle, *buffers, sample_start_cnt, valid_sample_cnt)
+        libtiepie.ScpGetData5Ch(self._dev_handle, *buffers, sample_start_cnt,
+                                valid_sample_cnt)
 
         # Cast ctypes float array to normal python lists
-        data = [None if channel_data is None else list(channel_data) for channel_data in buffers]
+        data = [None if channel_data is None else list(channel_data) for
+                channel_data in buffers]
 
         return data
 
@@ -310,8 +342,8 @@ class Oscilloscope(Device):
         Previously to retrieving data, a measurement has to be started.
 
         Returns:
-            list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
-                  a list of samples.
+            list: List with entries for each channel. An entry contains None,
+                  if the channel is disabled, otherwise a list of samples.
         """
         # Get number of valid samples
         sample_start_cnt, valid_sample_cnt = self._get_sample_cnts()
@@ -325,10 +357,12 @@ class Oscilloscope(Device):
                 if self.channels[idx].is_enabled:
                     buffers[idx] = (ctypes.c_float * valid_sample_cnt)()
 
-        libtiepie.ScpGetData6Ch(self._dev_handle, *buffers, sample_start_cnt, valid_sample_cnt)
+        libtiepie.ScpGetData6Ch(self._dev_handle, *buffers, sample_start_cnt,
+                                valid_sample_cnt)
 
         # Cast ctypes float array to normal python lists
-        data = [None if channel_data is None else list(channel_data) for channel_data in buffers]
+        data = [None if channel_data is None else list(channel_data) for
+                channel_data in buffers]
 
         return data
 
@@ -338,8 +372,8 @@ class Oscilloscope(Device):
         Previously to retrieving data, a measurement has to be started.
 
         Returns:
-            list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
-                  a list of samples.
+            list: List with entries for each channel. An entry contains None, 
+                  if the channel is disabled, otherwise a list of samples.
         """
         # Get number of valid samples
         sample_start_cnt, valid_sample_cnt = self._get_sample_cnts()
@@ -353,10 +387,12 @@ class Oscilloscope(Device):
                 if self.channels[idx].is_enabled:
                     buffers[idx] = (ctypes.c_float * valid_sample_cnt)()
 
-        libtiepie.ScpGetData7Ch(self._dev_handle, *buffers, sample_start_cnt, valid_sample_cnt)
+        libtiepie.ScpGetData7Ch(self._dev_handle, *buffers, sample_start_cnt,
+                                valid_sample_cnt)
 
         # Cast ctypes float array to normal python lists
-        data = [None if channel_data is None else list(channel_data) for channel_data in buffers]
+        data = [None if channel_data is None else list(channel_data) for
+                channel_data in buffers]
 
         return data
 
@@ -366,8 +402,8 @@ class Oscilloscope(Device):
         Previously to retrieving data, a measurement has to be started.
 
         Returns:
-            list: List with entries for each channel. An entry contains None, if the channel is disabled, otherwise
-                  a list of samples.
+            list: List with entries for each channel. An entry contains None, 
+                  if the channel is disabled, otherwise a list of samples.
         """
         # Get number of valid samples
         sample_start_cnt, valid_sample_cnt = self._get_sample_cnts()
@@ -381,10 +417,12 @@ class Oscilloscope(Device):
                 if self.channels[idx].is_enabled:
                     buffers[idx] = (ctypes.c_float * valid_sample_cnt)()
 
-        libtiepie.ScpGetData8Ch(self._dev_handle, *buffers, sample_start_cnt, valid_sample_cnt)
+        libtiepie.ScpGetData8Ch(self._dev_handle, *buffers, sample_start_cnt,
+                                valid_sample_cnt)
 
         # Cast ctypes float array to normal python lists
-        data = [None if channel_data is None else list(channel_data) for channel_data in buffers]
+        data = [None if channel_data is None else list(channel_data) for
+                channel_data in buffers]
 
         return data
 
@@ -441,14 +479,16 @@ class Oscilloscope(Device):
                 # ... and ignoring "unknown" (already handled above)
                 if key == "unknown":
                     pass
-                elif raw_modes & self.MEASURE_MODES[key] == self.MEASURE_MODES[key]:
+                elif raw_modes & self.MEASURE_MODES[key] == self.MEASURE_MODES[
+                        key]:
                     _modes.append(key)
 
         return tuple(_modes)
 
     @property
     def measure_mode(self):
-        """Get or set the current measure mode (keys of :py:attr:`tiepie.oscilloscope.Oscilloscope.MEASURE_MODES`)"""
+        """Get or set the current measure mode (keys of
+        :py:attr:`tiepie.oscilloscope.Oscilloscope.MEASURE_MODES`)"""
         mode_int = libtiepie.ScpGetMeasureMode(self._dev_handle)
         for key in self.MEASURE_MODES:
             if mode_int == self.MEASURE_MODES[key]:
@@ -458,7 +498,8 @@ class Oscilloscope(Device):
 
     @measure_mode.setter
     def measure_mode(self, value):
-        libtiepie.ScpSetMeasureMode(self._dev_handle, self.MEASURE_MODES[value])
+        libtiepie.ScpSetMeasureMode(
+            self._dev_handle, self.MEASURE_MODES[value])
 
     @property
     def is_running(self):
@@ -483,7 +524,8 @@ class Oscilloscope(Device):
         """Check if the oscilloscope is triggered by a timeout.
 
         Returns:
-            bool: True if oscilloscope is triggered by a timeout, False otherwise.
+            bool: True if oscilloscope is triggered by a timeout,
+                  False otherwise.
         """
         return libtiepie.ScpIsTimeOutTriggered(self._dev_handle) == 1
 
@@ -528,7 +570,8 @@ class Oscilloscope(Device):
         res = (ctypes.c_uint8 * res_len)()
 
         # write the actual data to the array
-        libtiepie.ScpGetResolutions(self._dev_handle, ctypes.byref(res), res_len)
+        libtiepie.ScpGetResolutions(self._dev_handle, ctypes.byref(res),
+                                    res_len)
 
         # convert to a normal python list
         res = list(res)
@@ -573,7 +616,8 @@ class Oscilloscope(Device):
                 # ... and ignoring "unknown" (already handled above)
                 if key == "unknown":
                     pass
-                elif raw_res & self.AUTO_RESOLUTIONS[key] == self.AUTO_RESOLUTIONS[key]:
+                elif raw_res & self.AUTO_RESOLUTIONS[key] == \
+                        self.AUTO_RESOLUTIONS[key]:
                     _res.append(key)
 
         return tuple(_res)
@@ -592,7 +636,8 @@ class Oscilloscope(Device):
 
     @auto_resolution.setter
     def auto_resolution(self, value):
-        libtiepie.ScpSetAutoResolutionMode(self._dev_handle, self.AUTO_RESOLUTIONS[value])
+        libtiepie.ScpSetAutoResolutionMode(self._dev_handle,
+                                           self.AUTO_RESOLUTIONS[value])
 
     @property
     def clock_sources_available(self):
@@ -618,8 +663,8 @@ class Oscilloscope(Device):
 
     @property
     def clock_source(self):
-        """Get or set the current clock source (key of :py:attr:`tiepie.oscilloscope.Oscilloscope.CLOCK_SOURCES`)
-        """
+        """Get or set the current clock source (key of
+        :py:attr:`tiepie.oscilloscope.Oscilloscope.CLOCK_SOURCES`)"""
         src = libtiepie.ScpGetClockSource(self._dev_handle)
         for key, value in self.CLOCK_SOURCES.items():
             if src == value:
@@ -629,7 +674,8 @@ class Oscilloscope(Device):
 
     @clock_source.setter
     def clock_source(self, value):
-        libtiepie.ScpSetClockSource(self._dev_handle, self.CLOCK_SOURCES[value])
+        libtiepie.ScpSetClockSource(
+            self._dev_handle, self.CLOCK_SOURCES[value])
 
     @property
     def clock_outputs_available(self):
@@ -655,7 +701,8 @@ class Oscilloscope(Device):
 
     @property
     def clock_output(self):
-        """Get or set the current clock output (key of :py:attr:`tiepie.oscilloscope.Oscilloscope.CLOCK_OUTPUTS`)"""
+        """Get or set the current clock output (key of
+        :py:attr:`tiepie.oscilloscope.Oscilloscope.CLOCK_OUTPUTS`)"""
         out = libtiepie.ScpGetClockOutput(self._dev_handle)
         for key, value in self.CLOCK_OUTPUTS.items():
             if out == value:
@@ -665,7 +712,8 @@ class Oscilloscope(Device):
 
     @clock_output.setter
     def clock_output(self, value):
-        libtiepie.ScpSetClockOutput(self._dev_handle, self.CLOCK_OUTPUTS[value])
+        libtiepie.ScpSetClockOutput(
+            self._dev_handle, self.CLOCK_OUTPUTS[value])
 
     @property
     def clock_source_frequencies_available(self):
@@ -679,7 +727,9 @@ class Oscilloscope(Device):
         frequencies = (ctypes.c_double * frequencies_len)()
 
         # Write the actual data to the array
-        libtiepie.ScpGetClockSourceFrequencies(self._dev_handle, self._idx, ctypes.byref(frequencies), frequencies_len)
+        libtiepie.ScpGetClockSourceFrequencies(self._dev_handle,
+                                               ctypes.byref(frequencies),
+                                               frequencies_len)
 
         # Convert to a normal python list
         frequencies = tuple(frequencies)
@@ -707,7 +757,9 @@ class Oscilloscope(Device):
         frequencies = (ctypes.c_double * frequencies_len)()
 
         # Write the actual data to the array
-        libtiepie.ScpGetClockOutputFrequencies(self._dev_handle, self._idx, ctypes.byref(frequencies), frequencies_len)
+        libtiepie.ScpGetClockOutputFrequencies(self._dev_handle,
+                                               ctypes.byref(frequencies),
+                                               frequencies_len)
 
         # Convert to a normal python list
         frequencies = tuple(frequencies)
@@ -790,7 +842,7 @@ class Oscilloscope(Device):
         The pre sample ratio is a float between 0 and 1 and defines how many
         samples should be recorded before the trigger point. To ensure all
         pre samples are recorded, set
-        :py:attr:`tiepie.oscilloscope.Oscilloscope.trig_holdoff` to 
+        :py:attr:`tiepie.oscilloscope.Oscilloscope.trig_holdoff` to
         :py:attr:`tiepie.oscilloscope.Oscilloscope.TRIG_HOLDOFF_ALL_PRE_SAMPLES`
         or set :py:attr:`tiepie.oscilloscope.Oscilloscope.trig_holdoff` to equal
         or greater than
@@ -836,7 +888,9 @@ class Oscilloscope(Device):
     def trig_timeout(self):
         """Get or set the trigger timeout in seconds.
 
-        0 forces a trigger immediately after a measurement is started, -1 will wait infinitely for a trigger."""
+        0 forces a trigger immediately after a measurement is started,
+        -1 will wait infinitely for a trigger.
+        """
         return libtiepie.ScpGetTriggerTimeOut(self._dev_handle)
 
     @trig_timeout.setter
@@ -924,8 +978,8 @@ class Oscilloscope(Device):
 
         The trigger holdoff sets how many samples need to be recorded until
         a trigger can happen.
-        
-        Use :py:attr:`tiepie.oscilloscope.Oscilloscope.TRIG_HOLDOFF_ALL_PRE_SAMPLES` 
+
+        Use :py:attr:`tiepie.oscilloscope.Oscilloscope.TRIG_HOLDOFF_ALL_PRE_SAMPLES`
         to ensure all pre samples are recorded if pre_sample_ratio is set.
         """
         return libtiepie.ScpGetTriggerHoldOffCount(self._dev_handle)
@@ -981,7 +1035,8 @@ class Oscilloscope(Device):
         data = (ctypes.c_uint8 * self.channel_cnt)()
 
         # Write the actual data to the array
-        libtiepie.ScpGetConnectionTestData(self._dev_handle, ctypes.byref(data), self.channel_cnt)
+        libtiepie.ScpGetConnectionTestData(self._dev_handle, ctypes.byref(data),
+                                           self.channel_cnt)
 
         # Convert to a normal python list
         data = list(data)
@@ -1046,16 +1101,15 @@ class Oscilloscope(Device):
             list: List with entries for each channel. An entry contains None,
                   if the channel is disabled, otherwise a list of samples.
         """
-
         if self.measure_mode == "block" and self.pre_sample_ratio > 0:
-            if self.is_trig_holdoff_available and self.trig_holdoff < self.pre_sample_ratio*self.record_length:
-                    warnings.warn("trig_holdoff is not set to record all pre"
-                                  " samples. This may lead to varying signal "
-                                  "lengths due to triggers occuring before "
-                                  "enough samples have been stored."
-                                  " Please set trig_holdoff to "
-                                  "TRIG_HOLDOFF_ALL_PRE_SAMPLES to get a "
-                                  "predictable time vector.", UserWarning)
+            if self.is_trig_holdoff_available and self.trig_holdoff < self.pre_sample_ratio * self.record_length:
+                warnings.warn("trig_holdoff is not set to record all pre"
+                              " samples. This may lead to varying signal "
+                              "lengths due to triggers occuring before "
+                              "enough samples have been stored."
+                              " Please set trig_holdoff to "
+                              "TRIG_HOLDOFF_ALL_PRE_SAMPLES to get a "
+                              "predictable time vector.", UserWarning)
         # Start measurement
         self.start()
 
@@ -1082,10 +1136,10 @@ class Oscilloscope(Device):
         Returns:
             :class:`numpy.ndarray`: Time vector
         """
-        time_vec = np.linspace(0, 1/self.sample_freq*self.record_length,
+        time_vec = np.linspace(0, 1 / self.sample_freq * self.record_length,
                                num=self.record_length, endpoint=False)
         if self.measure_mode == "block":
-            trig_idx = int(self.pre_sample_ratio*len(time_vec))
+            trig_idx = int(self.pre_sample_ratio * len(time_vec))
             return time_vec - time_vec[trig_idx]
         else:
             return time_vec

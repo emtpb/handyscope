@@ -7,11 +7,16 @@ class Generator(Device):
     """Class for a generator.
 
     Attributes:
-        CONNECTOR_TYPES (dict): dict which maps connector types as strs to their libtiepie int version
-        GENERATOR_STATUSES (dict): dict which maps generator statuses as strs to their libtiepie int version
-        SIGNAL_TYPES (dict): dict which maps signal types as strs to their libtiepie int version
-        FREQUENCY_MODES (dict): dict which maps frequency modes as strs to their libtiepie int version
-        GENERATOR_MODES (dict): dict which maps generator modes as strs to their libtiepie int version
+        CONNECTOR_TYPES (dict): dict which maps connector types as strs to
+                                their libtiepie int version
+        GENERATOR_STATUSES (dict): dict which maps generator statuses as strs
+                                   to their libtiepie int version
+        SIGNAL_TYPES (dict): dict which maps signal types as strs to
+                             their libtiepie int version
+        FREQUENCY_MODES (dict): dict which maps frequency modes as strs to
+                                their libtiepie int version
+        GENERATOR_MODES (dict): dict which maps generator modes as strs to
+                                their libtiepie int version
     """
     # See also OscilloscopeChannel.CONNECTOR_TYPES
     CONNECTOR_TYPES = {"unknown":   0,
@@ -63,15 +68,17 @@ class Generator(Device):
                       "uint64":   128,
                       "float32":  256,
                       "float64":  512}
-    
+
     _device_type = "Gen"
 
     def __init__(self, instr_id, id_kind="product id"):
         """Contructor for a generator.
 
         Args:
-            instr_id (int or str): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
-            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS)
+            instr_id (int or str): Device list index, product ID
+                                   (listed in dict PRODUCT_IDS) or serial number
+            id_kind (str): the kind of the given instr_id
+                           (listed in dict ID_KINDS)
         """
         super().__init__(instr_id, id_kind, self._device_type)
 
@@ -80,7 +87,8 @@ class Generator(Device):
         """Get the connector type.
 
         Returns:
-            str: The connector type, key of :py:attr:`tiepie.generator.Generator.CONNECTOR_TYPES`
+            str: The connector type, key of
+                 :py:attr:`tiepie.generator.Generator.CONNECTOR_TYPES`
         """
         raw_type = libtiepie.GenGetConnectorType(self._dev_handle)
         for key, value in self.CONNECTOR_TYPES.items():
@@ -148,7 +156,8 @@ class Generator(Device):
         """Get the current generator status.
 
         Returns:
-            str: Generator status, key of :py:attr:`tiepie.generator.Generator.GENERATOR_STATUSES`
+            str: Generator status, key of
+                 :py:attr:`tiepie.generator.Generator.GENERATOR_STATUSES`
         """
         raw_status = libtiepie.GenGetStatus(self._dev_handle)
 
@@ -207,7 +216,8 @@ class Generator(Device):
         """Get available signal types.
 
         Returns:
-            tuple: Available signal types, keys of :py:attr:`tiepie.generator.Generator.SIGNAL_TYPES`
+            tuple: Available signal types, keys of
+                   :py:attr:`tiepie.generator.Generator.SIGNAL_TYPES`
         """
         raw_types = libtiepie.GenGetSignalTypes(self._dev_handle)
         _types = []
@@ -248,7 +258,7 @@ class Generator(Device):
         """Get the minimum available amplitude.
 
         Returns:
-            float: Miminum available amplitude in Volt.
+            float: Minimum available amplitude in Volt.
         """
         return libtiepie.GenGetAmplitudeMin(self._dev_handle)
 
@@ -281,7 +291,8 @@ class Generator(Device):
 
         buffer = (ctypes.c_double * list_len)()
 
-        libtiepie.GenGetAmplitudeRanges(self._dev_handle, ctypes.byref(buffer), list_len)
+        libtiepie.GenGetAmplitudeRanges(
+            self._dev_handle, ctypes.byref(buffer), list_len)
 
         return tuple(buffer)
 
@@ -306,13 +317,13 @@ class Generator(Device):
     def verify_amplitude(self, amplitude):
         """Verify an amplitude without setting it in the hardware.
 
-            Args:
-                amplitude (float): The amplitude to verify.
-            Returns:
-                float: The amplitude the hardware would set.
-                       (The hardware might not set the amplitude
-                        due to clipping.)
-            """
+        Args:
+            amplitude (float): The amplitude to verify.
+        Returns:
+            float: The amplitude the hardware would set.
+                   (The hardware might not set the amplitude
+                    due to clipping.)
+        """
         return libtiepie.GenVerifyAmplitude(self._dev_handle, amplitude)
 
     @property
@@ -350,13 +361,13 @@ class Generator(Device):
     def verify_offset(self, offset):
         """Verify an offset without setting it in the hardware.
 
-            Args:
-                offset (float): The offset to verify.
-            Returns:
-                float: The offset the hardware would set.
-                       (The hardware might not set the offset
-                        due to clipping.)
-            """
+        Args:
+            offset (float): The offset to verify.
+        Returns:
+            float: The offset the hardware would set.
+                   (The hardware might not set the offset
+                    due to clipping.)
+        """
         return libtiepie.GenVerifyOffset(self._dev_handle, offset)
 
     @property
@@ -394,13 +405,13 @@ class Generator(Device):
     def verify_frequency(self, frequency):
         """Verify a frequency without setting it in the hardware.
 
-            Args:
-                frequency (float): The frequency to verify.
-            Returns:
-                float: The frequency the hardware would set.
-                       (The hardware might not set the frequency
-                        due to clipping.)
-            """
+        Args:
+            frequency (float): The frequency to verify.
+        Returns:
+            float: The frequency the hardware would set.
+                   (The hardware might not set the frequency
+                    due to clipping.)
+        """
         return libtiepie.GenVerifyFrequency(self._dev_handle, frequency)
 
     @property
@@ -408,7 +419,8 @@ class Generator(Device):
         """Get the available frequency modes.
 
         Returns:
-            tuple: Available frequency modes, keys of :py:attr:`tiepie.generator.Generator.FREQUENCY_MODES`
+            tuple: Available frequency modes, keys of
+                   :py:attr:`tiepie.generator.Generator.FREQUENCY_MODES`
         """
         raw_modes = libtiepie.GenGetFrequencyModes(self._dev_handle)
         _modes = []
@@ -437,7 +449,8 @@ class Generator(Device):
 
     @freq_mode.setter
     def freq_mode(self, value):
-        libtiepie.GenSetFrequencyMode(self._dev_handle, self.FREQUENCY_MODES[value])
+        libtiepie.GenSetFrequencyMode(
+            self._dev_handle, self.FREQUENCY_MODES[value])
 
     @property
     def is_phase_available(self):
@@ -492,8 +505,9 @@ class Generator(Device):
     def symmetry_min(self):
         """Get the minimum available symmetry.
 
-        The symmetry of a signal defines the ratio between the length of positive part of a period and the length of
-        the negative part of a period of the generated signal.
+        The symmetry of a signal defines the ratio between the length of
+        positive part of a period and the length of the negative part of
+        a period of the generated signal.
 
         Returns:
             float: Minimum available symmetry, value between 0 and 1.
@@ -504,8 +518,9 @@ class Generator(Device):
     def symmetry_max(self):
         """Get the maximum available symmetry.
 
-        The symmetry of a signal defines the ratio between the length of positive part of a period and the length of
-        the negative part of a period of the generated signal.
+        The symmetry of a signal defines the ratio between the length of
+        positive part of a period and the length of the negative part of a
+        period of the generated signal.
 
         Returns:
             float: Maximum available symmetry, value between 0 and 1.
@@ -516,8 +531,9 @@ class Generator(Device):
     def symmetry(self):
         """Get or set the maximum available symmetry.
 
-        The symmetry of a signal defines the ratio between the length of positive part of a period and the length of
-        the negative part of a period of the generated signal.
+        The symmetry of a signal defines the ratio between the length of
+        positive part of a period and the length of the negative part of
+        a period of the generated signal.
         """
         return libtiepie.GenGetSymmetry(self._dev_handle)
 
@@ -677,8 +693,7 @@ class Generator(Device):
     @property
     def is_arb_data_available(self):
         """Get whether the current signal type supports controlling the
-        arbitrary waveform buffer.
-        """
+        arbitrary waveform buffer."""
         return libtiepie.GenHasData(self._dev_handle) == 1
 
     @property
@@ -733,8 +748,9 @@ class Generator(Device):
     def arb_data(self, value_list):
         """Fill the arbitrary data buffer of the generator.
 
-        The values are normalized by the generator itself: The highest absolute value equals the set amplitude value,
-        0 corresponds to the set offset value. If value_list is empty, the buffer gets cleared.
+        The values are normalized by the generator itself: The highest
+        absolute value equals the set amplitude value, 0 corresponds to the
+        set offset value. If value_list is empty, the buffer gets cleared.
 
         Args:
             value_list (list): List with arbitrary data samples
@@ -760,8 +776,8 @@ class Generator(Device):
 
     @property
     def arb_data_raw_range(self):
-        """Get the minimum, zero and maximum raw value of the arbitrary
-        data buffer range as int.
+        """Get the minimum, zero and maximum raw value of the arbitrary data
+        buffer range as int.
 
         Returns:
             tuple: Minimum, zero, maximum raw value for the arbitrary data
@@ -800,8 +816,8 @@ class Generator(Device):
 
     @property
     def arb_data_raw_zero(self):
-        """Get the raw value which corresponds to zero in the arbitrary
-        data buffer.
+        """Get the raw value which corresponds to zero in the arbitrary data
+        buffer.
 
         Returns:
             int: Raw value which corresponds to zero in the arbitrary
@@ -812,9 +828,9 @@ class Generator(Device):
     def arb_data_raw(self, value_list):
         """Fill the arbitrary data buffer of the generator with raw values.
 
-         Args:
-             value_list (list): List with arbitrary data samples
-         """
+        Args:
+            value_list (list): List with arbitrary data samples
+        """
         list_len = len(value_list)
 
         if list_len == 0:
@@ -829,10 +845,12 @@ class Generator(Device):
     def modes_native_available(self):
         """Get the natively available generator modes.
 
-        The natively available modes are the built-in modes of the generetator, independent of current settings.
+        The natively available modes are the built-in modes of the generetator,
+        independent of current settings.
 
         Returns:
-            tuple: Available modes, keys of :py:attr:`tiepie.generator.Generator.GENERATOR_MODES`
+            tuple: Available modes, keys of
+                  :py:attr:`tiepie.generator.Generator.GENERATOR_MODES`
         """
         raw_modes = libtiepie.GenGetModesNative(self._dev_handle)
         _modes = []
@@ -855,7 +873,8 @@ class Generator(Device):
         The currently available modes depend on the current generator settings.
 
         Returns:
-            tuple: Available modes, keys of :py:attr:`tiepie.generator.Generator.GENERATOR_MODES`
+            tuple: Available modes, keys of
+                   :py:attr:`tiepie.generator.Generator.GENERATOR_MODES`
         """
         raw_modes = libtiepie.GenGetModes(self._dev_handle)
         _modes = []
@@ -873,8 +892,8 @@ class Generator(Device):
 
     @property
     def mode(self):
-        """Get or set the current generator mode (keys of :py:attr:`tiepie.generator.Generator.GENERATOR_MODES`).
-        """
+        """Get or set the current generator mode (keys of
+        :py:attr:`tiepie.generator.Generator.GENERATOR_MODES`)."""
         raw_mode = libtiepie.GenGetMode(self._dev_handle)
 
         for key, value in self.GENERATOR_MODES.items():
@@ -999,8 +1018,7 @@ class Generator(Device):
         libtiepie.GenSetBurstSegmentCount(self._dev_handle, value)
 
     def verify_burst_segment_cnt(self, burst_segment_cnt):
-        """Verify a burst segment count without setting it in the
-        hardware.
+        """Verify a burst segment count without setting it in the hardware.
 
         Args:
             burst_segment_cnt (int): The burst segment count to verify.

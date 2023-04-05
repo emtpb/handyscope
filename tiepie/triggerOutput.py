@@ -41,13 +41,15 @@ class TriggerOutput:
     @property
     def name(self):
         # get length of name string
-        str_len = libtiepie.DevTrOutGetName(self._dev_handle, self._idx, None, 0)
+        str_len = libtiepie.DevTrOutGetName(
+            self._dev_handle, self._idx, None, 0)
 
         # initialize mutable string buffer
         str_buffer = ctypes.create_string_buffer(str_len)
 
         # write the actual name to the buffer
-        libtiepie.DevTrOutGetName(self._dev_handle, self._idx, str_buffer, str_len)
+        libtiepie.DevTrOutGetName(
+            self._dev_handle, self._idx, str_buffer, str_len)
 
         # convert to a normal python string
         name = str_buffer.value.decode('utf-8')
@@ -85,7 +87,8 @@ class TriggerOutput:
 
     @event.setter
     def event(self, value):
-        libtiepie.DevTrOutSetEvent(self._dev_handle, self._idx, self.TRIGGER_EVENTS[value])
+        libtiepie.DevTrOutSetEvent(
+            self._dev_handle, self._idx, self.TRIGGER_EVENTS[value])
 
     def force_trig(self):
         return libtiepie.DevTrOutTrigger(self._dev_handle, self._idx) == 1

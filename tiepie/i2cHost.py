@@ -6,7 +6,8 @@ import ctypes
 class I2CHost(Device):
     """Class for an I2CHost.
 
-    An I2CHost is the I2C bus master included in Handyscopes. It is accessible via external connectors (D-Sub).
+    An I2CHost is the I2C bus master included in Handyscopes. It is accessible
+    via external connectors (D-Sub).
     """
     _device_type = "I2C"
 
@@ -14,8 +15,10 @@ class I2CHost(Device):
         """Constructor for an I2C host.
 
         Args:
-            instr_id (int or str): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
-            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS)
+            instr_id (int or str): Device list index, product ID (listed
+                                   in dict PRODUCT_IDS) or serial number
+            id_kind (str): the kind of the given instr_id (listed in dict
+                           ID_KINDS)
         """
         super().__init__(instr_id, id_kind, self._device_type)
 
@@ -98,7 +101,8 @@ class I2CHost(Device):
             list of int: List with the received bytes.
         """
         buffer = (ctypes.c_uint8 * no_bytes)()
-        libtiepie.I2CRead(self._dev_handle, address, ctypes.byref(buffer), no_bytes, send_stop)
+        libtiepie.I2CRead(self._dev_handle, address, ctypes.byref(buffer),
+                          no_bytes, send_stop)
         return list(buffer)
 
     def read_byte(self, address):
@@ -133,14 +137,16 @@ class I2CHost(Device):
         Args:
             address     (int):          I2C address
             data        (list of int):  List of bytes to be written
-            send_stop   (bool):         Whether to send a stop bit (defaults to True).
+            send_stop   (bool):         Whether to send a stop bit (defaults to
+                                        True).
 
         Returns:
             bool: True if write succeeded, False otherwise.
         """
         data_len = len(data)
         buffer = (ctypes.c_uint8 * data_len)(*data)
-        result = libtiepie.I2CWrite(self._dev_handle, address, ctypes.byref(buffer), data_len, send_stop)
+        result = libtiepie.I2CWrite(self._dev_handle, address,
+                                    ctypes.byref(buffer), data_len, send_stop)
 
         return result == 1
 
@@ -215,7 +221,8 @@ class I2CHost(Device):
         Returns:
             bool: True if write succeeded, False otherwise.
         """
-        result = libtiepie.I2CWriteByteWord(self._dev_handle, address, data_byte, data_word)
+        result = libtiepie.I2CWriteByteWord(self._dev_handle, address,
+                                            data_byte, data_word)
 
         return result == 1
 
@@ -227,8 +234,10 @@ class I2CHost(Device):
         """
         valid_addresses = []
 
-        # Only check allowed addresses: "Two groups of eight addresses (0000 XXX and 1111 XXX) are reserved"
-        # `see official I2C-bus specification and user manual <http://www.nxp.com/documents/user_manual/UM10204.pdf>`_
+        # Only check allowed addresses: "Two groups of eight addresses
+        # (0000 XXX and 1111 XXX) are reserved"
+        # `see official I2C-bus specification and user manual
+        # <http://www.nxp.com/documents/user_manual/UM10204.pdf>`_
         for address in range(0x08, 0x77):
             if self.is_internal_address(address):
                 continue
@@ -236,10 +245,12 @@ class I2CHost(Device):
                 try:
                     self.write(address, [0])
                 except OSError as err:
-                    # If no ACK was received, there is no device listening on this address
+                    # If no ACK was received, there is no device listening on
+                    # this address
                     if err.args[0] == "[-15]: NO_ACKNOWLEDGE":
                         continue
-                # If code didn't raise an exception, i.e. ACK was received, address is valid!
+                # If code didn't raise an exception, i.e. ACK was received,
+                # address is valid!
                 valid_addresses.append(address)
 
         return tuple(valid_addresses)

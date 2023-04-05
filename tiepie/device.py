@@ -1,16 +1,18 @@
-from tiepie.library import libtiepie, CallbackObject
+import ctypes
+from datetime import date
+
 from tiepie.deviceList import device_list
+from tiepie.library import libtiepie, CallbackObject
 from tiepie.triggerInput import TriggerInput
 from tiepie.triggerOutput import TriggerOutput
-from datetime import date
-import ctypes
 
 
 class Device:
     """Base class for devices.
 
-    This class contains methods common to all devices of an instrument, like name and serial number. A device is e.g. an
-    oscilloscope or a generator, whereas an instrument is e.g. the whole 'HS5'.
+    This class contains methods common to all devices of an instrument,
+    like name and serial number. A device is e.g. an oscilloscope or a
+    generator,  whereas an instrument is e.g. the whole 'HS5'.
     """
     EVENT_IDS = {'invalid': 0,
                  'object_removed': 1,
@@ -26,11 +28,15 @@ class Device:
         """Constructor for class Device.
 
         Args:
-            instr_id (int or str): Device list index, product ID (listed in dict PRODUCT_IDS) or serial number
-            id_kind (str): the kind of the given instr_id (listed in dict ID_KINDS)
-            device_type (str): the type of the device (listed in dict DEVICE_TYPES)
+            instr_id (int or str): Device list index, product ID
+                                  (listed in dict PRODUCT_IDS) or serial number.
+            id_kind (str): The kind of the given instr_id
+                           (listed in dict ID_KINDS).
+            device_type (str): The type of the device
+                               (listed in dict DEVICE_TYPES).
         """
-        self._dev_handle = device_list.open_device(instr_id, id_kind, device_type)
+        self._dev_handle = device_list.open_device(instr_id, id_kind,
+                                                   device_type)
 
         self._trig_ins = []
         for idx in range(self.trig_in_cnt):
@@ -49,14 +55,18 @@ class Device:
             events (list): Events as a list of strings to bind events to
                            callback functions. Available events are given in
                            EVENT_IDS.
-            cb_functions (list): Callback functions. Length of list has to be identical with length of events.
-                                Each function has to have the following head: fun(p_data, value). 'p_data' is the data
-                                provided by the event and 'value' a single value.
+            cb_functions (list): Callback functions. Length of list has to
+                                 be identical with length of events. Each
+                                 function has to have the following
+                                 head: fun(p_data, value). 'p_data' is the data
+                                 provided by the event and 'value' a single value.
         """
         def default_cb(p_data, value):
             pass
+
         # Fill the dict with default functions
-        function_map = {event_id: default_cb for event_id in self.EVENT_IDS.values()}
+        function_map = {event_id: default_cb for event_id in
+                        self.EVENT_IDS.values()}
         # Set all the desired events with the callback functions
         for event, function in zip(events, cb_functions):
             event_id = self.EVENT_IDS[event]
@@ -64,12 +74,13 @@ class Device:
 
         def object_callback(p_data, event_id, value):
             function_map[event_id](p_data, value)
+
         self._obj_cb = CallbackObject(object_callback)
         libtiepie.ObjSetEventCallback(self._dev_handle, self._obj_cb, None)
 
     @property
     def driver_ver(self):
-        """Get the driver version in the format Major.Minor.Release.Build
+        """Get the driver version in the format Major.Minor.Release.Build.
 
         Returns:
             str: driver version in the format Major.Minor.Release.Build
@@ -79,7 +90,7 @@ class Device:
 
     @property
     def firmware_ver(self):
-        """Get the firmware version in the format Major.Minor.Release.Build
+        """Get the firmware version in the format Major.Minor.Release.Build.
 
         Returns:
             str: firmware version in the format Major.Minor.Release.Build
@@ -89,18 +100,19 @@ class Device:
 
     @property
     def calibration_date(self):
-        """Get the calibration date
+        """Get the calibration date.
 
         Returns:
             :py:class:`datetime.date`: calibration date
         """
         raw_date = libtiepie.DevGetCalibrationDate(self._dev_handle)
-        split_date = date(raw_date >> 16, (raw_date >> 8) & 0xff, raw_date & 0xff)
+        split_date = date(raw_date >> 16, (raw_date >> 8) & 0xff,
+                          raw_date & 0xff)
         return split_date
 
     @property
     def serial_no(self):
-        """Get the serial number
+        """Get the serial number.
 
         Returns:
             int: serial number
@@ -109,7 +121,8 @@ class Device:
 
     @property
     def product_id(self):
-        """Get the product id as human readable string (key of :py:attr:`tiepie.deviceList.DeviceList.PRODUCT_IDS`)
+        """Get the product id as human readable string (key of
+        :py:attr:`tiepie.deviceList.DeviceList.PRODUCT_IDS`)
 
         Returns:
             str: product id
@@ -127,7 +140,8 @@ class Device:
 
     @property
     def device_type(self):
-        """Get the device type as human readable string (key of :py:attr:`tiepie.deviceList.DeviceList.DEVICE_TYPES`)
+        """Get the device type as human readable string (key of
+        :py:attr:`tiepie.deviceList.DeviceList.DEVICE_TYPES`)
 
         Returns:
             str: device type
@@ -218,10 +232,9 @@ class Device:
     def calibration_token(self):
         """Get the calibration token of the device.
 
-         Returns:
-             str: calibration token of the device.
-         """
-
+        Returns:
+            str: calibration token of the device.
+        """
         # get length of calibration token string
         str_len = libtiepie.DevGetCalibrationToken(self._dev_handle, None, 0)
 
@@ -352,7 +365,8 @@ class Device:
         try:
             return libtiepie.DevTrGetInputCount(self._dev_handle)
         except OSError as err:
-            # DevTrGetInputCount raises NOT_SUPPORTED OSError, if the device has no trigger inputs
+            # DevTrGetInputCount raises NOT_SUPPORTED OSError,
+            # if the device has no trigger inputs
             if str(err) == "[-2]: NOT_SUPPORTED":
                 return 0
             else:
@@ -382,7 +396,8 @@ class Device:
         try:
             return libtiepie.DevTrGetOutputCount(self._dev_handle)
         except OSError as err:
-            # DevTrGetOutputCount raises NOT_SUPPORTED OSError, if the device has no trigger outputs
+            # DevTrGetOutputCount raises NOT_SUPPORTED OSError,
+            # if the device has no trigger outputs
             if str(err) == "[-2]: NOT_SUPPORTED":
                 return 0
             else:
@@ -406,9 +421,11 @@ def version_to_str(raw_version):
     """Convert a raw version int in TiePie's format to a nice string.
 
     Args:
-        raw_version (int): concatenated version numbers as int in TiePie's format
+        raw_version (int): concatenated version numbers as int in 
+                           TiePie's format.
 
     Returns:
         str: version number as str
     """
-    return '.'.join([str((raw_version >> (idx * 16)) & 0xffff) for idx in range(3, -1, -1)])
+    return '.'.join(
+        [str((raw_version >> (idx * 16)) & 0xffff) for idx in range(3, -1, -1)])

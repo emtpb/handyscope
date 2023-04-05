@@ -1,21 +1,22 @@
-"""
-This module implements an interface to the TiePie device library.
+"""This module implements an interface to the TiePie device library.
 
-Information on the specific functions can be found in the `library's api documentation
-<http://api.tiepie.com/libtiepie/>`_
+Information on the specific functions can be found in the `library's api
+documentation <http://api.tiepie.com/libtiepie/>`_
 
-It is implemented as a module and not as a class, because modules are only imported once in Python. This ensures that
-there is only one instance (=> singleton). See also `the Python FAQ
+It is implemented as a module and not as a class, because modules are only
+imported once in Python. This ensures that there is only one instance
+ (=> singleton). See also `the Python FAQ
 <https://docs.python.org/3/faq/programming.html#how-do-i-share-global-variables-across-modules>`_.
 
 Attributes:
     libtiepie (:py:class:`ctypes.CDLL`): instance of the library
 """
 
-from pkg_resources import resource_filename
-from ctypes import *
 import platform
 import warnings
+from ctypes import *
+
+from pkg_resources import resource_filename
 
 # Type definitions for callback usage
 Callback = CFUNCTYPE(None, c_void_p)
@@ -25,7 +26,8 @@ CallbackHandle = CFUNCTYPE(None, c_void_p, c_uint32)
 
 
 def _load_lib():
-    """Load the library and define argument and return types as well as error check functions.
+    """Load the library and define argument and return types as well as error
+    check functions.
 
     Returns:
         libtiepie (:py:class:`ctypes.CDLL`): instance of the library
@@ -39,7 +41,8 @@ def _load_lib():
         if sizeof(c_voidp) == 8:
             library_name = 'libtiepie64.dll'
     else:
-        raise Exception('Can\'t determine library name, unknown platform.system(): ' + platform.system())
+        raise Exception(
+            'Can\'t determine library name, unknown platform.system(): ' + platform.system())
 
     library_path = resource_filename(__name__, 'bin/{}'.format(library_name))
     libtiepie = CDLL(library_path)
@@ -113,10 +116,12 @@ def _load_lib():
     libtiepie.LstDevGetName.argtypes = [c_uint32, c_uint32, c_char_p, c_uint32]
     libtiepie.LstDevGetName.errcheck = _check_status
     libtiepie.LstDevGetNameShort.restype = c_uint32
-    libtiepie.LstDevGetNameShort.argtypes = [c_uint32, c_uint32, c_char_p, c_uint32]
+    libtiepie.LstDevGetNameShort.argtypes = [c_uint32, c_uint32, c_char_p,
+                                             c_uint32]
     libtiepie.LstDevGetNameShort.errcheck = _check_status
     libtiepie.LstDevGetNameShortest.restype = c_uint32
-    libtiepie.LstDevGetNameShortest.argtypes = [c_uint32, c_uint32, c_char_p, c_uint32]
+    libtiepie.LstDevGetNameShortest.argtypes = [c_uint32, c_uint32, c_char_p,
+                                                c_uint32]
     libtiepie.LstDevGetNameShortest.errcheck = _check_status
     libtiepie.LstDevGetDriverVersion.restype = c_uint64
     libtiepie.LstDevGetDriverVersion.argtypes = [c_uint32, c_uint32]
@@ -128,7 +133,8 @@ def _load_lib():
     libtiepie.LstDevGetFirmwareVersion.argtypes = [c_uint32, c_uint32]
     libtiepie.LstDevGetFirmwareVersion.errcheck = _check_status
     libtiepie.LstDevGetRecommendedFirmwareVersion.restype = c_uint64
-    libtiepie.LstDevGetRecommendedFirmwareVersion.argtypes = [c_uint32, c_uint32]
+    libtiepie.LstDevGetRecommendedFirmwareVersion.argtypes = [c_uint32,
+                                                              c_uint32]
     libtiepie.LstDevGetRecommendedFirmwareVersion.errcheck = _check_status
     libtiepie.LstDevGetCalibrationDate.restype = c_uint32
     libtiepie.LstDevGetCalibrationDate.argtypes = [c_uint32, c_uint32]
@@ -150,7 +156,8 @@ def _load_lib():
     libtiepie.LstDevGetTypes.argtypes = [c_uint32, c_uint32]
     libtiepie.LstDevGetTypes.errcheck = _check_status
     libtiepie.LstDevGetContainedSerialNumbers.restype = c_uint32
-    libtiepie.LstDevGetContainedSerialNumbers.argtypes = [c_uint32, c_uint32, c_void_p, c_uint32]
+    libtiepie.LstDevGetContainedSerialNumbers.argtypes = [c_uint32, c_uint32,
+                                                          c_void_p, c_uint32]
     libtiepie.LstDevGetContainedSerialNumbers.errcheck = _check_status
     libtiepie.LstCbDevGetProductId.restype = c_uint32
     libtiepie.LstCbDevGetProductId.argtypes = [c_uint32, c_uint32, c_uint32]
@@ -159,34 +166,42 @@ def _load_lib():
     libtiepie.LstCbDevGetVendorId.argtypes = [c_uint32, c_uint32, c_uint32]
     libtiepie.LstCbDevGetVendorId.errcheck = _check_status
     libtiepie.LstCbDevGetName.restype = c_uint32
-    libtiepie.LstCbDevGetName.argtypes = [c_uint32, c_uint32, c_uint32, c_char_p, c_uint32]
+    libtiepie.LstCbDevGetName.argtypes = [c_uint32, c_uint32, c_uint32,
+                                          c_char_p, c_uint32]
     libtiepie.LstCbDevGetName.errcheck = _check_status
     libtiepie.LstCbDevGetNameShort.restype = c_uint32
-    libtiepie.LstCbDevGetNameShort.argtypes = [c_uint32, c_uint32, c_uint32, c_char_p, c_uint32]
+    libtiepie.LstCbDevGetNameShort.argtypes = [c_uint32, c_uint32, c_uint32,
+                                               c_char_p, c_uint32]
     libtiepie.LstCbDevGetNameShort.errcheck = _check_status
     libtiepie.LstCbDevGetNameShortest.restype = c_uint32
-    libtiepie.LstCbDevGetNameShortest.argtypes = [c_uint32, c_uint32, c_uint32, c_char_p, c_uint32]
+    libtiepie.LstCbDevGetNameShortest.argtypes = [c_uint32, c_uint32, c_uint32,
+                                                  c_char_p, c_uint32]
     libtiepie.LstCbDevGetNameShortest.errcheck = _check_status
     libtiepie.LstCbDevGetDriverVersion.restype = c_uint64
     libtiepie.LstCbDevGetDriverVersion.argtypes = [c_uint32, c_uint32, c_uint32]
     libtiepie.LstCbDevGetDriverVersion.errcheck = _check_status
     libtiepie.LstCbDevGetFirmwareVersion.restype = c_uint64
-    libtiepie.LstCbDevGetFirmwareVersion.argtypes = [c_uint32, c_uint32, c_uint32]
+    libtiepie.LstCbDevGetFirmwareVersion.argtypes = [c_uint32, c_uint32,
+                                                     c_uint32]
     libtiepie.LstCbDevGetFirmwareVersion.errcheck = _check_status
     libtiepie.LstCbDevGetCalibrationDate.restype = c_uint32
-    libtiepie.LstCbDevGetCalibrationDate.argtypes = [c_uint32, c_uint32, c_uint32]
+    libtiepie.LstCbDevGetCalibrationDate.argtypes = [c_uint32, c_uint32,
+                                                     c_uint32]
     libtiepie.LstCbDevGetCalibrationDate.errcheck = _check_status
     libtiepie.LstCbScpGetChannelCount.restype = c_uint16
     libtiepie.LstCbScpGetChannelCount.argtypes = [c_uint32, c_uint32, c_uint32]
     libtiepie.LstCbScpGetChannelCount.errcheck = _check_status
     libtiepie.LstSetCallbackDeviceAdded.restype = None
-    libtiepie.LstSetCallbackDeviceAdded.argtypes = [CallbackDeviceList, c_void_p]
+    libtiepie.LstSetCallbackDeviceAdded.argtypes = [CallbackDeviceList,
+                                                    c_void_p]
     libtiepie.LstSetCallbackDeviceAdded.errcheck = _check_status
     libtiepie.LstSetCallbackDeviceRemoved.restype = None
-    libtiepie.LstSetCallbackDeviceRemoved.argtypes = [CallbackDeviceList, c_void_p]
+    libtiepie.LstSetCallbackDeviceRemoved.argtypes = [CallbackDeviceList,
+                                                      c_void_p]
     libtiepie.LstSetCallbackDeviceRemoved.errcheck = _check_status
     libtiepie.LstSetCallbackDeviceCanOpenChanged.restype = None
-    libtiepie.LstSetCallbackDeviceCanOpenChanged.argtypes = [CallbackDeviceList, c_void_p]
+    libtiepie.LstSetCallbackDeviceCanOpenChanged.argtypes = [CallbackDeviceList,
+                                                             c_void_p]
     libtiepie.LstSetCallbackDeviceCanOpenChanged.errcheck = _check_status
     if platform.system() == 'Linux':
         libtiepie.LstSetEventDeviceAdded.restype = None
@@ -259,7 +274,8 @@ def _load_lib():
     libtiepie.ObjGetInterfaces.argtypes = [c_uint32]
     libtiepie.ObjGetInterfaces.errcheck = _check_status
     libtiepie.ObjSetEventCallback.restype = None
-    libtiepie.ObjSetEventCallback.argtypes = [c_uint32, CallbackObject, c_void_p]
+    libtiepie.ObjSetEventCallback.argtypes = [c_uint32, CallbackObject,
+                                              c_void_p]
     libtiepie.ObjSetEventCallback.errcheck = _check_status
     libtiepie.ObjSetEventCallback.errcheck = _check_status
     libtiepie.ObjGetEvent.restype = c_uint8
@@ -354,7 +370,8 @@ def _load_lib():
         libtiepie.DevSetEventRemoved.argtypes = [c_uint32, HANDLE]
         libtiepie.DevSetEventRemoved.errcheck = _check_status
         libtiepie.DevSetMessageRemoved.restype = None
-        libtiepie.DevSetMessageRemoved.argtypes = [c_uint32, HWND, WPARAM, LPARAM]
+        libtiepie.DevSetMessageRemoved.argtypes = [c_uint32, HWND, WPARAM,
+                                                   LPARAM]
         libtiepie.DevSetMessageRemoved.errcheck = _check_status
     libtiepie.DevTrGetInputCount.restype = c_uint16
     libtiepie.DevTrGetInputCount.argtypes = [c_uint32]
@@ -420,7 +437,8 @@ def _load_lib():
     libtiepie.DevTrOutGetId.argtypes = [c_uint32, c_uint16]
     libtiepie.DevTrOutGetId.errcheck = _check_status
     libtiepie.DevTrOutGetName.restype = c_uint32
-    libtiepie.DevTrOutGetName.argtypes = [c_uint32, c_uint16, c_char_p, c_uint32]
+    libtiepie.DevTrOutGetName.argtypes = [c_uint32, c_uint16, c_char_p,
+                                          c_uint32]
     libtiepie.DevTrOutGetName.errcheck = _check_status
     libtiepie.DevTrOutTrigger.restype = c_uint8
     libtiepie.DevTrOutTrigger.argtypes = [c_uint32, c_uint16]
@@ -432,7 +450,8 @@ def _load_lib():
     libtiepie.ScpChIsAvailable.argtypes = [c_uint32, c_uint16]
     libtiepie.ScpChIsAvailable.errcheck = _check_status
     libtiepie.ScpChIsAvailableEx.restype = c_uint8
-    libtiepie.ScpChIsAvailableEx.argtypes = [c_uint32, c_uint16, c_uint32, c_double, c_uint8, c_void_p,
+    libtiepie.ScpChIsAvailableEx.argtypes = [c_uint32, c_uint16, c_uint32,
+                                             c_double, c_uint8, c_void_p,
                                              c_uint16]
     libtiepie.ScpChIsAvailableEx.errcheck = _check_status
     libtiepie.ScpChGetConnectorType.restype = c_uint32
@@ -491,7 +510,8 @@ def _load_lib():
     libtiepie.ScpChGetRanges.argtypes = [c_uint32, c_uint16, c_void_p, c_uint32]
     libtiepie.ScpChGetRanges.errcheck = _check_status
     libtiepie.ScpChGetRangesEx.restype = c_uint32
-    libtiepie.ScpChGetRangesEx.argtypes = [c_uint32, c_uint16, c_uint64, c_void_p, c_uint32]
+    libtiepie.ScpChGetRangesEx.argtypes = [c_uint32, c_uint16, c_uint64,
+                                           c_void_p, c_uint32]
     libtiepie.ScpChGetRangesEx.errcheck = _check_status
     libtiepie.ScpChGetRange.restype = c_double
     libtiepie.ScpChGetRange.argtypes = [c_uint32, c_uint16]
@@ -535,7 +555,8 @@ def _load_lib():
     libtiepie.ScpChTrIsAvailable.argtypes = [c_uint32, c_uint16]
     libtiepie.ScpChTrIsAvailable.errcheck = _check_status
     libtiepie.ScpChTrIsAvailableEx.restype = c_uint8
-    libtiepie.ScpChTrIsAvailableEx.argtypes = [c_uint32, c_uint16, c_uint32, c_double, c_uint8, c_void_p,
+    libtiepie.ScpChTrIsAvailableEx.argtypes = [c_uint32, c_uint16, c_uint32,
+                                               c_double, c_uint8, c_void_p,
                                                c_void_p, c_uint16]
     libtiepie.ScpChTrIsAvailableEx.errcheck = _check_status
     libtiepie.ScpChTrIsTriggered.restype = c_uint8
@@ -575,7 +596,8 @@ def _load_lib():
     libtiepie.ScpChTrGetLevel.argtypes = [c_uint32, c_uint16, c_uint32]
     libtiepie.ScpChTrGetLevel.errcheck = _check_status
     libtiepie.ScpChTrSetLevel.restype = c_double
-    libtiepie.ScpChTrSetLevel.argtypes = [c_uint32, c_uint16, c_uint32, c_double]
+    libtiepie.ScpChTrSetLevel.argtypes = [c_uint32, c_uint16, c_uint32,
+                                          c_double]
     libtiepie.ScpChTrSetLevel.errcheck = _check_status
     libtiepie.ScpChTrGetHysteresisCount.restype = c_uint32
     libtiepie.ScpChTrGetHysteresisCount.argtypes = [c_uint32, c_uint16]
@@ -584,13 +606,15 @@ def _load_lib():
     libtiepie.ScpChTrGetHysteresis.argtypes = [c_uint32, c_uint16, c_uint32]
     libtiepie.ScpChTrGetHysteresis.errcheck = _check_status
     libtiepie.ScpChTrSetHysteresis.restype = c_double
-    libtiepie.ScpChTrSetHysteresis.argtypes = [c_uint32, c_uint16, c_uint32, c_double]
+    libtiepie.ScpChTrSetHysteresis.argtypes = [c_uint32, c_uint16, c_uint32,
+                                               c_double]
     libtiepie.ScpChTrSetHysteresis.errcheck = _check_status
     libtiepie.ScpChTrGetConditions.restype = c_uint32
     libtiepie.ScpChTrGetConditions.argtypes = [c_uint32, c_uint16]
     libtiepie.ScpChTrGetConditions.errcheck = _check_status
     libtiepie.ScpChTrGetConditionsEx.restype = c_uint32
-    libtiepie.ScpChTrGetConditionsEx.argtypes = [c_uint32, c_uint16, c_uint32, c_uint64]
+    libtiepie.ScpChTrGetConditionsEx.argtypes = [c_uint32, c_uint16, c_uint32,
+                                                 c_uint64]
     libtiepie.ScpChTrGetConditionsEx.errcheck = _check_status
     libtiepie.ScpChTrGetCondition.restype = c_uint32
     libtiepie.ScpChTrGetCondition.argtypes = [c_uint32, c_uint16]
@@ -608,26 +632,32 @@ def _load_lib():
     libtiepie.ScpChTrSetTime.argtypes = [c_uint32, c_uint16, c_uint32, c_double]
     libtiepie.ScpChTrSetTime.errcheck = _check_status
     libtiepie.ScpChTrVerifyTime.restype = c_double
-    libtiepie.ScpChTrVerifyTime.argtypes = [c_uint32, c_uint16, c_uint32, c_double]
+    libtiepie.ScpChTrVerifyTime.argtypes = [c_uint32, c_uint16, c_uint32,
+                                            c_double]
     libtiepie.ScpChTrVerifyTime.errcheck = _check_status
     libtiepie.ScpChTrVerifyTimeEx2.restype = c_double
-    libtiepie.ScpChTrVerifyTimeEx2.argtypes = [c_uint32, c_uint16, c_uint32, c_double, c_uint32, c_double,
+    libtiepie.ScpChTrVerifyTimeEx2.argtypes = [c_uint32, c_uint16, c_uint32,
+                                               c_double, c_uint32, c_double,
                                                c_uint64, c_uint32]
     libtiepie.ScpChTrVerifyTimeEx2.errcheck = _check_status
     libtiepie.ScpGetData.restype = c_uint64
-    libtiepie.ScpGetData.argtypes = [c_uint32, c_void_p, c_uint16, c_uint64, c_uint64]
+    libtiepie.ScpGetData.argtypes = [c_uint32, c_void_p, c_uint16, c_uint64,
+                                     c_uint64]
     libtiepie.ScpGetData.errcheck = _check_status
     libtiepie.ScpGetData1Ch.restype = c_uint64
     libtiepie.ScpGetData1Ch.argtypes = [c_uint32, c_void_p, c_uint64, c_uint64]
     libtiepie.ScpGetData1Ch.errcheck = _check_status
     libtiepie.ScpGetData2Ch.restype = c_uint64
-    libtiepie.ScpGetData2Ch.argtypes = [c_uint32, c_void_p, c_void_p, c_uint64, c_uint64]
+    libtiepie.ScpGetData2Ch.argtypes = [c_uint32, c_void_p, c_void_p, c_uint64,
+                                        c_uint64]
     libtiepie.ScpGetData2Ch.errcheck = _check_status
     libtiepie.ScpGetData3Ch.restype = c_uint64
-    libtiepie.ScpGetData3Ch.argtypes = [c_uint32, c_void_p, c_void_p, c_void_p, c_uint64, c_uint64]
+    libtiepie.ScpGetData3Ch.argtypes = [c_uint32, c_void_p, c_void_p, c_void_p,
+                                        c_uint64, c_uint64]
     libtiepie.ScpGetData3Ch.errcheck = _check_status
     libtiepie.ScpGetData4Ch.restype = c_uint64
-    libtiepie.ScpGetData4Ch.argtypes = [c_uint32, c_void_p, c_void_p, c_void_p, c_void_p, c_uint64, c_uint64]
+    libtiepie.ScpGetData4Ch.argtypes = [c_uint32, c_void_p, c_void_p, c_void_p,
+                                        c_void_p, c_uint64, c_uint64]
     libtiepie.ScpGetData4Ch.errcheck = _check_status
     libtiepie.ScpGetData5Ch.restype = c_uint64
     libtiepie.ScpGetData5Ch.argtypes = [c_uint32, c_void_p, c_void_p, c_void_p,
@@ -652,7 +682,8 @@ def _load_lib():
     libtiepie.ScpGetValidPreSampleCount.argtypes = [c_uint32]
     libtiepie.ScpGetValidPreSampleCount.errcheck = _check_status
     libtiepie.ScpChGetDataValueRange.restype = None
-    libtiepie.ScpChGetDataValueRange.argtypes = [c_uint32, c_uint16, c_void_p, c_void_p]
+    libtiepie.ScpChGetDataValueRange.argtypes = [c_uint32, c_uint16, c_void_p,
+                                                 c_void_p]
     libtiepie.ScpChGetDataValueRange.errcheck = _check_status
     libtiepie.ScpChGetDataValueMin.restype = c_double
     libtiepie.ScpChGetDataValueMin.argtypes = [c_uint32, c_uint16]
@@ -661,19 +692,24 @@ def _load_lib():
     libtiepie.ScpChGetDataValueMax.argtypes = [c_uint32, c_uint16]
     libtiepie.ScpChGetDataValueMax.errcheck = _check_status
     libtiepie.ScpGetDataRaw.restype = c_uint64
-    libtiepie.ScpGetDataRaw.argtypes = [c_uint32, c_void_p, c_uint16, c_uint64, c_uint64]
+    libtiepie.ScpGetDataRaw.argtypes = [c_uint32, c_void_p, c_uint16, c_uint64,
+                                        c_uint64]
     libtiepie.ScpGetDataRaw.errcheck = _check_status
     libtiepie.ScpGetDataRaw1Ch.restype = c_uint64
-    libtiepie.ScpGetDataRaw1Ch.argtypes = [c_uint32, c_void_p, c_uint64, c_uint64]
+    libtiepie.ScpGetDataRaw1Ch.argtypes = [c_uint32, c_void_p, c_uint64,
+                                           c_uint64]
     libtiepie.ScpGetDataRaw1Ch.errcheck = _check_status
     libtiepie.ScpGetDataRaw2Ch.restype = c_uint64
-    libtiepie.ScpGetDataRaw2Ch.argtypes = [c_uint32, c_void_p, c_void_p, c_uint64, c_uint64]
+    libtiepie.ScpGetDataRaw2Ch.argtypes = [c_uint32, c_void_p, c_void_p,
+                                           c_uint64, c_uint64]
     libtiepie.ScpGetDataRaw2Ch.errcheck = _check_status
     libtiepie.ScpGetDataRaw3Ch.restype = c_uint64
-    libtiepie.ScpGetDataRaw3Ch.argtypes = [c_uint32, c_void_p, c_void_p, c_void_p, c_uint64, c_uint64]
+    libtiepie.ScpGetDataRaw3Ch.argtypes = [c_uint32, c_void_p, c_void_p,
+                                           c_void_p, c_uint64, c_uint64]
     libtiepie.ScpGetDataRaw3Ch.errcheck = _check_status
     libtiepie.ScpGetDataRaw4Ch.restype = c_uint64
-    libtiepie.ScpGetDataRaw4Ch.argtypes = [c_uint32, c_void_p, c_void_p, c_void_p, c_void_p, c_uint64,
+    libtiepie.ScpGetDataRaw4Ch.argtypes = [c_uint32, c_void_p, c_void_p,
+                                           c_void_p, c_void_p, c_uint64,
                                            c_uint64]
     libtiepie.ScpGetDataRaw4Ch.errcheck = _check_status
     libtiepie.ScpGetDataRaw5Ch.restype = c_uint64
@@ -702,7 +738,9 @@ def _load_lib():
     libtiepie.ScpChGetDataRawType.argtypes = [c_uint32, c_uint16]
     libtiepie.ScpChGetDataRawType.errcheck = _check_status
     libtiepie.ScpChGetDataRawValueRange.restype = None
-    libtiepie.ScpChGetDataRawValueRange.argtypes = [c_uint32, c_uint16, c_void_p, c_void_p, c_void_p]
+    libtiepie.ScpChGetDataRawValueRange.argtypes = [c_uint32, c_uint16,
+                                                    c_void_p, c_void_p,
+                                                    c_void_p]
     libtiepie.ScpChGetDataRawValueRange.errcheck = _check_status
     libtiepie.ScpChGetDataRawValueMin.restype = c_int64
     libtiepie.ScpChGetDataRawValueMin.argtypes = [c_uint32, c_uint16]
@@ -734,10 +772,13 @@ def _load_lib():
     libtiepie.ScpSetCallbackDataReady.argtypes = [c_uint32, Callback, c_void_p]
     libtiepie.ScpSetCallbackDataReady.errcheck = _check_status
     libtiepie.ScpSetCallbackDataOverflow.restype = None
-    libtiepie.ScpSetCallbackDataOverflow.argtypes = [c_uint32, Callback, c_void_p]
+    libtiepie.ScpSetCallbackDataOverflow.argtypes = [c_uint32, Callback,
+                                                     c_void_p]
     libtiepie.ScpSetCallbackDataOverflow.errcheck = _check_status
     libtiepie.ScpSetCallbackConnectionTestCompleted.restype = None
-    libtiepie.ScpSetCallbackConnectionTestCompleted.argtypes = [c_uint32, Callback, c_void_p]
+    libtiepie.ScpSetCallbackConnectionTestCompleted.argtypes = [c_uint32,
+                                                                Callback,
+                                                                c_void_p]
     libtiepie.ScpSetCallbackConnectionTestCompleted.errcheck = _check_status
     libtiepie.ScpSetCallbackTriggered.restype = None
     libtiepie.ScpSetCallbackTriggered.argtypes = [c_uint32, Callback, c_void_p]
@@ -750,7 +791,8 @@ def _load_lib():
         libtiepie.ScpSetEventDataOverflow.argtypes = [c_uint32, c_int]
         libtiepie.ScpSetEventDataOverflow.errcheck = _check_status
         libtiepie.ScpSetEventConnectionTestCompleted.restype = None
-        libtiepie.ScpSetEventConnectionTestCompleted.argtypes = [c_uint32, c_int]
+        libtiepie.ScpSetEventConnectionTestCompleted.argtypes = [c_uint32,
+                                                                 c_int]
         libtiepie.ScpSetEventConnectionTestCompleted.errcheck = _check_status
         libtiepie.ScpSetEventTriggered.restype = None
         libtiepie.ScpSetEventTriggered.argtypes = [c_uint32, c_int]
@@ -763,22 +805,28 @@ def _load_lib():
         libtiepie.ScpSetEventDataOverflow.argtypes = [c_uint32, HANDLE]
         libtiepie.ScpSetEventDataOverflow.errcheck = _check_status
         libtiepie.ScpSetEventConnectionTestCompleted.restype = None
-        libtiepie.ScpSetEventConnectionTestCompleted.argtypes = [c_uint32, HANDLE]
+        libtiepie.ScpSetEventConnectionTestCompleted.argtypes = [c_uint32,
+                                                                 HANDLE]
         libtiepie.ScpSetEventConnectionTestCompleted.errcheck = _check_status
         libtiepie.ScpSetEventTriggered.restype = None
         libtiepie.ScpSetEventTriggered.argtypes = [c_uint32, HANDLE]
         libtiepie.ScpSetEventTriggered.errcheck = _check_status
         libtiepie.ScpSetMessageDataReady.restype = None
-        libtiepie.ScpSetMessageDataReady.argtypes = [c_uint32, HWND, WPARAM, LPARAM]
+        libtiepie.ScpSetMessageDataReady.argtypes = [c_uint32, HWND, WPARAM,
+                                                     LPARAM]
         libtiepie.ScpSetMessageDataReady.errcheck = _check_status
         libtiepie.ScpSetMessageDataOverflow.restype = None
-        libtiepie.ScpSetMessageDataOverflow.argtypes = [c_uint32, HWND, WPARAM, LPARAM]
+        libtiepie.ScpSetMessageDataOverflow.argtypes = [c_uint32, HWND, WPARAM,
+                                                        LPARAM]
         libtiepie.ScpSetMessageDataOverflow.errcheck = _check_status
         libtiepie.ScpSetMessageConnectionTestCompleted.restype = None
-        libtiepie.ScpSetMessageConnectionTestCompleted.argtypes = [c_uint32, HWND, WPARAM, LPARAM]
+        libtiepie.ScpSetMessageConnectionTestCompleted.argtypes = [c_uint32,
+                                                                   HWND, WPARAM,
+                                                                   LPARAM]
         libtiepie.ScpSetMessageConnectionTestCompleted.errcheck = _check_status
         libtiepie.ScpSetMessageTriggered.restype = None
-        libtiepie.ScpSetMessageTriggered.argtypes = [c_uint32, HWND, WPARAM, LPARAM]
+        libtiepie.ScpSetMessageTriggered.argtypes = [c_uint32, HWND, WPARAM,
+                                                     LPARAM]
         libtiepie.ScpSetMessageTriggered.errcheck = _check_status
     libtiepie.ScpStart.restype = c_uint8
     libtiepie.ScpStart.argtypes = [c_uint32]
@@ -899,11 +947,16 @@ def _load_lib():
     libtiepie.ScpVerifySampleFrequency.argtypes = [c_uint32, c_double]
     libtiepie.ScpVerifySampleFrequency.errcheck = _check_status
     libtiepie.ScpVerifySampleFrequencyEx.restype = c_double
-    libtiepie.ScpVerifySampleFrequencyEx.argtypes = [c_uint32, c_double, c_uint32, c_uint8, c_void_p, c_uint16]
+    libtiepie.ScpVerifySampleFrequencyEx.argtypes = [c_uint32, c_double,
+                                                     c_uint32, c_uint8,
+                                                     c_void_p, c_uint16]
     libtiepie.ScpVerifySampleFrequencyEx.errcheck = _check_status
     libtiepie.ScpVerifySampleFrequenciesEx.restype = None
-    libtiepie.ScpVerifySampleFrequenciesEx.argtypes = [c_uint32, c_void_p, c_uint32, c_uint32, c_uint32,
-                                                       c_uint8, c_void_p, c_uint16]
+    libtiepie.ScpVerifySampleFrequenciesEx.argtypes = [c_uint32, c_void_p,
+                                                       c_uint32, c_uint32,
+                                                       c_uint32,
+                                                       c_uint8, c_void_p,
+                                                       c_uint16]
     libtiepie.ScpVerifySampleFrequenciesEx.errcheck = _check_status
     libtiepie.ScpGetRecordLengthMax.restype = c_uint64
     libtiepie.ScpGetRecordLengthMax.argtypes = [c_uint32]
@@ -921,7 +974,8 @@ def _load_lib():
     libtiepie.ScpVerifyRecordLength.argtypes = [c_uint32, c_uint64]
     libtiepie.ScpVerifyRecordLength.errcheck = _check_status
     libtiepie.ScpVerifyRecordLengthEx.restype = c_uint64
-    libtiepie.ScpVerifyRecordLengthEx.argtypes = [c_uint32, c_uint64, c_uint32, c_uint8, c_void_p, c_uint16]
+    libtiepie.ScpVerifyRecordLengthEx.argtypes = [c_uint32, c_uint64, c_uint32,
+                                                  c_uint8, c_void_p, c_uint16]
     libtiepie.ScpVerifyRecordLengthEx.errcheck = _check_status
     libtiepie.ScpGetPreSampleRatio.restype = c_double
     libtiepie.ScpGetPreSampleRatio.argtypes = [c_uint32]
@@ -945,7 +999,8 @@ def _load_lib():
     libtiepie.ScpVerifySegmentCount.argtypes = [c_uint32, c_uint32]
     libtiepie.ScpVerifySegmentCount.errcheck = _check_status
     libtiepie.ScpVerifySegmentCountEx2.restype = c_uint32
-    libtiepie.ScpVerifySegmentCountEx2.argtypes = [c_uint32, c_uint32, c_uint32, c_uint64, c_void_p, c_uint16]
+    libtiepie.ScpVerifySegmentCountEx2.argtypes = [c_uint32, c_uint32, c_uint32,
+                                                   c_uint64, c_void_p, c_uint16]
     libtiepie.ScpVerifySegmentCountEx2.errcheck = _check_status
     libtiepie.ScpHasTrigger.restype = c_uint8
     libtiepie.ScpHasTrigger.argtypes = [c_uint32]
@@ -963,7 +1018,8 @@ def _load_lib():
     libtiepie.ScpVerifyTriggerTimeOut.argtypes = [c_uint32, c_double]
     libtiepie.ScpVerifyTriggerTimeOut.errcheck = _check_status
     libtiepie.ScpVerifyTriggerTimeOutEx.restype = c_double
-    libtiepie.ScpVerifyTriggerTimeOutEx.argtypes = [c_uint32, c_double, c_uint32, c_double]
+    libtiepie.ScpVerifyTriggerTimeOutEx.argtypes = [c_uint32, c_double,
+                                                    c_uint32, c_double]
     libtiepie.ScpVerifyTriggerTimeOutEx.errcheck = _check_status
     libtiepie.ScpHasTriggerDelay.restype = c_uint8
     libtiepie.ScpHasTriggerDelay.argtypes = [c_uint32]
@@ -987,7 +1043,8 @@ def _load_lib():
     libtiepie.ScpVerifyTriggerDelay.argtypes = [c_uint32, c_double]
     libtiepie.ScpVerifyTriggerDelay.errcheck = _check_status
     libtiepie.ScpVerifyTriggerDelayEx.restype = c_double
-    libtiepie.ScpVerifyTriggerDelayEx.argtypes = [c_uint32, c_double, c_uint32, c_double]
+    libtiepie.ScpVerifyTriggerDelayEx.argtypes = [c_uint32, c_double, c_uint32,
+                                                  c_double]
     libtiepie.ScpVerifyTriggerDelayEx.errcheck = _check_status
     libtiepie.ScpHasTriggerHoldOff.restype = c_uint8
     libtiepie.ScpHasTriggerHoldOff.argtypes = [c_uint32]
@@ -1098,7 +1155,8 @@ def _load_lib():
     libtiepie.GenGetAmplitudeMax.argtypes = [c_uint32]
     libtiepie.GenGetAmplitudeMax.errcheck = _check_status
     libtiepie.GenGetAmplitudeMinMaxEx.restype = None
-    libtiepie.GenGetAmplitudeMinMaxEx.argtypes = [c_uint32, c_uint32, c_void_p, c_void_p]
+    libtiepie.GenGetAmplitudeMinMaxEx.argtypes = [c_uint32, c_uint32, c_void_p,
+                                                  c_void_p]
     libtiepie.GenGetAmplitudeMinMaxEx.errcheck = _check_status
     libtiepie.GenGetAmplitude.restype = c_double
     libtiepie.GenGetAmplitude.argtypes = [c_uint32]
@@ -1110,7 +1168,8 @@ def _load_lib():
     libtiepie.GenVerifyAmplitude.argtypes = [c_uint32, c_double]
     libtiepie.GenVerifyAmplitude.errcheck = _check_status
     libtiepie.GenVerifyAmplitudeEx.restype = c_double
-    libtiepie.GenVerifyAmplitudeEx.argtypes = [c_uint32, c_double, c_uint32, c_uint32, c_double]
+    libtiepie.GenVerifyAmplitudeEx.argtypes = [c_uint32, c_double, c_uint32,
+                                               c_uint32, c_double]
     libtiepie.GenVerifyAmplitudeEx.errcheck = _check_status
     libtiepie.GenGetAmplitudeRanges.restype = c_uint32
     libtiepie.GenGetAmplitudeRanges.argtypes = [c_uint32, c_void_p, c_uint32]
@@ -1140,7 +1199,8 @@ def _load_lib():
     libtiepie.GenGetOffsetMax.argtypes = [c_uint32]
     libtiepie.GenGetOffsetMax.errcheck = _check_status
     libtiepie.GenGetOffsetMinMaxEx.restype = None
-    libtiepie.GenGetOffsetMinMaxEx.argtypes = [c_uint32, c_uint32, c_void_p, c_void_p]
+    libtiepie.GenGetOffsetMinMaxEx.argtypes = [c_uint32, c_uint32, c_void_p,
+                                               c_void_p]
     libtiepie.GenGetOffsetMinMaxEx.errcheck = _check_status
     libtiepie.GenGetOffset.restype = c_double
     libtiepie.GenGetOffset.argtypes = [c_uint32]
@@ -1152,7 +1212,8 @@ def _load_lib():
     libtiepie.GenVerifyOffset.argtypes = [c_uint32, c_double]
     libtiepie.GenVerifyOffset.errcheck = _check_status
     libtiepie.GenVerifyOffsetEx.restype = c_double
-    libtiepie.GenVerifyOffsetEx.argtypes = [c_uint32, c_double, c_uint32, c_double]
+    libtiepie.GenVerifyOffsetEx.argtypes = [c_uint32, c_double, c_uint32,
+                                            c_double]
     libtiepie.GenVerifyOffsetEx.errcheck = _check_status
     libtiepie.GenGetFrequencyModes.restype = c_uint32
     libtiepie.GenGetFrequencyModes.argtypes = [c_uint32]
@@ -1179,10 +1240,12 @@ def _load_lib():
     libtiepie.GenGetFrequencyMax.argtypes = [c_uint32]
     libtiepie.GenGetFrequencyMax.errcheck = _check_status
     libtiepie.GenGetFrequencyMinMax.restype = None
-    libtiepie.GenGetFrequencyMinMax.argtypes = [c_uint32, c_uint32, c_void_p, c_void_p]
+    libtiepie.GenGetFrequencyMinMax.argtypes = [c_uint32, c_uint32, c_void_p,
+                                                c_void_p]
     libtiepie.GenGetFrequencyMinMax.errcheck = _check_status
     libtiepie.GenGetFrequencyMinMaxEx.restype = None
-    libtiepie.GenGetFrequencyMinMaxEx.argtypes = [c_uint32, c_uint32, c_uint32, c_void_p, c_void_p]
+    libtiepie.GenGetFrequencyMinMaxEx.argtypes = [c_uint32, c_uint32, c_uint32,
+                                                  c_void_p, c_void_p]
     libtiepie.GenGetFrequencyMinMaxEx.errcheck = _check_status
     libtiepie.GenGetFrequency.restype = c_double
     libtiepie.GenGetFrequency.argtypes = [c_uint32]
@@ -1194,7 +1257,8 @@ def _load_lib():
     libtiepie.GenVerifyFrequency.argtypes = [c_uint32, c_double]
     libtiepie.GenVerifyFrequency.errcheck = _check_status
     libtiepie.GenVerifyFrequencyEx2.restype = c_double
-    libtiepie.GenVerifyFrequencyEx2.argtypes = [c_uint32, c_double, c_uint32, c_uint32, c_uint64, c_double]
+    libtiepie.GenVerifyFrequencyEx2.argtypes = [c_uint32, c_double, c_uint32,
+                                                c_uint32, c_uint64, c_double]
     libtiepie.GenVerifyFrequencyEx2.errcheck = _check_status
     libtiepie.GenHasPhase.restype = c_uint8
     libtiepie.GenHasPhase.argtypes = [c_uint32]
@@ -1209,7 +1273,8 @@ def _load_lib():
     libtiepie.GenGetPhaseMax.argtypes = [c_uint32]
     libtiepie.GenGetPhaseMax.errcheck = _check_status
     libtiepie.GenGetPhaseMinMaxEx.restype = None
-    libtiepie.GenGetPhaseMinMaxEx.argtypes = [c_uint32, c_uint32, c_void_p, c_void_p]
+    libtiepie.GenGetPhaseMinMaxEx.argtypes = [c_uint32, c_uint32, c_void_p,
+                                              c_void_p]
     libtiepie.GenGetPhaseMinMaxEx.errcheck = _check_status
     libtiepie.GenGetPhase.restype = c_double
     libtiepie.GenGetPhase.argtypes = [c_uint32]
@@ -1236,7 +1301,8 @@ def _load_lib():
     libtiepie.GenGetSymmetryMax.argtypes = [c_uint32]
     libtiepie.GenGetSymmetryMax.errcheck = _check_status
     libtiepie.GenGetSymmetryMinMaxEx.restype = None
-    libtiepie.GenGetSymmetryMinMaxEx.argtypes = [c_uint32, c_uint32, c_void_p, c_void_p]
+    libtiepie.GenGetSymmetryMinMaxEx.argtypes = [c_uint32, c_uint32, c_void_p,
+                                                 c_void_p]
     libtiepie.GenGetSymmetryMinMaxEx.errcheck = _check_status
     libtiepie.GenGetSymmetry.restype = c_double
     libtiepie.GenGetSymmetry.argtypes = [c_uint32]
@@ -1263,7 +1329,8 @@ def _load_lib():
     libtiepie.GenGetWidthMax.argtypes = [c_uint32]
     libtiepie.GenGetWidthMax.errcheck = _check_status
     libtiepie.GenGetWidthMinMaxEx.restype = None
-    libtiepie.GenGetWidthMinMaxEx.argtypes = [c_uint32, c_uint32, c_double, c_void_p, c_void_p]
+    libtiepie.GenGetWidthMinMaxEx.argtypes = [c_uint32, c_uint32, c_double,
+                                              c_void_p, c_void_p]
     libtiepie.GenGetWidthMinMaxEx.errcheck = _check_status
     libtiepie.GenGetWidth.restype = c_double
     libtiepie.GenGetWidth.argtypes = [c_uint32]
@@ -1275,7 +1342,8 @@ def _load_lib():
     libtiepie.GenVerifyWidth.argtypes = [c_uint32, c_double]
     libtiepie.GenVerifyWidth.errcheck = _check_status
     libtiepie.GenVerifyWidthEx.restype = c_double
-    libtiepie.GenVerifyWidthEx.argtypes = [c_uint32, c_double, c_uint32, c_double]
+    libtiepie.GenVerifyWidthEx.argtypes = [c_uint32, c_double, c_uint32,
+                                           c_double]
     libtiepie.GenVerifyWidthEx.errcheck = _check_status
     libtiepie.GenGetLeadingEdgeTimeMin.restype = c_double
     libtiepie.GenGetLeadingEdgeTimeMin.argtypes = [c_uint32]
@@ -1344,7 +1412,8 @@ def _load_lib():
     libtiepie.GenGetDataLengthMax.argtypes = [c_uint32]
     libtiepie.GenGetDataLengthMax.errcheck = _check_status
     libtiepie.GenGetDataLengthMinMaxEx.restype = None
-    libtiepie.GenGetDataLengthMinMaxEx.argtypes = [c_uint32, c_uint32, c_void_p, c_void_p]
+    libtiepie.GenGetDataLengthMinMaxEx.argtypes = [c_uint32, c_uint32, c_void_p,
+                                                   c_void_p]
     libtiepie.GenGetDataLengthMinMaxEx.errcheck = _check_status
     libtiepie.GenGetDataLength.restype = c_uint64
     libtiepie.GenGetDataLength.argtypes = [c_uint32]
@@ -1359,13 +1428,15 @@ def _load_lib():
     libtiepie.GenSetData.argtypes = [c_uint32, c_void_p, c_uint64]
     libtiepie.GenSetData.errcheck = _check_status
     libtiepie.GenSetDataEx.restype = None
-    libtiepie.GenSetDataEx.argtypes = [c_uint32, c_void_p, c_uint64, c_uint32, c_uint32]
+    libtiepie.GenSetDataEx.argtypes = [c_uint32, c_void_p, c_uint64, c_uint32,
+                                       c_uint32]
     libtiepie.GenSetDataEx.errcheck = _check_status
     libtiepie.GenGetDataRawType.restype = c_uint32
     libtiepie.GenGetDataRawType.argtypes = [c_uint32]
     libtiepie.GenGetDataRawType.errcheck = _check_status
     libtiepie.GenGetDataRawValueRange.restype = None
-    libtiepie.GenGetDataRawValueRange.argtypes = [c_uint32, c_void_p, c_void_p, c_void_p]
+    libtiepie.GenGetDataRawValueRange.argtypes = [c_uint32, c_void_p, c_void_p,
+                                                  c_void_p]
     libtiepie.GenGetDataRawValueRange.errcheck = _check_status
     libtiepie.GenGetDataRawValueMin.restype = c_int64
     libtiepie.GenGetDataRawValueMin.argtypes = [c_uint32]
@@ -1380,7 +1451,8 @@ def _load_lib():
     libtiepie.GenSetDataRaw.argtypes = [c_uint32, c_void_p, c_uint64]
     libtiepie.GenSetDataRaw.errcheck = _check_status
     libtiepie.GenSetDataRawEx.restype = None
-    libtiepie.GenSetDataRawEx.argtypes = [c_uint32, c_void_p, c_uint64, c_uint32, c_uint32]
+    libtiepie.GenSetDataRawEx.argtypes = [c_uint32, c_void_p, c_uint64,
+                                          c_uint32, c_uint32]
     libtiepie.GenSetDataRawEx.errcheck = _check_status
     libtiepie.GenGetModes.restype = c_uint64
     libtiepie.GenGetModes.argtypes = [c_uint32]
@@ -1407,7 +1479,8 @@ def _load_lib():
     libtiepie.GenGetBurstCountMax.argtypes = [c_uint32]
     libtiepie.GenGetBurstCountMax.errcheck = _check_status
     libtiepie.GenGetBurstCountMinMaxEx.restype = None
-    libtiepie.GenGetBurstCountMinMaxEx.argtypes = [c_uint32, c_uint64, c_void_p, c_void_p]
+    libtiepie.GenGetBurstCountMinMaxEx.argtypes = [c_uint32, c_uint64, c_void_p,
+                                                   c_void_p]
     libtiepie.GenGetBurstCountMinMaxEx.errcheck = _check_status
     libtiepie.GenGetBurstCount.restype = c_uint64
     libtiepie.GenGetBurstCount.argtypes = [c_uint32]
@@ -1422,7 +1495,8 @@ def _load_lib():
     libtiepie.GenGetBurstSampleCountMax.argtypes = [c_uint32]
     libtiepie.GenGetBurstSampleCountMax.errcheck = _check_status
     libtiepie.GenGetBurstSampleCountMinMaxEx.restype = None
-    libtiepie.GenGetBurstSampleCountMinMaxEx.argtypes = [c_uint32, c_uint64, c_void_p, c_void_p]
+    libtiepie.GenGetBurstSampleCountMinMaxEx.argtypes = [c_uint32, c_uint64,
+                                                         c_void_p, c_void_p]
     libtiepie.GenGetBurstSampleCountMinMaxEx.errcheck = _check_status
     libtiepie.GenGetBurstSampleCount.restype = c_uint64
     libtiepie.GenGetBurstSampleCount.argtypes = [c_uint32]
@@ -1437,8 +1511,11 @@ def _load_lib():
     libtiepie.GenGetBurstSegmentCountMax.argtypes = [c_uint32]
     libtiepie.GenGetBurstSegmentCountMax.errcheck = _check_status
     libtiepie.GenGetBurstSegmentCountMinMaxEx.restype = None
-    libtiepie.GenGetBurstSegmentCountMinMaxEx.argtypes = [c_uint32, c_uint64, c_uint32, c_uint32, c_double,
-                                                          c_uint64, c_void_p, c_void_p]
+    libtiepie.GenGetBurstSegmentCountMinMaxEx.argtypes = [c_uint32, c_uint64,
+                                                          c_uint32, c_uint32,
+                                                          c_double,
+                                                          c_uint64, c_void_p,
+                                                          c_void_p]
     libtiepie.GenGetBurstSegmentCountMinMaxEx.errcheck = _check_status
     libtiepie.GenGetBurstSegmentCount.restype = c_uint64
     libtiepie.GenGetBurstSegmentCount.argtypes = [c_uint32]
@@ -1450,11 +1527,14 @@ def _load_lib():
     libtiepie.GenVerifyBurstSegmentCount.argtypes = [c_uint32, c_uint64]
     libtiepie.GenVerifyBurstSegmentCount.errcheck = _check_status
     libtiepie.GenVerifyBurstSegmentCountEx.restype = c_uint64
-    libtiepie.GenVerifyBurstSegmentCountEx.argtypes = [c_uint32, c_uint64, c_uint64, c_uint32, c_uint32,
+    libtiepie.GenVerifyBurstSegmentCountEx.argtypes = [c_uint32, c_uint64,
+                                                       c_uint64, c_uint32,
+                                                       c_uint32,
                                                        c_double, c_uint64]
     libtiepie.GenVerifyBurstSegmentCountEx.errcheck = _check_status
     libtiepie.GenSetCallbackBurstCompleted.restype = None
-    libtiepie.GenSetCallbackBurstCompleted.argtypes = [c_uint32, Callback, c_void_p]
+    libtiepie.GenSetCallbackBurstCompleted.argtypes = [c_uint32, Callback,
+                                                       c_void_p]
     libtiepie.GenSetCallbackBurstCompleted.errcheck = _check_status
     if platform.system() == 'Linux':
         libtiepie.GenSetEventBurstCompleted.restype = None
@@ -1465,10 +1545,12 @@ def _load_lib():
         libtiepie.GenSetEventBurstCompleted.argtypes = [c_uint32, HANDLE]
         libtiepie.GenSetEventBurstCompleted.errcheck = _check_status
         libtiepie.GenSetMessageBurstCompleted.restype = None
-        libtiepie.GenSetMessageBurstCompleted.argtypes = [c_uint32, HWND, WPARAM, LPARAM]
+        libtiepie.GenSetMessageBurstCompleted.argtypes = [c_uint32, HWND,
+                                                          WPARAM, LPARAM]
         libtiepie.GenSetMessageBurstCompleted.errcheck = _check_status
     libtiepie.GenSetCallbackControllableChanged.restype = None
-    libtiepie.GenSetCallbackControllableChanged.argtypes = [c_uint32, Callback, c_void_p]
+    libtiepie.GenSetCallbackControllableChanged.argtypes = [c_uint32, Callback,
+                                                            c_void_p]
     libtiepie.GenSetCallbackControllableChanged.errcheck = _check_status
     if platform.system() == 'Linux':
         libtiepie.GenSetEventControllableChanged.restype = None
@@ -1479,7 +1561,8 @@ def _load_lib():
         libtiepie.GenSetEventControllableChanged.argtypes = [c_uint32, HANDLE]
         libtiepie.GenSetEventControllableChanged.errcheck = _check_status
         libtiepie.GenSetMessageControllableChanged.restype = None
-        libtiepie.GenSetMessageControllableChanged.argtypes = [c_uint32, HWND, WPARAM, LPARAM]
+        libtiepie.GenSetMessageControllableChanged.argtypes = [c_uint32, HWND,
+                                                               WPARAM, LPARAM]
         libtiepie.GenSetMessageControllableChanged.errcheck = _check_status
     libtiepie.I2CIsInternalAddress.restype = c_uint8
     libtiepie.I2CIsInternalAddress.argtypes = [c_uint32, c_uint16]
@@ -1488,7 +1571,8 @@ def _load_lib():
     libtiepie.I2CGetInternalAddresses.argtypes = [c_uint32, c_void_p, c_uint32]
     libtiepie.I2CGetInternalAddresses.errcheck = _check_status
     libtiepie.I2CRead.restype = c_uint8
-    libtiepie.I2CRead.argtypes = [c_uint32, c_uint16, c_void_p, c_uint32, c_uint8]
+    libtiepie.I2CRead.argtypes = [c_uint32, c_uint16, c_void_p, c_uint32,
+                                  c_uint8]
     libtiepie.I2CRead.errcheck = _check_status
     libtiepie.I2CReadByte.restype = c_uint8
     libtiepie.I2CReadByte.argtypes = [c_uint32, c_uint16, c_void_p]
@@ -1497,7 +1581,8 @@ def _load_lib():
     libtiepie.I2CReadWord.argtypes = [c_uint32, c_uint16, c_void_p]
     libtiepie.I2CReadWord.errcheck = _check_status
     libtiepie.I2CWrite.restype = c_uint8
-    libtiepie.I2CWrite.argtypes = [c_uint32, c_uint16, c_void_p, c_uint32, c_uint8]
+    libtiepie.I2CWrite.argtypes = [c_uint32, c_uint16, c_void_p, c_uint32,
+                                   c_uint8]
     libtiepie.I2CWrite.errcheck = _check_status
     libtiepie.I2CWriteByte.restype = c_uint8
     libtiepie.I2CWriteByte.argtypes = [c_uint32, c_uint16, c_uint8]
@@ -1506,7 +1591,8 @@ def _load_lib():
     libtiepie.I2CWriteByteByte.argtypes = [c_uint32, c_uint16, c_uint8, c_uint8]
     libtiepie.I2CWriteByteByte.errcheck = _check_status
     libtiepie.I2CWriteByteWord.restype = c_uint8
-    libtiepie.I2CWriteByteWord.argtypes = [c_uint32, c_uint16, c_uint8, c_uint16]
+    libtiepie.I2CWriteByteWord.argtypes = [c_uint32, c_uint16, c_uint8,
+                                           c_uint16]
     libtiepie.I2CWriteByteWord.errcheck = _check_status
     libtiepie.I2CWriteWord.restype = c_uint8
     libtiepie.I2CWriteWord.argtypes = [c_uint32, c_uint16, c_uint16]
@@ -1583,18 +1669,19 @@ def _check_status(result, func, args):
     """Checks the status after calling a library function.
 
     This function is not intended as standalone function. It is
-    a callable to be assigned to the :py:attr:`ctypes._FuncPtr.errcheck` attribute of the foreign function
-    definitions.
+    a callable to be assigned to the :py:attr:`ctypes._FuncPtr.errcheck`
+    attribute of the foreign function definitions.
 
     Args:
-        result: what the foreign function returns, as specified by the restype attribute
+        result: what the foreign function returns, as specified by the restype
+                attribute
         func: the foreign function object itself
-        args:  tuple containing the parameters originally passed to the function call
+        args:  tuple containing the parameters originally passed to the
+               function call
 
     Returns:
         The unaltered result returned by the foreign function.
     """
-
     status_code = libtiepie.LibGetLastStatus()
 
     # From API documentation:
@@ -1602,7 +1689,9 @@ def _check_status(result, func, args):
     # <0 means error
     # >0 means ok, but with a side effect
     if status_code != 0:
-        status_str = '[' + str(status_code) + ']: ' + libtiepie.LibGetLastStatusStr().decode('utf-8')
+        status_str = '[' + str(
+            status_code) + ']: ' + libtiepie.LibGetLastStatusStr().decode(
+            'utf-8')
         if status_code > 0:
             warnings.warn(status_str)
         else:
@@ -1612,7 +1701,7 @@ def _check_status(result, func, args):
 
 
 def is_initialized():
-    """Get library initialized flag
+    """Get library initialized flag.
 
     Returns:
         bool: True is library is initialized, False otherwise
@@ -1621,7 +1710,7 @@ def is_initialized():
 
 
 def get_version():
-    """Get library version
+    """Get library version.
 
     Returns:
         str: library version major.minor.release.build
@@ -1631,7 +1720,7 @@ def get_version():
 
 
 def get_version_postfix():
-    """Get library version postfix
+    """Get library version postfix.
 
     Returns:
         str: version postfix
