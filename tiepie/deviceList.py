@@ -8,9 +8,12 @@ class DeviceList:
     """This class provides access to the device list maintained by libtiepie.
 
     Attributes:
-        ID_KINDS (dict): dict which maps readable representations of id kinds to their int version
-        PRODUCT_IDS (dict): dict which maps readable representations of product ids to their int version
-        DEVICE_TYPES (dict): dict which maps readable representations of device types to their int version
+        ID_KINDS (dict): dict which maps readable representations of id kinds
+                         to their int version
+        PRODUCT_IDS (dict): dict which maps readable representations of product
+                            ids to their int version
+        DEVICE_TYPES (dict): dict which maps readable representations of
+                             device types to their int version
     """
 
     ID_KINDS = {"product id":    1,
@@ -150,13 +153,16 @@ class DeviceList:
         else:
             instr_id_int = instr_id
         # get the driver version
-        driver_version = libtiepie.LstDevGetDriverVersion(id_kind_int, instr_id_int)
+        driver_version = libtiepie.LstDevGetDriverVersion(id_kind_int,
+                                                          instr_id_int)
 
         return version_to_str(driver_version)
 
     def get_recommended_driver_version(self, instr_id, id_kind="index"):
         """Get the recommended driver version of the device.
 
+        Not tested.
+        
         Args:
             instr_id (int): Device list index, product ID
                             (listed in dict PRODUCT_IDS) or serial number.
@@ -176,7 +182,8 @@ class DeviceList:
         else:
             instr_id_int = instr_id
         # get the driver version
-        driver_version = libtiepie.LstDevGetRecommendedDriverVersion(id_kind_int, instr_id_int)
+        driver_version = libtiepie.LstDevGetRecommendedDriverVersion(
+            id_kind_int, instr_id_int)
 
         return version_to_str(driver_version)
 
@@ -202,12 +209,15 @@ class DeviceList:
         else:
             instr_id_int = instr_id
         # get the firmware version
-        firmware_version = libtiepie.LstDevGetFirmwareVersion(id_kind_int, instr_id_int)
+        firmware_version = libtiepie.LstDevGetFirmwareVersion(id_kind_int,
+                                                              instr_id_int)
 
         return version_to_str(firmware_version)
 
     def get_recommended_firmware_version(self, instr_id, id_kind="index"):
         """Get the recommended firmware version of the device.
+        
+        Not tested.
 
         Args:
             instr_id (int): Device list index, product ID
@@ -228,7 +238,8 @@ class DeviceList:
         else:
             instr_id_int = instr_id
         # get the firmware version
-        firmware_version = libtiepie.LstDevGetRecommendedFirmwareVersion(id_kind_int, instr_id_int)
+        firmware_version = libtiepie.LstDevGetRecommendedFirmwareVersion(
+            id_kind_int, instr_id_int)
 
         return version_to_str(firmware_version)
 
@@ -257,7 +268,8 @@ class DeviceList:
         # get the calibration date
         raw_date = libtiepie.LstDevGetCalibrationDate(id_kind_int, instr_id_int)
 
-        split_date = date(raw_date >> 16, (raw_date >> 8) & 0xff, raw_date & 0xff)
+        split_date = date(raw_date >> 16, (raw_date >> 8) & 0xff,
+                          raw_date & 0xff)
         return split_date
 
     def get_device_name(self, instr_id, id_kind="index"):
@@ -337,13 +349,15 @@ class DeviceList:
         id_kind_int = self.ID_KINDS[id_kind]
 
         # get length of device name string
-        str_len = libtiepie.LstDevGetNameShortest(id_kind_int, instr_id, None, 0)
+        str_len = libtiepie.LstDevGetNameShortest(id_kind_int, instr_id,
+                                                  None, 0)
 
         # initialize mutable string buffer
         str_buffer = ctypes.create_string_buffer(str_len)
 
         # write the actual device name to the buffer
-        libtiepie.LstDevGetNameShortest(id_kind_int, instr_id, str_buffer, str_len)
+        libtiepie.LstDevGetNameShortest(id_kind_int, instr_id, str_buffer,
+                                        str_len)
 
         # convert to a normal python string
         dev_name = str_buffer.value.decode('utf-8')
@@ -531,7 +545,9 @@ class DeviceList:
         """
         instr_str = ""
         for instr_info in self.get_overview():
-            instr_str += "%d:\t%s\t%d\t%s\n" % (instr_info["Index"], instr_info["Name"], instr_info["SerNo"],
+            instr_str += "%d:\t%s\t%d\t%s\n" % (instr_info["Index"],
+                                                instr_info["Name"],
+                                                instr_info["SerNo"],
                                                 instr_info["DevTypes"])
 
         return instr_str
@@ -570,7 +586,8 @@ class DeviceList:
         else:
             instr_id_int = instr_id
 
-        return libtiepie.LstOpenDevice(id_kind_int, instr_id_int, device_type_int)
+        return libtiepie.LstOpenDevice(id_kind_int, instr_id_int,
+                                       device_type_int)
 
     def get_channel_count_cb(self, instr_id, contained_serial_no,
                              id_kind="index"):
@@ -710,7 +727,8 @@ class DeviceList:
         str_buffer = ctypes.create_string_buffer(str_len)
 
         # write the actual device name to the buffer
-        libtiepie.LstCbDevGetNameShort(id_kind_int, instr_id, contained_serial_no,
+        libtiepie.LstCbDevGetNameShort(id_kind_int, instr_id,
+                                       contained_serial_no,
                                        str_buffer, str_len)
 
         # convert to a normal python string
@@ -865,5 +883,6 @@ def version_to_str(raw_version):
     return '.'.join([str((raw_version >> (idx * 16)) & 0xffff) for idx in range(3, -1, -1)])
 
 
-# Instantiate class to make it available via import. Thus only one instance exists (singleton design pattern).
+# Instantiate class to make it available via import. Thus only one instance 
+# exists (singleton design pattern).
 device_list = DeviceList()

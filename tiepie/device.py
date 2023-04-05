@@ -222,6 +222,8 @@ class Device:
     @property
     def ip_port(self):
         """Get the IP Port number of the device.
+        
+        Not tested.
 
         Returns:
             int: IP Port number of the device.
@@ -261,6 +263,8 @@ class Device:
     @property
     def battery_charge(self):
         """Get the current charge of the battery in percent.
+        
+        Not tested.
 
         Returns:
             int: Battery charge in percent.
@@ -270,6 +274,8 @@ class Device:
     @property
     def battery_time_to_empty(self):
         """Get the battery time until it is empty in minutes.
+        
+        Not tested.
 
         Returns:
             int: Battery time in minutes.
@@ -278,7 +284,9 @@ class Device:
 
     @property
     def battery_time_to_full(self):
-        """Get the battery time until it is fully charged in minutes .
+        """Get the battery time until it is fully charged in minutes.
+        
+        Not tested.
 
         Returns:
             int: Battery time in minutes.
@@ -288,6 +296,8 @@ class Device:
     @property
     def battery_charger_connected(self):
         """Check whether the charger is connected to the device.
+                
+        Not tested.
 
         Returns:
             bool: True if the charger is connected to the device.
@@ -297,6 +307,8 @@ class Device:
     @property
     def battery_charging(self):
         """Check whether the battery is charging.
+        
+        Not tested.
 
         Returns:
             bool: True if the battery is getting charged.
@@ -306,6 +318,8 @@ class Device:
     @property
     def battery_broken(self):
         """Check whether the device battery is broken.
+        
+        Not tested.
 
         Returns:
             bool: True if the device battery is broken.

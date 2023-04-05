@@ -118,7 +118,10 @@ class OscilloscopeChannel:
 
     @property
     def safe_ground_enabled(self):
-        """Get or set whether the safe ground is enabled."""
+        """Get or set whether the safe ground is enabled.
+        
+        Not tested.
+        """
         return libtiepie.ScpChGetSafeGroundEnabled(self._dev_handle,
                                                    self._idx) == 1
 
@@ -128,19 +131,28 @@ class OscilloscopeChannel:
 
     @property
     def safe_ground_threshold_min(self):
-        """Get the minimum safe ground threshold current."""
+        """Get the minimum safe ground threshold current.
+        
+        Not tested.
+        """
         return libtiepie.ScpChGetSafeGroundThresholdMin(self._dev_handle,
                                                         self._idx)
 
     @property
     def safe_ground_threshold_max(self):
-        """Get the maximum safe ground threshold current."""
+        """Get the maximum safe ground threshold current.
+        
+        Not tested.
+        """
         return libtiepie.ScpChGetSafeGroundThresholdMax(self._dev_handle,
                                                         self._idx)
 
     @property
     def safe_ground_threshold(self):
-        """Get or set the safe ground threshold current."""
+        """Get or set the safe ground threshold current.
+        
+        Not tested.
+        """
         return libtiepie.ScpChGetSafeGroundThreshold(self._dev_handle,
                                                      self._idx)
 
@@ -152,6 +164,8 @@ class OscilloscopeChannel:
     def verify_safe_ground_threshold(self, threshold):
         """Verify a safe ground threshold without setting it in the hardware.
 
+        Not tested.
+        
         Args:
             threshold (float): The safe ground threshold to verify.
         Returns:

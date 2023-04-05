@@ -280,7 +280,7 @@ class Oscilloscope(Device):
         """Retrieve measured samples of channel 1 to 4.
 
         Previously to retrieving data, a measurement has to be started.
-
+        
         Returns:
             list: List with entries for each channel. An entry contains None,
                   if the channel is disabled, otherwise a list of samples.
@@ -310,6 +310,8 @@ class Oscilloscope(Device):
         """Retrieve measured samples of channel 1 to 5.
 
         Previously to retrieving data, a measurement has to be started.
+        
+        Not tested.
 
         Returns:
             list: List with entries for each channel. An entry contains None,
@@ -340,6 +342,8 @@ class Oscilloscope(Device):
         """Retrieve measured samples of channel 1 to 6.
 
         Previously to retrieving data, a measurement has to be started.
+        
+        Not tested.
 
         Returns:
             list: List with entries for each channel. An entry contains None,
@@ -370,6 +374,8 @@ class Oscilloscope(Device):
         """Retrieve measured samples of channel 1 to 7.
 
         Previously to retrieving data, a measurement has to be started.
+        
+        Not tested.
 
         Returns:
             list: List with entries for each channel. An entry contains None, 
@@ -400,6 +406,8 @@ class Oscilloscope(Device):
         """Retrieve measured samples of channel 1 to 8.
 
         Previously to retrieving data, a measurement has to be started.
+        
+        Not tested.
 
         Returns:
             list: List with entries for each channel. An entry contains None, 

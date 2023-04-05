@@ -609,6 +609,8 @@ class Generator(Device):
         """Get the minimum available leading edge time.
 
         Available for signal type "pulse".
+        
+        Not tested.
         """
         return libtiepie.GenGetLeadingEdgeTimeMin(self._dev_handle)
 
@@ -617,6 +619,8 @@ class Generator(Device):
         """Get the maximum available leading edge time.
 
         Available for signal type "pulse".
+        
+        Not tested.
         """
         return libtiepie.GenGetLeadingEdgeTimeMax(self._dev_handle)
 
@@ -625,6 +629,8 @@ class Generator(Device):
         """Get or set the available leading edge time.
 
         Available for signal type "pulse".
+        
+        Not tested.
         """
         return libtiepie.GenGetLeadingEdgeTime(self._dev_handle)
 
@@ -636,6 +642,8 @@ class Generator(Device):
         """Verify a leading edge time without setting it in the hardware.
 
         Available for signal type "pulse".
+        
+        Not tested.
 
         Args:
             leading_edge_time (float): The leading edge time to verify.
@@ -652,6 +660,8 @@ class Generator(Device):
         """Get the minimum available trailing edge time.
 
         Available for signal type "pulse".
+        
+        Not tested.
         """
         return libtiepie.GenGetTrailingEdgeTimeMin(self._dev_handle)
 
@@ -660,6 +670,8 @@ class Generator(Device):
         """Get the maximum available trailing edge time.
 
         Available for signal type "pulse".
+        
+        Not tested.
         """
         return libtiepie.GenGetTrailingEdgeTimeMax(self._dev_handle)
 
@@ -668,6 +680,8 @@ class Generator(Device):
         """Get or set the available trailing edge time.
 
         Available for signal type "pulse".
+        
+        Not tested.
         """
         return libtiepie.GenGetTrailingEdgeTime(self._dev_handle)
 
@@ -679,6 +693,8 @@ class Generator(Device):
         """Verify a trailing edge time without setting it in the hardware.
 
         Available for signal type "pulse".
+        
+        Not tested.
 
         Args:
             trailing_edge_time (float): The trailing edge time to verify.
@@ -693,7 +709,10 @@ class Generator(Device):
     @property
     def is_arb_data_available(self):
         """Get whether the current signal type supports controlling the
-        arbitrary waveform buffer."""
+        arbitrary waveform buffer.
+        
+        Not tested.
+        """
         return libtiepie.GenHasData(self._dev_handle) == 1
 
     @property
@@ -734,6 +753,8 @@ class Generator(Device):
         hardware.
 
         Available for signal type "arbitrary".
+        
+        Not tested.
 
         Args:
             arb_data_length (int): The length to verify.
@@ -1020,8 +1041,11 @@ class Generator(Device):
     def verify_burst_segment_cnt(self, burst_segment_cnt):
         """Verify a burst segment count without setting it in the hardware.
 
+        Not tested.
+        
         Args:
             burst_segment_cnt (int): The burst segment count to verify.
+            
         Returns:
             int: The burst segment count the hardware would set.
                  (The hardware might not set the burst segment count
