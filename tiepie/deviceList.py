@@ -49,8 +49,7 @@ class DeviceList:
         return libtiepie.LstGetCount()
 
     def can_open_device(self, instr_id, id_kind="index", device_type="Osc"):
-        """Check whether a device (of device_type) of an instrument (with given
-        id) and return the device handle.
+        """Check whether a device can be opened.
 
         Args:
             instr_id (int or str): Device list index, product ID
@@ -64,7 +63,7 @@ class DeviceList:
                                defaults to oscilloscope.
 
         Returns:
-            handle (:py:class:`ctypes.c_uint32`): device handle
+            bool: True, if the device can be opened.
         """
         # translate id kind & device type str to int
         id_kind_int = self.ID_KINDS[id_kind]
@@ -386,7 +385,7 @@ class DeviceList:
         return serial_no
 
     def get_contained_serial_no(self, instr_id, id_kind="index"):
-        """Get serial numbers of devices in a contained devices.
+        """Get serial numbers of devices in a contained device.
 
         Args:
             instr_id (int): Device list index, product ID

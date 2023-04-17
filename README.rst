@@ -5,12 +5,12 @@ TiePie
 TiePie provides a Python interface to the mobile USB-oscilloscopes made by TiePie.
 
 This package is inspired by `python-libtiepie <https://github.com/TiePie/python-libtiepie>`_
-and acts as an alternativ. The main differences are the following:
+and acts as an alternative. The main differences are the following:
 
 
-1. When using **python-libtiepie** non-numerical settings are get and set using binary values which can be mapped constants. In **TiePie**, those binary values are internally mapped to strings and an overview of the available strings is provided in an additional property.
+1. **python-libtiepie** has some constants defined, which can be used to set properties like signal type. However, the user needs to know the names of these constants and they cannot be printed due to actually being numerical (binary) values. In **TiePie**, the values are given as strings and an overview of the available strings is provided in an additional property.
 2. The error check is performed automatically after every method call.   
-3. More trivial way of opening of devices.
+3. More easier way of opening of devices.
 
 Example of setting and getting the signal type in **python-libtiepie**::
 
@@ -83,7 +83,7 @@ Example for using an oscilloscope device::
     # Enable the trigger
     osc.channels[0].trig_enabled= True
     # Disable the trigger timeout
-    # osc.trig_timeout = -1
+    osc.trig_timeout = -1
     # Set record length and sampling frequency
     osc.record_length = 62500
     osc.sample_freq = 100000
