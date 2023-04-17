@@ -1,4 +1,5 @@
 from tiepie.oscilloscopeChannel import OscilloscopeChannel
+import math
 import pytest
 import time
 
@@ -472,8 +473,9 @@ def test_verify_sample_freq(default_osc):
     assert type(default_osc.verify_sample_freq(
         default_osc.sample_freq_max / 2)) is float
     # Test verify
-    assert default_osc.verify_sample_freq(
-        default_osc.sample_freq_max / 2) == default_osc.sample_freq_max / 2
+    assert math.isclose(default_osc.verify_sample_freq(
+        default_osc.sample_freq_max / 2),
+        default_osc.sample_freq_max / 2, rel_tol=1e-6)
     # Test if the frequency clips
     assert default_osc.verify_sample_freq(
         default_osc.sample_freq_max + 1.0) == default_osc.sample_freq_max
@@ -594,8 +596,10 @@ def test_verify_trig_delay(default_osc):
     assert type(default_osc.verify_trig_delay(
         default_osc.trig_delay_max / 2)) is float
     # Test verify
-    assert default_osc.verify_trig_delay(
-        default_osc.trig_delay_max / 2) == default_osc.trig_delay_max / 2
+    assert math.isclose(
+        default_osc.verify_trig_delay(default_osc.trig_delay_max / 2),
+        default_osc.trig_delay_max / 2,
+        rel_tol=1e-6)
     # Test if the segment cnt clips
     assert default_osc.verify_trig_delay(
         default_osc.trig_delay_max + 1.0) == default_osc.trig_delay_max

@@ -404,12 +404,12 @@ def test_data_range(osc):
             assert type(element) is float
 
 
-def test_data_range_min(osc):
+def test_data_value_min(osc):
     for channel in osc.channels:
         assert type(channel.data_value_min) is float
 
 
-def test_data_range_max(osc):
+def test_data_value_max(osc):
     for channel in osc.channels:
         assert type(channel.data_value_max) is float
 

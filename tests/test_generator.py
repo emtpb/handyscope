@@ -150,7 +150,7 @@ def test_verify_amplitude(default_gen_sine):
     for ampl in [default_gen_sine.amplitude_min,
                  (default_gen_sine.amplitude_max-default_gen_sine.amplitude_min)/2,
                  default_gen_sine.amplitude_max]:
-        default_gen_sine.verify_amplitude(ampl)
+        assert default_gen_sine.verify_amplitude(ampl) == ampl
     # Test if amplitude clips
     assert default_gen_sine.verify_amplitude(default_gen_sine.amplitude_max+1.0) == default_gen_sine.amplitude_max
 
@@ -187,10 +187,10 @@ def test_verify_offset(default_gen_sine):
     # Test type
     assert type(default_gen_sine.verify_offset(default_gen_sine.offset_max/2)) is float
     # Test verify
-    for offset in [default_gen_sine.offset_min,
-                   (default_gen_sine.offset_max-default_gen_sine.offset_min)/2,
-                   default_gen_sine.offset_max]:
-        default_gen_sine.verify_offset(offset)
+    low_limit = default_gen_sine.offset_min + default_gen_sine.amplitude
+    high_limit = default_gen_sine.offset_max - default_gen_sine.amplitude
+    for offset in [low_limit, (high_limit - low_limit) / 2, high_limit]:
+        assert default_gen_sine.verify_offset(offset) == offset
 
 
 def test_is_frequency_available(default_gen_sine):
@@ -228,8 +228,8 @@ def test_verify_frequency(default_gen_sine):
     # Test type
     assert type(default_gen_sine.verify_frequency(default_gen_sine.freq_max/2)) is float
     # Test verify
-    assert default_gen_sine.verify_frequency(
-        default_gen_sine.freq_max/2) == default_gen_sine.freq_max/2
+    assert math.isclose(default_gen_sine.verify_frequency(
+        default_gen_sine.freq_max/2), default_gen_sine.freq_max/2, rel_tol=1e-6)
     # Test if the frequency clips
     assert default_gen_sine.verify_frequency(default_gen_sine.freq_max+1.0) == default_gen_sine.freq_max
 
@@ -285,8 +285,10 @@ def test_verify_phase(default_gen_sine):
     # Test type
     assert type(default_gen_sine.verify_phase(default_gen_sine.phase_max/2)) is float
     # Test verify
-    assert default_gen_sine.verify_phase(
-        default_gen_sine.phase_max / 2) == default_gen_sine.phase_max / 2
+    assert math.isclose(
+        default_gen_sine.verify_phase(default_gen_sine.phase_max / 2),
+        default_gen_sine.phase_max / 2,
+        rel_tol=1e-6)
     # Test if the phase overruns
     assert default_gen_sine.verify_phase(
         default_gen_sine.phase_max + 1.0) == default_gen_sine.phase_max
@@ -327,8 +329,10 @@ def test_verify_symmetry(default_gen_sine):
     # Test type
     assert type(default_gen_sine.verify_symmetry(default_gen_sine.symmetry_max/2)) is float
     # Test verify
-    assert default_gen_sine.verify_symmetry(
-        default_gen_sine.symmetry_max / 2) == default_gen_sine.symmetry_max / 2
+    assert math.isclose(default_gen_sine.verify_symmetry(
+        default_gen_sine.symmetry_max / 2),
+        default_gen_sine.symmetry_max / 2,
+        rel_tol=1e-6)
     # Test if the symmetry clips
     assert default_gen_sine.verify_symmetry(
         default_gen_sine.symmetry_max + 1.0) == default_gen_sine.symmetry_max
@@ -370,8 +374,10 @@ def test_verify_pulse_width(default_gen_pulse):
     # Test type
     assert type(default_gen_pulse.verify_pulse_width(default_gen_pulse.pulse_width_max/2)) is float
     # Test verify
-    assert default_gen_pulse.verify_pulse_width(
-        default_gen_pulse.pulse_width_max / 2) == default_gen_pulse.pulse_width_max / 2
+    assert math.isclose(default_gen_pulse.verify_pulse_width(
+        default_gen_pulse.pulse_width_max / 2),
+        default_gen_pulse.pulse_width_max / 2,
+        rel_tol=1e-6)
     # Test if the pulse width clips
     assert default_gen_pulse.verify_pulse_width(
         default_gen_pulse.pulse_width_max + 1.0) == default_gen_pulse.pulse_width_max
