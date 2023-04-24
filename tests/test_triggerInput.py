@@ -1,5 +1,5 @@
 import pytest
-from tiepie.triggerInput import TriggerInput
+from handyscope.triggerInput import TriggerInput
 
 
 def test_is_available(device):

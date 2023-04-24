@@ -4,9 +4,9 @@ import warnings
 
 import numpy as np
 
-from tiepie.device import Device
-from tiepie.library import libtiepie
-from tiepie.oscilloscopeChannel import OscilloscopeChannel
+from handyscope.device import Device
+from handyscope.library import libtiepie
+from handyscope.oscilloscopeChannel import OscilloscopeChannel
 
 
 class Oscilloscope(Device):
@@ -92,7 +92,7 @@ class Oscilloscope(Device):
 
         Returns:
             tuple: Tuple of oscilloscope channels 
-                   (:py:class:`tiepie.oscilloscopeChannel.OscilloscopeChannel`)
+                   (:py:class:`handyscope.oscilloscopeChannel.OscilloscopeChannel`)
         """
         return self._channels
 
@@ -472,7 +472,7 @@ class Oscilloscope(Device):
         """Get the available measure modes.
 
         Returns:
-            tuple: Available measure modes (keys of :py:attr:`tiepie.oscilloscope.Oscilloscope.MEASURE_MODES`)
+            tuple: Available measure modes (keys of :py:attr:`handyscope.oscilloscope.Oscilloscope.MEASURE_MODES`)
         """
         raw_modes = libtiepie.ScpGetMeasureModes(self._dev_handle)
         _modes = []
@@ -496,7 +496,7 @@ class Oscilloscope(Device):
     @property
     def measure_mode(self):
         """Get or set the current measure mode (keys of
-        :py:attr:`tiepie.oscilloscope.Oscilloscope.MEASURE_MODES`)"""
+        :py:attr:`handyscope.oscilloscope.Oscilloscope.MEASURE_MODES`)"""
         mode_int = libtiepie.ScpGetMeasureMode(self._dev_handle)
         for key in self.MEASURE_MODES:
             if mode_int == self.MEASURE_MODES[key]:
@@ -609,7 +609,7 @@ class Oscilloscope(Device):
         """Get available auto resolutions.
 
         Returns:
-            tuple: Available auto resolutions (keys of :py:attr:`tiepie.oscilloscope.Oscilloscope.AUTO_RESOLUTIONS`)
+            tuple: Available auto resolutions (keys of :py:attr:`handyscope.oscilloscope.Oscilloscope.AUTO_RESOLUTIONS`)
         """
         raw_res = libtiepie.ScpGetAutoResolutionModes(self._dev_handle)
         _res = []
@@ -633,7 +633,7 @@ class Oscilloscope(Device):
     @property
     def auto_resolution(self):
         """Get or set the current auto resolution mode (key of
-        :py:attr:`tiepie.oscilloscope.Oscilloscope.AUTO_RESOLUTIONS`)
+        :py:attr:`handyscope.oscilloscope.Oscilloscope.AUTO_RESOLUTIONS`)
         """
         raw_res = libtiepie.ScpGetAutoResolutionMode(self._dev_handle)
         for key, value in self.AUTO_RESOLUTIONS.items():
@@ -652,7 +652,7 @@ class Oscilloscope(Device):
         """Get available clock sources.
 
         Returns:
-            tuple: Available clock sources (keys of :py:attr:`tiepie.oscilloscope.Oscilloscope.CLOCK_SOURCES`)
+            tuple: Available clock sources (keys of :py:attr:`handyscope.oscilloscope.Oscilloscope.CLOCK_SOURCES`)
         """
         raw_srcs = libtiepie.ScpGetClockSources(self._dev_handle)
         srcs = []
@@ -672,7 +672,7 @@ class Oscilloscope(Device):
     @property
     def clock_source(self):
         """Get or set the current clock source (key of
-        :py:attr:`tiepie.oscilloscope.Oscilloscope.CLOCK_SOURCES`)"""
+        :py:attr:`handyscope.oscilloscope.Oscilloscope.CLOCK_SOURCES`)"""
         src = libtiepie.ScpGetClockSource(self._dev_handle)
         for key, value in self.CLOCK_SOURCES.items():
             if src == value:
@@ -690,7 +690,7 @@ class Oscilloscope(Device):
         """Get available clock outputs.
 
         Returns:
-            tuple: Available clock outputs (keys of :py:attr:`tiepie.oscilloscope.Oscilloscope.CLOCK_OUTPUTS`)
+            tuple: Available clock outputs (keys of :py:attr:`handyscope.oscilloscope.Oscilloscope.CLOCK_OUTPUTS`)
         """
         raw_outs = libtiepie.ScpGetClockOutputs(self._dev_handle)
         outs = []
@@ -710,7 +710,7 @@ class Oscilloscope(Device):
     @property
     def clock_output(self):
         """Get or set the current clock output (key of
-        :py:attr:`tiepie.oscilloscope.Oscilloscope.CLOCK_OUTPUTS`)"""
+        :py:attr:`handyscope.oscilloscope.Oscilloscope.CLOCK_OUTPUTS`)"""
         out = libtiepie.ScpGetClockOutput(self._dev_handle)
         for key, value in self.CLOCK_OUTPUTS.items():
             if out == value:
@@ -850,11 +850,11 @@ class Oscilloscope(Device):
         The pre sample ratio is a float between 0 and 1 and defines how many
         samples should be recorded before the trigger point. To ensure all
         pre samples are recorded, set
-        :py:attr:`tiepie.oscilloscope.Oscilloscope.trig_holdoff` to
-        :py:attr:`tiepie.oscilloscope.Oscilloscope.TRIG_HOLDOFF_ALL_PRE_SAMPLES`
-        or set :py:attr:`tiepie.oscilloscope.Oscilloscope.trig_holdoff` to equal
+        :py:attr:`handyscope.oscilloscope.Oscilloscope.trig_holdoff` to
+        :py:attr:`handyscope.oscilloscope.Oscilloscope.TRIG_HOLDOFF_ALL_PRE_SAMPLES`
+        or set :py:attr:`handyscope.oscilloscope.Oscilloscope.trig_holdoff` to equal
         or greater than
-        `tiepie.oscilloscope.Oscilloscope.record_length`* pre_sample_ratio.
+        `handyscope.oscilloscope.Oscilloscope.record_length`* pre_sample_ratio.
         """
         return libtiepie.ScpGetPreSampleRatio(self._dev_handle)
 
@@ -987,7 +987,7 @@ class Oscilloscope(Device):
         The trigger holdoff sets how many samples need to be recorded until
         a trigger can happen.
 
-        Use :py:attr:`tiepie.oscilloscope.Oscilloscope.TRIG_HOLDOFF_ALL_PRE_SAMPLES`
+        Use :py:attr:`handyscope.oscilloscope.Oscilloscope.TRIG_HOLDOFF_ALL_PRE_SAMPLES`
         to ensure all pre samples are recorded if pre_sample_ratio is set.
         """
         return libtiepie.ScpGetTriggerHoldOffCount(self._dev_handle)
@@ -1037,7 +1037,7 @@ class Oscilloscope(Device):
 
         Returns:
             tuple: Tuple with the test result of each channel (key of
-                   :py:attr:`tiepie.oscilloscope.Oscilloscope.CONNECTION_STATES`)
+                   :py:attr:`handyscope.oscilloscope.Oscilloscope.CONNECTION_STATES`)
         """
         # Initialize uint8 array
         data = (ctypes.c_uint8 * self.channel_cnt)()
@@ -1073,7 +1073,7 @@ class Oscilloscope(Device):
 
         Returns:
             tuple: Tuple with the test result of each channel (key of
-                   :py:attr:`tiepie.oscilloscope.Oscilloscope.CONNECTION_STATES`)
+                   :py:attr:`handyscope.oscilloscope.Oscilloscope.CONNECTION_STATES`)
         """
         if self.is_connection_test_available:
             res = self.start_connection_test()

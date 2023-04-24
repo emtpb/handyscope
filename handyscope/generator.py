@@ -1,5 +1,5 @@
-from tiepie.library import libtiepie
-from tiepie.device import Device
+from handyscope.library import libtiepie
+from handyscope.device import Device
 import ctypes
 
 
@@ -88,7 +88,7 @@ class Generator(Device):
 
         Returns:
             str: The connector type, key of
-                 :py:attr:`tiepie.generator.Generator.CONNECTOR_TYPES`
+                 :py:attr:`handyscope.generator.Generator.CONNECTOR_TYPES`
         """
         raw_type = libtiepie.GenGetConnectorType(self._dev_handle)
         for key, value in self.CONNECTOR_TYPES.items():
@@ -157,7 +157,7 @@ class Generator(Device):
 
         Returns:
             str: Generator status, key of
-                 :py:attr:`tiepie.generator.Generator.GENERATOR_STATUSES`
+                 :py:attr:`handyscope.generator.Generator.GENERATOR_STATUSES`
         """
         raw_status = libtiepie.GenGetStatus(self._dev_handle)
 
@@ -217,7 +217,7 @@ class Generator(Device):
 
         Returns:
             tuple: Available signal types, keys of
-                   :py:attr:`tiepie.generator.Generator.SIGNAL_TYPES`
+                   :py:attr:`handyscope.generator.Generator.SIGNAL_TYPES`
         """
         raw_types = libtiepie.GenGetSignalTypes(self._dev_handle)
         _types = []
@@ -420,7 +420,7 @@ class Generator(Device):
 
         Returns:
             tuple: Available frequency modes, keys of
-                   :py:attr:`tiepie.generator.Generator.FREQUENCY_MODES`
+                   :py:attr:`handyscope.generator.Generator.FREQUENCY_MODES`
         """
         raw_modes = libtiepie.GenGetFrequencyModes(self._dev_handle)
         _modes = []
@@ -871,7 +871,7 @@ class Generator(Device):
 
         Returns:
             tuple: Available modes, keys of
-                  :py:attr:`tiepie.generator.Generator.GENERATOR_MODES`
+                  :py:attr:`handyscope.generator.Generator.GENERATOR_MODES`
         """
         raw_modes = libtiepie.GenGetModesNative(self._dev_handle)
         _modes = []
@@ -895,7 +895,7 @@ class Generator(Device):
 
         Returns:
             tuple: Available modes, keys of
-                   :py:attr:`tiepie.generator.Generator.GENERATOR_MODES`
+                   :py:attr:`handyscope.generator.Generator.GENERATOR_MODES`
         """
         raw_modes = libtiepie.GenGetModes(self._dev_handle)
         _modes = []
@@ -914,7 +914,7 @@ class Generator(Device):
     @property
     def mode(self):
         """Get or set the current generator mode (keys of
-        :py:attr:`tiepie.generator.Generator.GENERATOR_MODES`)."""
+        :py:attr:`handyscope.generator.Generator.GENERATOR_MODES`)."""
         raw_mode = libtiepie.GenGetMode(self._dev_handle)
 
         for key, value in self.GENERATOR_MODES.items():

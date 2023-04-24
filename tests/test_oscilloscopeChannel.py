@@ -1,4 +1,4 @@
-from tiepie.oscilloscopeChannel import OscilloscopeChannel
+from handyscope.oscilloscopeChannel import OscilloscopeChannel
 import pytest
 
 

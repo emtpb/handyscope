@@ -1,5 +1,5 @@
 import ctypes
-from tiepie.library import libtiepie
+from handyscope.library import libtiepie
 
 
 class TriggerInput:

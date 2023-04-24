@@ -53,11 +53,11 @@ exclude_patterns = ['_build']
 
 
 # -- Project-specific configuration ------------------------------------
-project = 'tiepie'
+project = 'handyscope'
 copyright = "2019, Measurement Engineering Group"
 
 # Get version number from git via setuptools_scm
-release = get_distribution('tiepie').version
+release = get_distribution('handyscope').version
 version = '.'.join(release.split('.')[:3])
 
 today_fmt = '%Y-%m-%d'
@@ -95,8 +95,8 @@ latex_elements = {
 }
 
 latex_documents = [
-    ('index', 'tiepie.tex',
-     'tiepie Documentation',
+    ('index', 'handyscope.tex',
+     'handyscope Documentation',
      'Measurement Engineering Group', 'manual'),
 ]
 

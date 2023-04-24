@@ -1,5 +1,5 @@
-from tiepie.triggerInput import TriggerInput
-from tiepie.triggerOutput import TriggerOutput
+from handyscope.triggerInput import TriggerInput
+from handyscope.triggerOutput import TriggerOutput
 
 
 def test_firmware_ver(device):
@@ -21,7 +21,7 @@ def test_serial_no(device):
 
 
 def test_product_id(device):
-    from tiepie.deviceList import DeviceList
+    from handyscope.deviceList import DeviceList
 
     product_id = device.product_id
     assert type(product_id) is str
@@ -30,7 +30,7 @@ def test_product_id(device):
 
 
 def test_device_type(device):
-    from tiepie.deviceList import DeviceList
+    from handyscope.deviceList import DeviceList
 
     device_type = device.device_type
     assert type(device_type) is str
@@ -39,7 +39,7 @@ def test_device_type(device):
 
 
 def test_short_name(device):
-    from tiepie.deviceList import DeviceList
+    from handyscope.deviceList import DeviceList
 
     name = device.short_name
     assert type(name) is str

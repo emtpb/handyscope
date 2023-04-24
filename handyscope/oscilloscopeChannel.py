@@ -1,4 +1,4 @@
-from tiepie.library import libtiepie
+from handyscope.library import libtiepie
 import ctypes
 
 
@@ -181,7 +181,7 @@ class OscilloscopeChannel:
         """Get the connector type.
 
         Returns:
-            str: Connector type (key of :py:attr:`tiepie.oscilloscopeChannel.OscilloscopeChannel.CONNECTOR_TYPES`)
+            str: Connector type (key of :py:attr:`handyscope.oscilloscopeChannel.OscilloscopeChannel.CONNECTOR_TYPES`)
         """
         raw_type = libtiepie.ScpChGetConnectorType(self._dev_handle, self._idx)
         for key in self.CONNECTOR_TYPES:
@@ -213,7 +213,7 @@ class OscilloscopeChannel:
         """Get available couplings.
 
         Returns:
-            tuple: Available couplings (keys of :py:attr:`tiepie.oscilloscopeChannel.OscilloscopeChannel.COUPLINGS`)
+            tuple: Available couplings (keys of :py:attr:`handyscope.oscilloscopeChannel.OscilloscopeChannel.COUPLINGS`)
         """
         raw_couplings = libtiepie.ScpChGetCouplings(
             self._dev_handle, self._idx)
@@ -237,7 +237,7 @@ class OscilloscopeChannel:
     @property
     def coupling(self):
         """Get or set the current coupling (key of
-        :py:attr:`tiepie.oscilloscopeChannel.OscilloscopeChannel.COUPLINGS`)."""
+        :py:attr:`handyscope.oscilloscopeChannel.OscilloscopeChannel.COUPLINGS`)."""
         raw_coupling = libtiepie.ScpChGetCoupling(self._dev_handle, self._idx)
         for key in self.COUPLINGS:
             if raw_coupling == self.COUPLINGS[key]:
@@ -343,7 +343,7 @@ class OscilloscopeChannel:
 
         Returns:
             tuple: Available trigger kinds (keys of
-                   :py:attr:`tiepie.oscilloscopeChannel.OscilloscopeChannel.TRIGGER_KINDS`)
+                   :py:attr:`handyscope.oscilloscopeChannel.OscilloscopeChannel.TRIGGER_KINDS`)
         """
         raw_kinds = libtiepie.ScpChTrGetKinds(self._dev_handle, self._idx)
         _kinds = []
@@ -366,7 +366,7 @@ class OscilloscopeChannel:
     @property
     def trig_kind(self):
         """Get or set the current trigger kind (key of
-        :py:attr:`tiepie.oscilloscopeChannel.OscilloscopeChannel.TRIGGER_KINDS`)"""
+        :py:attr:`handyscope.oscilloscopeChannel.OscilloscopeChannel.TRIGGER_KINDS`)"""
         raw_kind = libtiepie.ScpChTrGetKind(self._dev_handle, self._idx)
         for key in self.TRIGGER_KINDS:
             if raw_kind == self.TRIGGER_KINDS[key]:
@@ -393,7 +393,7 @@ class OscilloscopeChannel:
         """Get or set the trigger levels.
 
         Value range depends on
-        :py:attr:`tiepie.oscilloscopeChannel.OscilloscopeChannel.trig_lvl_mode`.
+        :py:attr:`handyscope.oscilloscopeChannel.OscilloscopeChannel.trig_lvl_mode`.
         """
         _lvls = []
         for idx in range(self.trig_lvl_cnt):
@@ -412,7 +412,7 @@ class OscilloscopeChannel:
 
         Returns:
             tuple: Available trigger level modes (keys of
-                   :py:attr:`tiepie.oscilloscopeChannel.OscilloscopeChannel.TRIGGER_LVL_MODES`)
+                   :py:attr:`handyscope.oscilloscopeChannel.OscilloscopeChannel.TRIGGER_LVL_MODES`)
         """
         raw_modes = libtiepie.ScpChTrGetLevelModes(self._dev_handle, self._idx)
         _modes = []
@@ -437,7 +437,7 @@ class OscilloscopeChannel:
         """Get or set the current trigger level mode.
 
         Possible trigger level modes are the keys of
-        :py:attr:`tiepie.oscilloscopeChannel.OscilloscopeChannel.TRIGGER_LVL_MODES`.
+        :py:attr:`handyscope.oscilloscopeChannel.OscilloscopeChannel.TRIGGER_LVL_MODES`.
         """
         raw_mode = libtiepie.ScpChTrGetLevelMode(self._dev_handle, self._idx)
         for key, value in self.TRIGGER_LVL_MODES.items():
@@ -482,7 +482,7 @@ class OscilloscopeChannel:
 
         Returns:
             tuple: Available trigger conditions (keys of
-                   :py:attr:`tiepie.oscilloscopeChannel.OscilloscopeChannel.TRIGGER_CONDITIONS`)
+                   :py:attr:`handyscope.oscilloscopeChannel.OscilloscopeChannel.TRIGGER_CONDITIONS`)
         """
         raw_conds = libtiepie.ScpChTrGetConditions(self._dev_handle, self._idx)
         _conds = []
@@ -505,7 +505,7 @@ class OscilloscopeChannel:
     @property
     def trig_condition(self):
         """Get or set the current trigger condition (key of
-        :py:attr:`tiepie.oscilloscopeChannel.OscilloscopeChannel.TRIGGER_CONDITIONS`)"""
+        :py:attr:`handyscope.oscilloscopeChannel.OscilloscopeChannel.TRIGGER_CONDITIONS`)"""
         raw_cond = libtiepie.ScpChTrGetCondition(self._dev_handle, self._idx)
         for key, value in self.TRIGGER_CONDITIONS.items():
             if raw_cond == value:

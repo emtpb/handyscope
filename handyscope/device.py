@@ -1,10 +1,10 @@
 import ctypes
 from datetime import date
 
-from tiepie.deviceList import device_list
-from tiepie.library import libtiepie, CallbackObject
-from tiepie.triggerInput import TriggerInput
-from tiepie.triggerOutput import TriggerOutput
+from handyscope.deviceList import device_list
+from handyscope.library import libtiepie, CallbackObject
+from handyscope.triggerInput import TriggerInput
+from handyscope.triggerOutput import TriggerOutput
 
 
 class Device:
@@ -122,7 +122,7 @@ class Device:
     @property
     def product_id(self):
         """Get the product id as human readable string (key of
-        :py:attr:`tiepie.deviceList.DeviceList.PRODUCT_IDS`)
+        :py:attr:`handyscope.deviceList.DeviceList.PRODUCT_IDS`)
 
         Returns:
             str: product id
@@ -141,7 +141,7 @@ class Device:
     @property
     def device_type(self):
         """Get the device type as human readable string (key of
-        :py:attr:`tiepie.deviceList.DeviceList.DEVICE_TYPES`)
+        :py:attr:`handyscope.deviceList.DeviceList.DEVICE_TYPES`)
 
         Returns:
             str: device type
@@ -365,7 +365,7 @@ class Device:
         """List of all trigger inputs.
 
         Returns:
-            list: list of :py:class:`tiepie.triggerInput.TriggerInput`
+            list: list of :py:class:`handyscope.triggerInput.TriggerInput`
         """
         return self._trig_ins
 
@@ -396,7 +396,7 @@ class Device:
         """List of available trigger outputs.
 
         Returns:
-            list: list of :py:class:`tiepie.triggerOutput.TriggerOutput`
+            list: list of :py:class:`handyscope.triggerOutput.TriggerOutput`
         """
         return self._trig_outs
 
@@ -422,7 +422,7 @@ class Device:
         """Get trigger output index by its ID.
 
         Args:
-            trig_out_id (str): ID of the trigger output as in :py:attr:`tiepie.triggerOutput.TriggerOutput.TRIGGER_IDS`
+            trig_out_id (str): ID of the trigger output as in :py:attr:`handyscope.triggerOutput.TriggerOutput.TRIGGER_IDS`
 
         Returns:
             int: index of the requested trigger output

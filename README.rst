@@ -1,14 +1,14 @@
-======
-TiePie
-======
+==========
+Handyscope
+==========
 
-TiePie provides a Python interface to the mobile USB-oscilloscopes made by TiePie.
+Handyscope provides a Python interface to the mobile USB-oscilloscopes made by TiePie.
 
 This package is inspired by `python-libtiepie <https://github.com/TiePie/python-libtiepie>`_
 and acts as an alternative. The main differences are the following:
 
 
-1. **python-libtiepie** has some constants defined, which can be used to set properties like signal type. However, the user needs to know the names of these constants and they cannot be printed due to actually being numerical (binary) values. In **TiePie**, the values are given as strings and an overview of the available strings is provided in an additional property.
+1. **python-libtiepie** has some constants defined, which can be used to set properties like signal type. However, the user needs to know the names of these constants and they cannot be printed due to actually being numerical (binary) values. In **handyscope**, the values are given as strings and an overview of the available strings is provided in an additional property.
 2. The error check is performed automatically after every method call.   
 3. More easier way of opening of devices.
 
@@ -19,7 +19,7 @@ Example of setting and getting the signal type in **python-libtiepie**::
     # Prints 0x00000010
     print(gen.signal_type)
 
-Example of setting and getting the signal type in **TiePie**::
+Example of setting and getting the signal type in **handyscope**::
 
     # Prints the tuple ('sine', 'triangle', 'square', 'DC', 'noise', 'arbitrary', 'pulse')
     print(gen.signal_types_available)
@@ -45,7 +45,7 @@ Example of opening a generator device from the **python-libtiepie** repository::
 
 Example of opening a generator device using **TiePie**::
 
-    from tiepie import Generator
+    from handyscope import Generator
 
     gen = Generator("HS5") 
 
@@ -60,9 +60,9 @@ Features
 Installation
 ------------
 
-To install the TiePie Interface, run this command in your terminal:
+To install the Handyscope Interface, run this command in your terminal:
 
-$ pip install tiepie
+$ pip install handyscope
 
 Note that usage in Windows will require the `TiePie USB driver
 version 8.1.9 <https://download.tiepie.com/Drivers/DriverInstall-USB_v8.1.9.exe>`_
@@ -72,7 +72,7 @@ Usage
 
 Example for using an oscilloscope device::
 
-    from tiepie import Oscilloscope
+    from handyscope import Oscilloscope
     # To initialize as HS3 oscilloscope device
     osc = Oscilloscope("HS3")
     # Set the range of the channels to 4 Volts
@@ -93,7 +93,7 @@ Example for using an oscilloscope device::
 
 Example for using a generator device::
 
-    from tiepie import Generator
+    from handyscope import Generator
     # To initialize as HS3 generator device
     gen = Generator("HS3")
     # Set the signal type to a sinus wave

@@ -1,5 +1,5 @@
-from tiepie.library import libtiepie
-from tiepie.device import Device
+from handyscope.library import libtiepie
+from handyscope.device import Device
 import ctypes
 
 

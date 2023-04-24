@@ -6,9 +6,9 @@ with open(path.join(here, 'README.rst')) as readme_file:
     long_description = readme_file.read()
 
 setup(
-    name='tiepie',
+    name='handyscope',
 
-    description='TiePie provides a Python interface to the mobile USB-oscilloscopes made by TiePie.',
+    description='Handyscope provides a Python interface to the mobile USB-oscilloscopes made by TiePie.',
     long_description=long_description,
 
     url='http://emt.uni-paderborn.de',
@@ -20,12 +20,12 @@ setup(
     use_scm_version=True,
 
     packages=[
-        'tiepie'
+        'handyscope'
     ],
 
     # Additional data
     package_data={
-        'tiepie': ['bin/libtiepie32.dll',
+        'handyscope': ['bin/libtiepie32.dll',
                    'bin/libtiepie64.dll',
                    'bin/libtiepie.so',
                    'config.json'],

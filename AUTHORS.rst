@@ -1,7 +1,7 @@
 =======
 Authors
 =======
-Authors of TiePie, in chronological order:
+Authors of Handyscope, in chronological order:
 
 * Tim Hetkämper <hetkaemper@emt.uni-paderborn.de>
 * Johannes Deuse-Kleinsteuber

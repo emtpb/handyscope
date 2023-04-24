@@ -1,4 +1,4 @@
-from tiepie.library import libtiepie
+from handyscope.library import libtiepie
 
 from datetime import date
 import ctypes

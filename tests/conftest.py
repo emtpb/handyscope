@@ -1,9 +1,9 @@
-from tiepie.device import Device
-from tiepie.deviceList import DeviceList
-from tiepie.oscilloscope import Oscilloscope
-from tiepie.generator import Generator
-from tiepie.i2cHost import I2CHost
-import tiepie.deviceList
+from handyscope.device import Device
+from handyscope.deviceList import DeviceList
+from handyscope.oscilloscope import Oscilloscope
+from handyscope.generator import Generator
+from handyscope.i2cHost import I2CHost
+import handyscope.deviceList
 import pytest
 
 
@@ -19,7 +19,7 @@ def pytest_generate_tests(metafunc):
 
 @pytest.fixture(scope="module")
 def dev_list():
-    return tiepie.deviceList.device_list
+    return handyscope.deviceList.device_list
 
 
 @pytest.fixture(scope="module", params=[key for key in DeviceList.DEVICE_TYPES])
