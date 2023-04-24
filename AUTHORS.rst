@@ -7,3 +7,4 @@ Authors of Handyscope, in chronological order:
 * Johannes Deuse-Kleinsteuber
 * Fabian Woitschek
 * Leander Claes <claes@emt.uni-paderborn.de>
+* Kevin Koch
