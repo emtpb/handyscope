@@ -8,13 +8,26 @@ This project follows the guidelines of `Keep a changelog`_ and adheres to
 .. _Keep a changelog: http://keepachangelog.com/
 .. _Semantic versioning: https://semver.org/
 
-Unreleased
-==========
+`1.1.0`_ 2023-26-04
+===================
 
 Added
 -----
-* Updated libtiepie to 0.8.3 on linux and 0.8.4 on windows.
+* Added additional properties
+* Updated libtiepie to version 0.9.16.
+
+
+Changed
+-------
 * Differentiate between 32 and 64 bit dlls on windows.
+* API changes regarding generating callbacks.
+* API changes when retrieving data from specified channels.
+* Evaluate the trig holdoff in the measure method of the oscilloscope.
+
+Fixed
+-----
+* Fix wrong library call for burst sample count.
+* Some tests
 
 `1.0.0`_ 2019-11-11
 ===================
@@ -26,3 +39,4 @@ Added
 
 
 .. _1.0.0: https://atuin.emt.uni-paderborn.de/git/emt/tiepie/src/1.0.0
+.. _1.1.0: https://atuin.emt.uni-paderborn.de/git/emt/tiepie/src/1.1.0
