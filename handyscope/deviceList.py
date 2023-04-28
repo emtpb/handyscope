@@ -279,7 +279,7 @@ class DeviceList:
                             (listed in dict PRODUCT_IDS) or serial number.
             id_kind (str): the kind of the given instr_id
                            (listed in dict ID_KINDS), defaults to device list
-                            index.
+                           index.
 
         Returns:
             str: full device name
@@ -309,7 +309,7 @@ class DeviceList:
                             (listed in dict PRODUCT_IDS) or serial number.
             id_kind (str): the kind of the given instr_id
                            (listed in dict ID_KINDS), defaults to device list
-                            index.
+                           index.
 
         Returns:
             str: short device name
@@ -339,7 +339,7 @@ class DeviceList:
                             (listed in dict PRODUCT_IDS) or serial number.
             id_kind (str): the kind of the given instr_id
                            (listed in dict ID_KINDS), defaults to device list
-                            index.
+                           index.
 
         Returns:
             str: shortest device name
@@ -371,7 +371,7 @@ class DeviceList:
                             (listed in dict PRODUCT_IDS) or serial number.
             id_kind (str): the kind of the given instr_id
                            (listed in dict ID_KINDS), defaults to device list
-                            index.
+                           index.
 
         Returns:
             int: serial number
@@ -392,7 +392,7 @@ class DeviceList:
                             (listed in dict PRODUCT_IDS) or serial number.
             id_kind (str): the kind of the given instr_id
                            (listed in dict ID_KINDS), defaults to device list
-                            index.
+                           index.
 
         Returns:
             tuple: serial numbers of the devices
@@ -424,7 +424,7 @@ class DeviceList:
                             (listed in dict PRODUCT_IDS) or serial number.
             id_kind (str): the kind of the given instr_id
                            (listed in dict ID_KINDS), defaults to device list
-                            index.
+                           index.
 
         Returns:
             int: IP address
@@ -449,7 +449,7 @@ class DeviceList:
                             (listed in dict PRODUCT_IDS) or serial number.
             id_kind (str): the kind of the given instr_id
                            (listed in dict ID_KINDS), defaults to device list
-                            index.
+                           index.
 
         Returns:
             int: IP port
@@ -474,7 +474,7 @@ class DeviceList:
                             (listed in dict PRODUCT_IDS) or serial number.
             id_kind (str): the kind of the given instr_id
                            (listed in dict ID_KINDS), defaults to device list
-                            index.
+                           index.
 
         Returns:
             bool: True, if the device is connected to a server.
@@ -497,7 +497,7 @@ class DeviceList:
                             (listed in dict PRODUCT_IDS) or serial number.
             id_kind (str): the kind of the given instr_id
                            (listed in dict ID_KINDS), defaults to device list
-                            index.
+                           index.
 
         Returns:
             dict: key: type (as listed in DEVICE_TYPES), value: True/False.

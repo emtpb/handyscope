@@ -854,7 +854,7 @@ class Oscilloscope(Device):
         :py:attr:`handyscope.oscilloscope.Oscilloscope.TRIG_HOLDOFF_ALL_PRE_SAMPLES`
         or set :py:attr:`handyscope.oscilloscope.Oscilloscope.trig_holdoff` to equal
         or greater than
-        `handyscope.oscilloscope.Oscilloscope.record_length`* pre_sample_ratio.
+        :py:attr:`handyscope.oscilloscope.Oscilloscope.record_length` * pre_sample_ratio.
         """
         return libtiepie.ScpGetPreSampleRatio(self._dev_handle)
 
