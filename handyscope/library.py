@@ -5,7 +5,7 @@ documentation <http://api.tiepie.com/libtiepie/>`_
 
 It is implemented as a module and not as a class, because modules are only
 imported once in Python. This ensures that there is only one instance
- (=> singleton). See also `the Python FAQ
+(=> singleton). See also `the Python FAQ
 <https://docs.python.org/3/faq/programming.html#how-do-i-share-global-variables-across-modules>`_.
 
 Attributes:
