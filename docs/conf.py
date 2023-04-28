@@ -19,7 +19,7 @@ extensions = [
 ]
 
 # Show members of modules/classes and parent classes by default
-autodoc_default_flags = ['members', 'show-inheritance']
+autodoc_default_options = {'members': True, 'show-inheritance': True}
 
 # Set up napoleon for parsing Google-style docstrings
 napoleon_google_docstring = True
@@ -53,7 +53,7 @@ exclude_patterns = ['_build']
 
 
 # -- Project-specific configuration ------------------------------------
-project = 'handyscope'
+project = 'Handyscope'
 copyright = "2019, Measurement Engineering Group"
 
 # Get version number from git via setuptools_scm
