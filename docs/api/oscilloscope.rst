@@ -1,4 +1,4 @@
 Oscilloscope
 ============
 
-.. autoclass:: tiepie.oscilloscope.Oscilloscope
+.. autoclass:: handyscope.oscilloscope.Oscilloscope

@@ -1,4 +1,4 @@
 Device list
 ===========
 
-.. autoclass:: tiepie.deviceList.DeviceList
+.. autoclass:: handyscope.deviceList.DeviceList

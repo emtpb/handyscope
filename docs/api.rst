@@ -2,7 +2,7 @@
 API Reference
 *************
 
-This chapter contains the API documentation for tiepie.
+This chapter contains the API documentation for handyscope.
 
 .. toctree::
    :maxdepth: 1

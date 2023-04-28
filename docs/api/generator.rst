@@ -1,4 +1,4 @@
 Generator
 =========
 
-.. autoclass:: tiepie.generator.Generator
+.. autoclass:: handyscope.generator.Generator

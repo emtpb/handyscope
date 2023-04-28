@@ -43,7 +43,7 @@ Example of opening a generator device from the **python-libtiepie** repository::
             if gen:
                 break
 
-Example of opening a generator device using **TiePie**::
+Example of opening a generator device using **handyscope**::
 
     from handyscope import Generator
 

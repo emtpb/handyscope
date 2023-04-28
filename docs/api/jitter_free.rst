@@ -1,4 +1,4 @@
 Jitter free
 ===========
 
-.. automodule:: tiepie.jitter_free
+.. automodule:: handyscope.jitter_free

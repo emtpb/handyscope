@@ -76,7 +76,7 @@ html_theme = 'sphinx_rtd_theme'
 #html_sidebars = {}
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'tiepiedoc'
+htmlhelp_basename = 'handyscopedoc'
 
 
 # -- Options for LaTeX output ------------------------------------------

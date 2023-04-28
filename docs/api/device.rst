@@ -1,9 +1,9 @@
 Device
 ======
 
-.. autoclass:: tiepie.device.Device
+.. autoclass:: handyscope.device.Device
 
 
 Helper functions
 ----------------
-.. autofunction:: tiepie.device.version_to_str
+.. autofunction:: handyscope.device.version_to_str

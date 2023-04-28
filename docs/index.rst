@@ -1,8 +1,8 @@
-**********************************
-Welcome to tiepie's documentation!
-**********************************
+**************************************
+Welcome to handyscope's documentation!
+**************************************
 
-TiePie provides a Python interface to the mobile USB-oscilloscopes made by TiePie.
+Handyscope provides a Python interface to the mobile USB-oscilloscopes made by TiePie.
 
 
 Contents
@@ -12,7 +12,6 @@ Contents
    :maxdepth: 2
 
    readme
-   usage
    api
    authors
 

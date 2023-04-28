@@ -1,4 +1,4 @@
 Library
 =======
 
-.. automodule:: tiepie.library
+.. automodule:: handyscope.library

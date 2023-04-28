@@ -1,4 +1,4 @@
 Oscilloscope channel
 ====================
 
-.. autoclass:: tiepie.oscilloscopeChannel.OscilloscopeChannel
+.. autoclass:: handyscope.oscilloscopeChannel.OscilloscopeChannel
