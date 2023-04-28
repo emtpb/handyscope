@@ -1,0 +1,7 @@
+The handyscope repository and source distributions bundle several libraries that are
+compatibly licensed.  We list these here.
+
+Name: python-libtiepie
+Files: handyscope/bin/*
+License: MIT
+  For details, see handyscope/bin/LICENSE
