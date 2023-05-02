@@ -26,9 +26,9 @@ setup(
     # Additional data
     package_data={
         'handyscope': ['bin/libtiepie32.dll',
-                   'bin/libtiepie64.dll',
-                   'bin/libtiepie.so',
-                   'config.json'],
+                       'bin/libtiepie64.dll',
+                       'bin/libtiepie.so',
+                       'config.json'],
     },
 
     # Runtime dependencies
