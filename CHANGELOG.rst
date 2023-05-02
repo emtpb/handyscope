@@ -38,5 +38,5 @@ Added
 * libtiepie version 0.6.3.
 
 
-.. _1.0.0: https://atuin.emt.uni-paderborn.de/git/emt/tiepie/src/1.0.0
-.. _1.1.0: https://atuin.emt.uni-paderborn.de/git/emt/tiepie/src/1.1.0
+.. _1.1.0: https://github.com/emtpb/handyscope/releases/tag/1.1.0
+.. _1.0.0: https://github.com/emtpb/handyscope/releases/tag/1.0.0
