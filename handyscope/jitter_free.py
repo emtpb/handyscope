@@ -49,7 +49,7 @@ def _measurement(gen, osz):
     gen.start()
     while not osz.is_data_ready:
         time.sleep(0.05)
-    data = osz.retrieve_ch1_ch2()
+    data = osz.retrieve_ch1_to_ch2()
     gen.stop()
     return data
 
