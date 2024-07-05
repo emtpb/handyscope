@@ -106,3 +106,14 @@ Example for using a generator device::
     gen.is_out_on = True
     # Start the generator
     gen.start()
+
+
+Documentation
+-------------
+
+The documentation for `handyscope` can be built with
+
+    sphinx-build -M html docs build
+
+Open `build/html/index.html` with your preferred browser to read the generated
+documentation.
