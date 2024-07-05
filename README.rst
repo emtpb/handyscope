@@ -57,6 +57,12 @@ Features
 * Provides access to oscilloscope, signal generator and I2C interface features
 * Works with Windows and Linux
 
+SDK version
+-----------
+
+This package uses `LibTiePie SDK` 0.9.16 and does not support the newer `libtiepie-hw`.
+In `libtiepie-hw`, support for I2C was removed (see `migration guide <https://api.tiepie.com/libtiepie-hw/1.2.5/migrate.html>`_), which is why `handyscope` won't be migrated for now.
+
 Installation
 ------------
 
@@ -65,7 +71,9 @@ To install the Handyscope Interface, run this command in your terminal:
 $ pip install handyscope
 
 Note that usage in Windows will require the `TiePie USB driver
-version 8.1.9 <https://download.tiepie.com/Drivers/DriverInstall-USB_v8.1.9.exe>`_
+version 8.1.9 <https://download.tiepie.com/Drivers/DriverInstall-USB_v8.1.9.exe>`_.
+If you are also using TiePie's MultiChannelSoftware, please install version 1.44.1 from their `download archive <https://www.tiepie.com/en/download/archive>`_, as this is the latest version working with driver 8.1.9.
+The library files for Windows (32 & 64-bit) and Linux (x86-64/amd64) are included in `handyscope`, there's no need for additional installations.
 
 Usage
 -----
