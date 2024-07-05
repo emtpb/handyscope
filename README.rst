@@ -12,14 +12,18 @@ and acts as an alternative. The main differences are the following:
 2. The error check is performed automatically after every method call.
 3. More easier way of opening of devices.
 
-Example of setting and getting the signal type in **python-libtiepie**::
+Example of setting and getting the signal type in **python-libtiepie**:
+
+.. code-block:: python
 
     # Set the signal type to triangle
     gen.signal_type = libtiepie.ST_TRIANGLE
     # Prints 0x00000010
     print(gen.signal_type)
 
-Example of setting and getting the signal type in **handyscope**::
+Example of setting and getting the signal type in **handyscope**:
+
+.. code-block:: python
 
     # Prints the tuple ('sine', 'triangle', 'square', 'DC', 'noise', 'arbitrary', 'pulse')
     print(gen.signal_types_available)
@@ -27,8 +31,10 @@ Example of setting and getting the signal type in **handyscope**::
     gen.signal_type = "triangle"
     # Prints "triangle"
     print(gen.signal_type)
-    
-Example of opening a generator device from **python-libtiepie**::
+
+Example of opening a generator device from **python-libtiepie**:
+
+.. code-block:: python
 
     import libtiepie
 
@@ -43,7 +49,9 @@ Example of opening a generator device from **python-libtiepie**::
             if gen:
                 break
 
-Example of opening a generator device using **handyscope**::
+Example of opening a generator device using **handyscope**:
+
+.. code-block:: python
 
     from handyscope import Generator
 
@@ -60,26 +68,30 @@ Features
 SDK version
 -----------
 
-This package uses `LibTiePie SDK` 0.9.16 and does not support the newer `libtiepie-hw`.
-In `libtiepie-hw`, support for I2C was removed (see `migration guide <https://api.tiepie.com/libtiepie-hw/1.2.5/migrate.html>`_), which is why `handyscope` won't be migrated for now.
+This package uses **LibTiePie SDK** 0.9.16 and does not support the newer **libtiepie-hw**.
+In **libtiepie-hw**, support for I2C was removed (see `migration guide <https://api.tiepie.com/libtiepie-hw/1.2.5/migrate.html>`_), which is why **handyscope** won't be migrated for now.
 
 Installation
 ------------
 
 To install the Handyscope Interface, run this command in your terminal:
 
-$ pip install handyscope
+.. code-block:: bash
+
+    $ pip install handyscope
 
 Note that usage in Windows will require the `TiePie USB driver
 version 8.1.9 <https://download.tiepie.com/Drivers/DriverInstall-USB_v8.1.9.exe>`_.
 If you are also using TiePie's MultiChannelSoftware, please install version 1.44.1 from their `download archive <https://www.tiepie.com/en/download/archive>`_, as this is the latest version working with driver 8.1.9.
-The library files for Windows (32 & 64-bit) and Linux (x86-64/amd64) are included in `handyscope`, there's no need for additional installations.
+The library files for Windows (32 & 64-bit) and Linux (x86-64/amd64) are included in **handyscope**, there's no need for additional installations.
 For other Linux architectures, please follow `TiePie's library installation instructions <https://www.tiepie.com/en/download/linux>`_.
 
 Usage
 -----
 
-Example for using an oscilloscope device::
+Example for using an oscilloscope device:
+
+.. code-block:: python
 
     from handyscope import Oscilloscope
     # To initialize as HS3 oscilloscope device
@@ -100,7 +112,9 @@ Example for using an oscilloscope device::
     data = osc.measure()
 
 
-Example for using a generator device::
+Example for using a generator device:
+
+.. code-block:: python
 
     from handyscope import Generator
     # To initialize as HS3 generator device
@@ -120,9 +134,11 @@ Example for using a generator device::
 Documentation
 -------------
 
-The documentation for `handyscope` can be built with
+The documentation for **handyscope** can be built with:
 
-    sphinx-build -M html docs build
+.. code-block:: bash
 
-Open `build/html/index.html` with your preferred browser to read the generated
+    $ sphinx-build -M html docs build
+
+Open ``build/html/index.html`` with your preferred browser to read the generated
 documentation.
