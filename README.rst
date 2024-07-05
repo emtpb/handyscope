@@ -4,12 +4,12 @@ Handyscope
 
 Handyscope provides a Python interface to the mobile USB-oscilloscopes made by TiePie.
 
-This package is inspired by `python-libtiepie <https://github.com/TiePie/python-libtiepie>`_
+This package is inspired by `python-libtiepie <https://www.tiepie.com/en/libtiepie-sdk/python>`_
 and acts as an alternative. The main differences are the following:
 
 
 1. **python-libtiepie** has some constants defined, which can be used to set properties like signal type. However, the user needs to know the names of these constants and they cannot be printed due to actually being numerical (binary) values. In **handyscope**, the values are given as strings and an overview of the available strings is provided in an additional property.
-2. The error check is performed automatically after every method call.   
+2. The error check is performed automatically after every method call.
 3. More easier way of opening of devices.
 
 Example of setting and getting the signal type in **python-libtiepie**::
@@ -28,7 +28,7 @@ Example of setting and getting the signal type in **handyscope**::
     # Prints "triangle"
     print(gen.signal_type)
     
-Example of opening a generator device from the **python-libtiepie** repository::
+Example of opening a generator device from **python-libtiepie**::
 
     import libtiepie
 
