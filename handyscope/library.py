@@ -33,18 +33,28 @@ def _load_lib():
         libtiepie (:py:class:`ctypes.CDLL`): instance of the library
     """
     if platform.system() == 'Linux':
-        library_name = 'libtiepie.so'
+        # Use bundled amd64 library
+        if platform.machine() in ('x86_64', 'x86-64', 'amd64', 'x64'):
+            library_name = 'libtiepie.so'
+            library_path = resource_filename(__name__, 'bin/{}'.format(library_name))
+        # Other architectures are not included, requires installation of
+        # https://www.tiepie.com/en/download/linux
+        else:
+            library_name = 'libtiepie.so.0'
+            library_path = library_name
+
+    # Use bundled libraries on Windows
     elif platform.system() == 'Windows':
         from ctypes.wintypes import HANDLE, HWND, LPARAM, WPARAM
         if sizeof(c_voidp) == 4:
             library_name = 'libtiepie32.dll'
         if sizeof(c_voidp) == 8:
             library_name = 'libtiepie64.dll'
+        library_path = resource_filename(__name__, 'bin/{}'.format(library_name))
     else:
         raise Exception(
             'Can\'t determine library name, unknown platform.system(): ' + platform.system())
 
-    library_path = resource_filename(__name__, 'bin/{}'.format(library_name))
     libtiepie = CDLL(library_path)
 
     # define result and argument types

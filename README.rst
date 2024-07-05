@@ -74,6 +74,7 @@ Note that usage in Windows will require the `TiePie USB driver
 version 8.1.9 <https://download.tiepie.com/Drivers/DriverInstall-USB_v8.1.9.exe>`_.
 If you are also using TiePie's MultiChannelSoftware, please install version 1.44.1 from their `download archive <https://www.tiepie.com/en/download/archive>`_, as this is the latest version working with driver 8.1.9.
 The library files for Windows (32 & 64-bit) and Linux (x86-64/amd64) are included in `handyscope`, there's no need for additional installations.
+For other Linux architectures, please follow `TiePie's library installation instructions <https://www.tiepie.com/en/download/linux>`_.
 
 Usage
 -----
