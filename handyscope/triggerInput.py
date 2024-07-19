@@ -4,6 +4,8 @@ from handyscope.library import libtiepie
 
 class TriggerInput:
 
+    __slots__ = ("_dev_handle", "_idx")
+
     TRIGGER_KINDS = {
         "unknown": 0,
         "rising": 1,

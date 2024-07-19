@@ -16,6 +16,8 @@ class DeviceList:
                              device types to their int version
     """
 
+    __slots__ = ()
+
     ID_KINDS = {"product id":    1,
                 "index":         2,
                 "serial number": 4}
@@ -886,6 +888,6 @@ def version_to_str(raw_version):
     return '.'.join([str((raw_version >> (idx * 16)) & 0xffff) for idx in range(3, -1, -1)])
 
 
-# Instantiate class to make it available via import. Thus only one instance 
+# Instantiate class to make it available via import. Thus only one instance
 # exists (singleton design pattern).
 device_list = DeviceList()
