@@ -1161,13 +1161,11 @@ class Oscilloscope(Device):
                 < self.pre_sample_ratio * self.record_length
             ):
                 warnings.warn(
-                    "trig_holdoff is not set to record all pre"
-                    " samples. This may lead to varying signal "
-                    "lengths due to triggers occuring before "
-                    "enough samples have been stored."
-                    " Please set trig_holdoff to "
-                    "TRIG_HOLDOFF_ALL_PRE_SAMPLES to get a "
-                    "predictable time vector.",
+                    "trig_holdoff is not set to record all pre samples. This "
+                    "may lead to varying signal lengths due to triggers "
+                    "occuring before enough samples have been stored. Please "
+                    "set trig_holdoff to TRIG_HOLDOFF_ALL_PRE_SAMPLES to get "
+                    "a predictable time vector.",
                     UserWarning,
                 )
         # Start measurement
