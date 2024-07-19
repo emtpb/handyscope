@@ -9,6 +9,7 @@ class I2CHost(Device):
     An I2CHost is the I2C bus master included in Handyscopes. It is accessible
     via external connectors (D-Sub).
     """
+
     _device_type = "I2C"
 
     def __init__(self, instr_id, id_kind="product id"):
@@ -51,8 +52,7 @@ class I2CHost(Device):
                  (The hardware might not set the clock frequency
                  due to clipping.)
         """
-        return libtiepie.I2CVerifySpeed(self._dev_handle,
-                                        clock_freq)
+        return libtiepie.I2CVerifySpeed(self._dev_handle, clock_freq)
 
     def is_internal_address(self, address):
         """Check if given address is used internally.
@@ -73,16 +73,17 @@ class I2CHost(Device):
             tuple: Used adresses.
         """
         # Get length of list
-        adresses_len = libtiepie.I2CGetInternalAddresses(self._dev_handle,
-                                                         None, 0)
+        adresses_len = libtiepie.I2CGetInternalAddresses(
+            self._dev_handle, None, 0
+        )
 
         # Initialize double array
         adresses = (ctypes.c_uint16 * adresses_len)()
 
         # Write the actual data to the array
-        libtiepie.I2CGetInternalAddresses(self._dev_handle,
-                                          ctypes.byref(adresses),
-                                          adresses_len)
+        libtiepie.I2CGetInternalAddresses(
+            self._dev_handle, ctypes.byref(adresses), adresses_len
+        )
 
         # Convert to a normal python list
         adresses = tuple(adresses)
@@ -101,8 +102,13 @@ class I2CHost(Device):
             list of int: List with the received bytes.
         """
         buffer = (ctypes.c_uint8 * no_bytes)()
-        libtiepie.I2CRead(self._dev_handle, address, ctypes.byref(buffer),
-                          no_bytes, send_stop)
+        libtiepie.I2CRead(
+            self._dev_handle, 
+            address, 
+            ctypes.byref(buffer), 
+            no_bytes, 
+            send_stop
+        )
         return list(buffer)
 
     def read_byte(self, address):
@@ -145,8 +151,13 @@ class I2CHost(Device):
         """
         data_len = len(data)
         buffer = (ctypes.c_uint8 * data_len)(*data)
-        result = libtiepie.I2CWrite(self._dev_handle, address,
-                                    ctypes.byref(buffer), data_len, send_stop)
+        result = libtiepie.I2CWrite(
+            self._dev_handle, 
+            address, 
+            ctypes.byref(buffer), 
+            data_len, 
+            send_stop
+        )
 
         return result == 1
 
@@ -161,9 +172,13 @@ class I2CHost(Device):
         data_len = len(data)
         write_buffer = (ctypes.c_uint8 * data_len)(*data)
         read_buffer = (ctypes.c_ubyte * no_bytes)()
-        libtiepie.I2CWriteRead(self._dev_handle, address,
-                               ctypes.byref(write_buffer),
-                               data_len, ctypes.byref(read_buffer))
+        libtiepie.I2CWriteRead(
+            self._dev_handle,
+            address,
+            ctypes.byref(write_buffer),
+            data_len,
+            ctypes.byref(read_buffer),
+        )
         return list(read_buffer)
 
     def write_byte(self, address, data_byte):
@@ -191,8 +206,9 @@ class I2CHost(Device):
         Returns:
             bool: True if write succeeded, False otherwise.
         """
-        result = libtiepie.I2CWriteByteByte(self._dev_handle, address,
-                                            data_byte1, data_byte2)
+        result = libtiepie.I2CWriteByteByte(
+            self._dev_handle, address, data_byte1, data_byte2
+        )
 
         return result == 1
 
@@ -221,8 +237,9 @@ class I2CHost(Device):
         Returns:
             bool: True if write succeeded, False otherwise.
         """
-        result = libtiepie.I2CWriteByteWord(self._dev_handle, address,
-                                            data_byte, data_word)
+        result = libtiepie.I2CWriteByteWord(
+            self._dev_handle, address, data_byte, data_word
+        )
 
         return result == 1
 

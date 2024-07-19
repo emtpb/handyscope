@@ -14,15 +14,18 @@ class Device:
     like name and serial number. A device is e.g. an oscilloscope or a
     generator,  whereas an instrument is e.g. the whole 'HS5'.
     """
-    EVENT_IDS = {'invalid': 0,
-                 'object_removed': 1,
-                 'osc_data_ready': 2,
-                 'osc_data_overflow': 3,
-                 'osc_connection_test_completed': 4,
-                 'osc_triggered': 5,
-                 'gen_burst_completed': 6,
-                 'gen_control_label_changed': 7,
-                 'osc_safe_ground_error': 9}
+
+    EVENT_IDS = {
+        "invalid": 0,
+        "object_removed": 1,
+        "osc_data_ready": 2,
+        "osc_data_overflow": 3,
+        "osc_connection_test_completed": 4,
+        "osc_triggered": 5,
+        "gen_burst_completed": 6,
+        "gen_control_label_changed": 7,
+        "osc_safe_ground_error": 9,
+    }
 
     def __init__(self, instr_id, id_kind, device_type):
         """Constructor for class Device.
@@ -35,8 +38,9 @@ class Device:
             device_type (str): The type of the device
                                (listed in dict DEVICE_TYPES).
         """
-        self._dev_handle = device_list.open_device(instr_id, id_kind,
-                                                   device_type)
+        self._dev_handle = device_list.open_device(
+            instr_id, id_kind, device_type
+        )
 
         self._trig_ins = []
         for idx in range(self.trig_in_cnt):
@@ -61,12 +65,12 @@ class Device:
                                  head: fun(p_data, value). 'p_data' is the data
                                  provided by the event and 'value' a single value.
         """
+
         def default_cb(p_data, value):
             pass
 
         # Fill the dict with default functions
-        function_map = {event_id: default_cb for event_id in
-                        self.EVENT_IDS.values()}
+        function_map = {event_id: default_cb for event_id in self.EVENT_IDS.values()}
         # Set all the desired events with the callback functions
         for event, function in zip(events, cb_functions):
             event_id = self.EVENT_IDS[event]
@@ -106,8 +110,9 @@ class Device:
             :py:class:`datetime.date`: calibration date
         """
         raw_date = libtiepie.DevGetCalibrationDate(self._dev_handle)
-        split_date = date(raw_date >> 16, (raw_date >> 8) & 0xff,
-                          raw_date & 0xff)
+        split_date = date(
+            raw_date >> 16, (raw_date >> 8) & 0xFF, raw_date & 0xFF
+        )
         return split_date
 
     @property
@@ -174,7 +179,7 @@ class Device:
         libtiepie.DevGetName(self._dev_handle, str_buffer, str_len)
 
         # convert to a normal python string
-        dev_name = str_buffer.value.decode('utf-8')
+        dev_name = str_buffer.value.decode("utf-8")
 
         return dev_name
 
@@ -195,7 +200,7 @@ class Device:
         libtiepie.DevGetNameShort(self._dev_handle, str_buffer, str_len)
 
         # convert to a normal python string
-        dev_name = str_buffer.value.decode('utf-8')
+        dev_name = str_buffer.value.decode("utf-8")
 
         return dev_name
 
@@ -222,7 +227,7 @@ class Device:
     @property
     def ip_port(self):
         """Get the IP Port number of the device.
-        
+
         Not tested.
 
         Returns:
@@ -247,7 +252,7 @@ class Device:
         libtiepie.DevGetNameShortest(self._dev_handle, str_buffer, str_len)
 
         # convert to a normal python string
-        token = str_buffer.value.decode('utf-8')
+        token = str_buffer.value.decode("utf-8")
 
         return token
 
@@ -263,7 +268,7 @@ class Device:
     @property
     def battery_charge(self):
         """Get the current charge of the battery in percent.
-        
+
         Not tested.
 
         Returns:
@@ -274,7 +279,7 @@ class Device:
     @property
     def battery_time_to_empty(self):
         """Get the battery time until it is empty in minutes.
-        
+
         Not tested.
 
         Returns:
@@ -285,7 +290,7 @@ class Device:
     @property
     def battery_time_to_full(self):
         """Get the battery time until it is fully charged in minutes.
-        
+
         Not tested.
 
         Returns:
@@ -296,7 +301,7 @@ class Device:
     @property
     def battery_charger_connected(self):
         """Check whether the charger is connected to the device.
-                
+
         Not tested.
 
         Returns:
@@ -307,7 +312,7 @@ class Device:
     @property
     def battery_charging(self):
         """Check whether the battery is charging.
-        
+
         Not tested.
 
         Returns:
@@ -318,7 +323,7 @@ class Device:
     @property
     def battery_broken(self):
         """Check whether the device battery is broken.
-        
+
         Not tested.
 
         Returns:
@@ -343,7 +348,7 @@ class Device:
         libtiepie.DevGetNameShortest(self._dev_handle, str_buffer, str_len)
 
         # convert to a normal python string
-        dev_name = str_buffer.value.decode('utf-8')
+        dev_name = str_buffer.value.decode("utf-8")
 
         return dev_name
 
@@ -435,11 +440,12 @@ def version_to_str(raw_version):
     """Convert a raw version int in TiePie's format to a nice string.
 
     Args:
-        raw_version (int): concatenated version numbers as int in 
+        raw_version (int): concatenated version numbers as int in
                            TiePie's format.
 
     Returns:
         str: version number as str
     """
-    return '.'.join(
-        [str((raw_version >> (idx * 16)) & 0xffff) for idx in range(3, -1, -1)])
+    return ".".join(
+        [str((raw_version >> (idx * 16)) & 0xFFFF) for idx in range(3, -1, -1)]
+    )

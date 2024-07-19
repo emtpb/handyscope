@@ -265,7 +265,8 @@ class DeviceList:
             instr_id_int = instr_id
 
         # get the calibration date
-        raw_date = libtiepie.LstDevGetCalibrationDate(id_kind_int, instr_id_int)
+        raw_date = libtiepie.LstDevGetCalibrationDate(id_kind_int,
+                                                      instr_id_int)
 
         split_date = date(raw_date >> 16, (raw_date >> 8) & 0xff,
                           raw_date & 0xff)
@@ -324,7 +325,10 @@ class DeviceList:
         str_buffer = ctypes.create_string_buffer(str_len)
 
         # write the actual device name to the buffer
-        libtiepie.LstDevGetNameShort(id_kind_int, instr_id, str_buffer, str_len)
+        libtiepie.LstDevGetNameShort(id_kind_int,
+                                     instr_id,
+                                     str_buffer,
+                                     str_len)
 
         # convert to a normal python string
         dev_name = str_buffer.value.decode('utf-8')

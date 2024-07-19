@@ -3,24 +3,29 @@ from handyscope.library import libtiepie
 
 
 class TriggerInput:
-    TRIGGER_KINDS = {"unknown": 0,
-                     "rising": 1,
-                     "falling": 2,
-                     "in window": 4,
-                     "out window": 8,
-                     "any": 16,
-                     "enter window": 32,
-                     "exit window": 64,
-                     "pulsewidth positive": 128,
-                     "pulsewidth negative": 256}
+
+    TRIGGER_KINDS = {
+        "unknown": 0,
+        "rising": 1,
+        "falling": 2,
+        "in window": 4,
+        "out window": 8,
+        "any": 16,
+        "enter window": 32,
+        "exit window": 64,
+        "pulsewidth positive": 128,
+        "pulsewidth negative": 256,
+    }
 
     # See api doc, macro "TRIGGER_IO_ID"
-    TRIGGER_IDS = {"EXT 1":                 0 << 24 | 3 << 20 | 1 << 8 | 0,
-                   "EXT 2":                 0 << 24 | 3 << 20 | 2 << 8 | 0,
-                   "EXT 3":                 0 << 24 | 3 << 20 | 3 << 8 | 0,
-                   "Generator start":       0 << 24 | 2 << 20 | 0 << 8 | 0,
-                   "Generator stop":        0 << 24 | 2 << 20 | 0 << 8 | 1,
-                   "Generator new period":  0 << 24 | 2 << 20 | 0 << 8 | 2}
+    TRIGGER_IDS = {
+        "EXT 1": 0 << 24 | 3 << 20 | 1 << 8 | 0,
+        "EXT 2": 0 << 24 | 3 << 20 | 2 << 8 | 0,
+        "EXT 3": 0 << 24 | 3 << 20 | 3 << 8 | 0,
+        "Generator start": 0 << 24 | 2 << 20 | 0 << 8 | 0,
+        "Generator stop": 0 << 24 | 2 << 20 | 0 << 8 | 1,
+        "Generator new period": 0 << 24 | 2 << 20 | 0 << 8 | 2,
+    }
 
     def __init__(self, dev_handle, trig_in_idx):
         self._dev_handle = dev_handle
@@ -43,17 +48,19 @@ class TriggerInput:
     def name(self):
         # get length of name string
         str_len = libtiepie.DevTrInGetName(
-            self._dev_handle, self._idx, None, 0)
+            self._dev_handle, self._idx, None, 0
+        )
 
         # initialize mutable string buffer
         str_buffer = ctypes.create_string_buffer(str_len)
 
         # write the actual name to the buffer
         libtiepie.DevTrInGetName(
-            self._dev_handle, self._idx, str_buffer, str_len)
+            self._dev_handle, self._idx, str_buffer, str_len
+        )
 
         # convert to a normal python string
-        name = str_buffer.value.decode('utf-8')
+        name = str_buffer.value.decode("utf-8")
 
         return name
 
@@ -88,8 +95,9 @@ class TriggerInput:
 
     @kind.setter
     def kind(self, value):
-        libtiepie.DevTrInSetKind(
-            self._dev_handle, self._idx, self.TRIGGER_KINDS[value])
+        libtiepie.DevTrInSetKind(self._dev_handle,
+                                 self._idx,
+                                 self.TRIGGER_KINDS[value])
 
     @property
     def is_enabled(self):
@@ -111,8 +119,8 @@ class TriggerInput:
                   triggered, false otherwise.
         """
         try:
-            result = libtiepie.ScpTrInIsTriggered(
-                self._dev_handle, self._idx) == 1
+            result = libtiepie.ScpTrInIsTriggered(self._dev_handle,
+                                                  self._idx) == 1
         except IOError as err:
             if str(err) == "[-3]: INVALID_HANDLE":
                 result = False
