@@ -6,64 +6,63 @@ class OscilloscopeChannel:
     """Class for an oscilloscope channel.
 
     Attributes:
-        CONNECTOR_TYPES (dict): dict which maps connector types as strs to 
+        CONNECTOR_TYPES (dict): dict which maps connector types as strs to
                                 their libtiepie int version
         COUPLINGS (dict): dict which maps couplings as strs to their libtiepie
                           int version
-        TRIGGER_KINDS (dict): dict which maps trigger kinds as strs to their 
+        TRIGGER_KINDS (dict): dict which maps trigger kinds as strs to their
                               libtiepie int version
         TRIGGER_CONDITIONS (dict): dict which maps trigger conditions as strs
                                    to their libtiepie int version
     """
+
     # See also Generator.CONNECTOR_TYPES
-    CONNECTOR_TYPES = {"unknown":   0,
-                       "BNC":       1,
-                       "Banana":    2,
-                       "Powerplug": 4}
+    CONNECTOR_TYPES = {"unknown": 0, "BNC": 1, "Banana": 2, "Powerplug": 4}
 
-    COUPLINGS = {"unknown":  0,
-                 "V DC":     1,
-                 "V AC":     2,
-                 "A DC":     4,
-                 "A AC":     8,
-                 "Ohm":     16}
+    COUPLINGS = {
+        "unknown": 0,
+        "V DC": 1,
+        "V AC": 2,
+        "A DC": 4,
+        "A AC": 8,
+        "Ohm": 16
+    }
 
-    # Note: OscilloscopeChannel.TRIGGER_KINDS is the same as 
+    # Note: OscilloscopeChannel.TRIGGER_KINDS is the same as
     # TriggerInput.TRIGGER_KINDS, but defined seperately here for perspicuity.
     # In the API documentation there's the additional define "TKM_NONE", which
-    # has the same value as the - according to the docs also valid - define 
+    # has the same value as the - according to the docs also valid - define
     # "TK_UNKNOWN". Thus it is ignored here.
-    TRIGGER_KINDS = {"unknown": 0,
-                     "rising": 1,
-                     "falling": 2,
-                     "in window": 4,
-                     "out window": 8,
-                     "any": 16,
-                     "enter window": 32,
-                     "exit window": 64,
-                     "pulsewidth positive": 128,
-                     "pulsewidth negative": 256}
+    TRIGGER_KINDS = {
+        "unknown": 0,
+        "rising": 1,
+        "falling": 2,
+        "in window": 4,
+        "out window": 8,
+        "any": 16,
+        "enter window": 32,
+        "exit window": 64,
+        "pulsewidth positive": 128,
+        "pulsewidth negative": 256,
+    }
 
-    TRIGGER_CONDITIONS = {"unknown": 0,
-                          "none":    1,
-                          "smaller": 2,
-                          "larger":  4}
+    TRIGGER_CONDITIONS = {"unknown": 0, "none": 1, "smaller": 2, "larger": 4}
 
-    TRIGGER_LVL_MODES = {"unknown":  0,
-                         "relative": 1,
-                         "absolute": 2}
+    TRIGGER_LVL_MODES = {"unknown": 0, "relative": 1, "absolute": 2}
 
-    RAW_DATA_TYPES = {"unknown":    0,
-                      "int8":       1,
-                      "int16":      2,
-                      "int32":      4,
-                      "int64":      8,
-                      "uint8":     16,
-                      "uint16":    32,
-                      "uint32":    64,
-                      "uint64":   128,
-                      "float32":  256,
-                      "float64":  512}
+    RAW_DATA_TYPES = {
+        "unknown": 0,
+        "int8": 1,
+        "int16": 2,
+        "int32": 4,
+        "int64": 8,
+        "uint8": 16,
+        "uint16": 32,
+        "uint32": 64,
+        "uint64": 128,
+        "float32": 256,
+        "float64": 512,
+    }
 
     def __init__(self, dev_handle, ch_idx):
         """Constructor for an oscilloscope channel.
@@ -83,15 +82,17 @@ class OscilloscopeChannel:
             tuple: Available input bandwidths in Hz.
         """
         # Get length of list
-        ranges_len = libtiepie.ScpChGetBandwidths(self._dev_handle,
-                                                  self._idx, None, 0)
+        ranges_len = libtiepie.ScpChGetBandwidths(
+            self._dev_handle, self._idx, None, 0
+        )
 
         # Initialize double array
         bandwidths = (ctypes.c_double * ranges_len)()
 
         # Write the actual data to the array
-        libtiepie.ScpChGetBandwidths(self._dev_handle, self._idx,
-                                     ctypes.byref(bandwidths), ranges_len)
+        libtiepie.ScpChGetBandwidths(
+            self._dev_handle, self._idx, ctypes.byref(bandwidths), ranges_len
+        )
 
         # Convert to a normal python list
         bandwidths = tuple(bandwidths)
@@ -119,11 +120,13 @@ class OscilloscopeChannel:
     @property
     def safe_ground_enabled(self):
         """Get or set whether the safe ground is enabled.
-        
+
         Not tested.
         """
-        return libtiepie.ScpChGetSafeGroundEnabled(self._dev_handle,
-                                                   self._idx) == 1
+        return (
+            libtiepie.ScpChGetSafeGroundEnabled(self._dev_handle, self._idx)
+            == 1
+        )
 
     @safe_ground_enabled.setter
     def safe_ground_enabled(self, value):
@@ -132,40 +135,42 @@ class OscilloscopeChannel:
     @property
     def safe_ground_threshold_min(self):
         """Get the minimum safe ground threshold current.
-        
+
         Not tested.
         """
-        return libtiepie.ScpChGetSafeGroundThresholdMin(self._dev_handle,
-                                                        self._idx)
+        return libtiepie.ScpChGetSafeGroundThresholdMin(
+            self._dev_handle, self._idx
+        )
 
     @property
     def safe_ground_threshold_max(self):
         """Get the maximum safe ground threshold current.
-        
+
         Not tested.
         """
-        return libtiepie.ScpChGetSafeGroundThresholdMax(self._dev_handle,
-                                                        self._idx)
+        return libtiepie.ScpChGetSafeGroundThresholdMax(
+            self._dev_handle, self._idx
+        )
 
     @property
     def safe_ground_threshold(self):
         """Get or set the safe ground threshold current.
-        
+
         Not tested.
         """
-        return libtiepie.ScpChGetSafeGroundThreshold(self._dev_handle,
-                                                     self._idx)
+        return libtiepie.ScpChGetSafeGroundThreshold(
+            self._dev_handle, self._idx
+        )
 
     @safe_ground_threshold.setter
     def safe_ground_threshold(self, value):
-        libtiepie.ScpChSetSafeGroundThreshold(self._dev_handle, self._idx,
-                                              value)
+        libtiepie.ScpChSetSafeGroundThreshold(self._dev_handle, self._idx, value)
 
     def verify_safe_ground_threshold(self, threshold):
         """Verify a safe ground threshold without setting it in the hardware.
 
         Not tested.
-        
+
         Args:
             threshold (float): The safe ground threshold to verify.
         Returns:
@@ -173,8 +178,9 @@ class OscilloscopeChannel:
                    (The hardware might not set the safe ground threshold
                     due to clipping.)
         """
-        return libtiepie.ScpChVerifySafeGroundThreshold(self._dev_handle, self._idx,
-                                                        threshold)
+        return libtiepie.ScpChVerifySafeGroundThreshold(
+            self._dev_handle, self._idx, threshold
+        )
 
     @property
     def connector_type(self):
@@ -216,7 +222,8 @@ class OscilloscopeChannel:
             tuple: Available couplings (keys of :py:attr:`handyscope.oscilloscopeChannel.OscilloscopeChannel.COUPLINGS`)
         """
         raw_couplings = libtiepie.ScpChGetCouplings(
-            self._dev_handle, self._idx)
+            self._dev_handle, self._idx
+        )
         _couplings = []
 
         # if no couplings are available, return unknown
@@ -248,7 +255,8 @@ class OscilloscopeChannel:
     @coupling.setter
     def coupling(self, value):
         libtiepie.ScpChSetCoupling(
-            self._dev_handle, self._idx, self.COUPLINGS[value])
+            self._dev_handle, self._idx, self.COUPLINGS[value]
+        )
 
     @property
     def is_enabled(self):
@@ -295,14 +303,16 @@ class OscilloscopeChannel:
         """
         # Get length of list
         ranges_len = libtiepie.ScpChGetRanges(
-            self._dev_handle, self._idx, None, 0)
+            self._dev_handle, self._idx, None, 0
+        )
 
         # Initialize double array
         ranges = (ctypes.c_double * ranges_len)()
 
         # Write the actual data to the array
         libtiepie.ScpChGetRanges(
-            self._dev_handle, self._idx, ctypes.byref(ranges), ranges_len)
+            self._dev_handle, self._idx, ctypes.byref(ranges), ranges_len
+        )
 
         # Convert to a normal python list
         ranges = tuple(ranges)
@@ -326,7 +336,10 @@ class OscilloscopeChannel:
             bool: True, if the maximum of the range is reachable,
                   False otherwise.
         """
-        return libtiepie.ScpChIsRangeMaxReachable(self._dev_handle, self._idx) == 1
+        return (
+            libtiepie.ScpChIsRangeMaxReachable(self._dev_handle, self._idx)
+            == 1
+        )
 
     @property
     def is_trig_enabled(self):
@@ -377,7 +390,8 @@ class OscilloscopeChannel:
     @trig_kind.setter
     def trig_kind(self, value):
         libtiepie.ScpChTrSetKind(
-            self._dev_handle, self._idx, self.TRIGGER_KINDS[value])
+            self._dev_handle, self._idx, self.TRIGGER_KINDS[value]
+        )
 
     @property
     def trig_lvl_cnt(self):
@@ -397,8 +411,9 @@ class OscilloscopeChannel:
         """
         _lvls = []
         for idx in range(self.trig_lvl_cnt):
-            _lvls.append(libtiepie.ScpChTrGetLevel(
-                self._dev_handle, self._idx, idx))
+            _lvls.append(
+                libtiepie.ScpChTrGetLevel(self._dev_handle, self._idx, idx)
+            )
         return tuple(_lvls)
 
     @trig_lvl.setter
@@ -427,7 +442,10 @@ class OscilloscopeChannel:
                 # ...and ignoring "unknown" (already handled above)
                 if key == "unknown":
                     pass
-                elif raw_modes & self.TRIGGER_LVL_MODES[key] == self.TRIGGER_LVL_MODES[key]:
+                elif (
+                    raw_modes & self.TRIGGER_LVL_MODES[key]
+                    == self.TRIGGER_LVL_MODES[key]
+                ):
                     _modes.append(key)
 
         return tuple(_modes)
@@ -449,7 +467,8 @@ class OscilloscopeChannel:
     @trig_lvl_mode.setter
     def trig_lvl_mode(self, value):
         libtiepie.ScpChTrSetLevelMode(
-            self._dev_handle, self._idx, self.TRIGGER_LVL_MODES[value])
+            self._dev_handle, self._idx, self.TRIGGER_LVL_MODES[value]
+        )
 
     @property
     def trig_hysteresis_cnt(self):
@@ -465,8 +484,11 @@ class OscilloscopeChannel:
         """Get or set the trigger hysteresis."""
         _hyst = []
         for idx in range(self.trig_hysteresis_cnt):
-            _hyst.append(libtiepie.ScpChTrGetHysteresis(
-                self._dev_handle, self._idx, idx))
+            _hyst.append(
+                libtiepie.ScpChTrGetHysteresis(
+                    self._dev_handle, self._idx, idx
+                )
+            )
 
         return tuple(_hyst)
 
@@ -474,7 +496,8 @@ class OscilloscopeChannel:
     def trig_hysteresis(self, iterable):
         for idx, value in enumerate(iterable):
             libtiepie.ScpChTrSetHysteresis(
-                self._dev_handle, self._idx, idx, value)
+                self._dev_handle, self._idx, idx, value
+            )
 
     @property
     def trig_conditions_available(self):
@@ -497,7 +520,10 @@ class OscilloscopeChannel:
                 # ...and ignoring "unknown" (already handled above)
                 if key == "unknown":
                     pass
-                elif raw_conds & self.TRIGGER_CONDITIONS[key] == self.TRIGGER_CONDITIONS[key]:
+                elif (
+                    raw_conds & self.TRIGGER_CONDITIONS[key]
+                    == self.TRIGGER_CONDITIONS[key]
+                ):
                     _conds.append(key)
 
         return tuple(_conds)
@@ -505,7 +531,8 @@ class OscilloscopeChannel:
     @property
     def trig_condition(self):
         """Get or set the current trigger condition (key of
-        :py:attr:`handyscope.oscilloscopeChannel.OscilloscopeChannel.TRIGGER_CONDITIONS`)"""
+        :py:attr:`handyscope.oscilloscopeChannel.OscilloscopeChannel.TRIGGER_CONDITIONS`)
+        """
         raw_cond = libtiepie.ScpChTrGetCondition(self._dev_handle, self._idx)
         for key, value in self.TRIGGER_CONDITIONS.items():
             if raw_cond == value:
@@ -516,7 +543,8 @@ class OscilloscopeChannel:
     @trig_condition.setter
     def trig_condition(self, value):
         libtiepie.ScpChTrSetCondition(
-            self._dev_handle, self._idx, self.TRIGGER_CONDITIONS[value])
+            self._dev_handle, self._idx, self.TRIGGER_CONDITIONS[value]
+        )
 
     @property
     def trig_time_cnt(self):
@@ -533,8 +561,9 @@ class OscilloscopeChannel:
         times = []
 
         for idx in range(self.trig_time_cnt):
-            times.append(libtiepie.ScpChTrGetTime(
-                self._dev_handle, self._idx, idx))
+            times.append(
+                libtiepie.ScpChTrGetTime(self._dev_handle, self._idx, idx)
+            )
 
         return tuple(times)
 
@@ -555,8 +584,9 @@ class OscilloscopeChannel:
         """
         set_trigger_times = []
         for idx, value in enumerate(trigger_times):
-            trigger_time = libtiepie.ScpChTrVerifyTime(self._dev_handle,
-                                                       self._idx, idx, value)
+            trigger_time = libtiepie.ScpChTrVerifyTime(
+                self._dev_handle, self._idx, idx, value
+            )
             set_trigger_times.append(trigger_time)
         return set_trigger_times
 
@@ -567,14 +597,16 @@ class OscilloscopeChannel:
         Returns:
             bool: True if trigger is available, False otherwise.
         """
-        # TODO Check if both function calls are necessary. To be on the safe 
-        # side, currently both are called. Check if trigger support is given 
+        # TODO Check if both function calls are necessary. To be on the safe
+        # side, currently both are called. Check if trigger support is given
         # under the currently selected measure mode
-        measure_mode_ok = libtiepie.ScpChHasTrigger(
-            self._dev_handle, self._idx) == 1
+        measure_mode_ok = (
+            libtiepie.ScpChHasTrigger(self._dev_handle, self._idx) == 1
+        )
         # Check if trigger is available with current settings
-        settings_ok = libtiepie.ScpChTrIsAvailable(
-            self._dev_handle, self._idx) == 1
+        settings_ok = (
+            libtiepie.ScpChTrIsAvailable(self._dev_handle, self._idx) == 1
+        )
 
         return measure_mode_ok & settings_ok
 
@@ -603,11 +635,14 @@ class OscilloscopeChannel:
         Returns:
             bool: True if connection test is available, False otherwise.
         """
-        return libtiepie.ScpChHasConnectionTest(self._dev_handle, self._idx) == 1
+        return (
+            libtiepie.ScpChHasConnectionTest(self._dev_handle, self._idx) == 1
+        )
 
     @property
     def data_range(self):
-        """Get the minimum and maximum values of the input range of the measured data.
+        """Get the minimum and maximum values of the input range of the 
+        measured data.
 
         Returns:
             tuple: Minimum and maximum values of the input range as float
@@ -618,8 +653,11 @@ class OscilloscopeChannel:
 
         # Get data
         libtiepie.ScpChGetDataValueRange(
-            self._dev_handle, self._idx, ctypes.byref(range_min),
-            ctypes.byref(range_max))
+            self._dev_handle,
+            self._idx,
+            ctypes.byref(range_min),
+            ctypes.byref(range_max),
+        )
 
         # Get values and return them
         return range_min.value, range_max.value
@@ -667,10 +705,13 @@ class OscilloscopeChannel:
         zero = ctypes.c_uint64()
         maximum = ctypes.c_uint64()
 
-        libtiepie.ScpChGetDataRawValueRange(self._dev_handle, self._idx,
-                                            ctypes.byref(minimum),
-                                            ctypes.byref(zero),
-                                            ctypes.byref(maximum))
+        libtiepie.ScpChGetDataRawValueRange(
+            self._dev_handle,
+            self._idx,
+            ctypes.byref(minimum),
+            ctypes.byref(zero),
+            ctypes.byref(maximum),
+        )
 
         return minimum.value, zero.value, maximum.value
 

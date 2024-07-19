@@ -3,19 +3,23 @@ import ctypes
 
 
 class TriggerOutput:
-    TRIGGER_EVENTS = {"unknown":              0,
-                      "Generator start":      1,
-                      "Generator stop":       2,
-                      "Generator new period": 4,
-                      "Oscilloscope running": 8,
-                      "Oscilloscope triggered": 16,
-                      "manual": 32,
-                      }
+
+    TRIGGER_EVENTS = {
+        "unknown": 0,
+        "Generator start": 1,
+        "Generator stop": 2,
+        "Generator new period": 4,
+        "Oscilloscope running": 8,
+        "Oscilloscope triggered": 16,
+        "manual": 32,
+    }
 
     # see api doc, macro "TRIGGER_IO_ID"
-    TRIGGER_IDS = {"EXT 1": 0 << 24 | 3 << 20 | 1 << 8 | 0,
-                   "EXT 2": 0 << 24 | 3 << 20 | 2 << 8 | 0,
-                   "EXT 3": 0 << 24 | 3 << 20 | 3 << 8 | 0}
+    TRIGGER_IDS = {
+        "EXT 1": 0 << 24 | 3 << 20 | 1 << 8 | 0,
+        "EXT 2": 0 << 24 | 3 << 20 | 2 << 8 | 0,
+        "EXT 3": 0 << 24 | 3 << 20 | 3 << 8 | 0,
+    }
 
     def __init__(self, dev_handle, trig_out_idx):
         self._dev_handle = dev_handle
@@ -42,17 +46,19 @@ class TriggerOutput:
     def name(self):
         # get length of name string
         str_len = libtiepie.DevTrOutGetName(
-            self._dev_handle, self._idx, None, 0)
+            self._dev_handle, self._idx, None, 0
+        )
 
         # initialize mutable string buffer
         str_buffer = ctypes.create_string_buffer(str_len)
 
         # write the actual name to the buffer
         libtiepie.DevTrOutGetName(
-            self._dev_handle, self._idx, str_buffer, str_len)
+            self._dev_handle, self._idx, str_buffer, str_len
+        )
 
         # convert to a normal python string
-        name = str_buffer.value.decode('utf-8')
+        name = str_buffer.value.decode("utf-8")
 
         return name
 
@@ -88,7 +94,8 @@ class TriggerOutput:
     @event.setter
     def event(self, value):
         libtiepie.DevTrOutSetEvent(
-            self._dev_handle, self._idx, self.TRIGGER_EVENTS[value])
+            self._dev_handle, self._idx, self.TRIGGER_EVENTS[value]
+        )
 
     def force_trig(self):
         return libtiepie.DevTrOutTrigger(self._dev_handle, self._idx) == 1

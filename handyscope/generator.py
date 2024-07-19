@@ -18,56 +18,60 @@ class Generator(Device):
         GENERATOR_MODES (dict): dict which maps generator modes as strs to
                                 their libtiepie int version
     """
+
     # See also OscilloscopeChannel.CONNECTOR_TYPES
-    CONNECTOR_TYPES = {"unknown":   0,
-                       "BNC":       1,
-                       "Banana":    2,
-                       "Powerplug": 4}
+    CONNECTOR_TYPES = {"unknown": 0, "BNC": 1, "Banana": 2, "Powerplug": 4}
 
-    GENERATOR_STATUSES = {"unknown":      0,
-                          "stopped":      1,
-                          "running":      2,
-                          "burst active": 4,
-                          "waiting":      8}
+    GENERATOR_STATUSES = {
+        "unknown": 0,
+        "stopped": 1,
+        "running": 2,
+        "burst active": 4,
+        "waiting": 8,
+    }
 
-    SIGNAL_TYPES = {"unknown":      0,
-                    "sine":         1,
-                    "triangle":     2,
-                    "square":       4,
-                    "DC":           8,
-                    "noise":       16,
-                    "arbitrary":   32,
-                    "pulse":       64}
+    SIGNAL_TYPES = {
+        "unknown": 0,
+        "sine": 1,
+        "triangle": 2,
+        "square": 4,
+        "DC": 8,
+        "noise": 16,
+        "arbitrary": 32,
+        "pulse": 64,
+    }
 
-    FREQUENCY_MODES = {"unknown":   0,
-                       "signal":    1,
-                       "sample":    2}
+    FREQUENCY_MODES = {"unknown": 0, "signal": 1, "sample": 2}
 
-    GENERATOR_MODES = {"unknown":                          0,
-                       "continuous":                       1,
-                       "burst count":                      2,
-                       "gated periods":                    4,
-                       "gated":                            8,
-                       "gated period start":              16,
-                       "gated period finish":             32,
-                       "gated run":                       64,
-                       "gated run output":               128,
-                       "burst sample count":             256,
-                       "burst sample count output":      512,
-                       "burst segment count":           1024,
-                       "burst segment count output":    2048}
+    GENERATOR_MODES = {
+        "unknown": 0,
+        "continuous": 1,
+        "burst count": 2,
+        "gated periods": 4,
+        "gated": 8,
+        "gated period start": 16,
+        "gated period finish": 32,
+        "gated run": 64,
+        "gated run output": 128,
+        "burst sample count": 256,
+        "burst sample count output": 512,
+        "burst segment count": 1024,
+        "burst segment count output": 2048,
+    }
 
-    RAW_DATA_TYPES = {"unknown":    0,
-                      "int8":       1,
-                      "int16":      2,
-                      "int32":      4,
-                      "int64":      8,
-                      "uint8":     16,
-                      "uint16":    32,
-                      "uint32":    64,
-                      "uint64":   128,
-                      "float32":  256,
-                      "float64":  512}
+    RAW_DATA_TYPES = {
+        "unknown": 0,
+        "int8": 1,
+        "int16": 2,
+        "int32": 4,
+        "int64": 8,
+        "uint8": 16,
+        "uint16": 32,
+        "uint32": 64,
+        "uint64": 128,
+        "float32": 256,
+        "float64": 512,
+    }
 
     _device_type = "Gen"
 
@@ -76,7 +80,8 @@ class Generator(Device):
 
         Args:
             instr_id (int or str): Device list index, product ID
-                                   (listed in dict PRODUCT_IDS) or serial number
+                                   (listed in dict PRODUCT_IDS) or serial 
+                                   number
             id_kind (str): the kind of the given instr_id
                            (listed in dict ID_KINDS)
         """
@@ -292,7 +297,8 @@ class Generator(Device):
         buffer = (ctypes.c_double * list_len)()
 
         libtiepie.GenGetAmplitudeRanges(
-            self._dev_handle, ctypes.byref(buffer), list_len)
+            self._dev_handle, ctypes.byref(buffer), list_len
+        )
 
         return tuple(buffer)
 
@@ -450,7 +456,8 @@ class Generator(Device):
     @freq_mode.setter
     def freq_mode(self, value):
         libtiepie.GenSetFrequencyMode(
-            self._dev_handle, self.FREQUENCY_MODES[value])
+            self._dev_handle, self.FREQUENCY_MODES[value]
+        )
 
     @property
     def is_phase_available(self):
@@ -482,7 +489,7 @@ class Generator(Device):
 
     @phase.setter
     def phase(self, value):
-        libtiepie.GenSetPhase(self._dev_handle, value/360)
+        libtiepie.GenSetPhase(self._dev_handle, value / 360)
 
     def verify_phase(self, phase):
         """Verify a phase without setting it in the hardware.
@@ -494,7 +501,7 @@ class Generator(Device):
                    (The hardware might not set the phase
                     due to clipping.)
         """
-        return libtiepie.GenVerifyPhase(self._dev_handle, phase/360) * 360
+        return libtiepie.GenVerifyPhase(self._dev_handle, phase / 360) * 360
 
     @property
     def is_symmetry_available(self):
@@ -609,7 +616,7 @@ class Generator(Device):
         """Get the minimum available leading edge time.
 
         Available for signal type "pulse".
-        
+
         Not tested.
         """
         return libtiepie.GenGetLeadingEdgeTimeMin(self._dev_handle)
@@ -619,7 +626,7 @@ class Generator(Device):
         """Get the maximum available leading edge time.
 
         Available for signal type "pulse".
-        
+
         Not tested.
         """
         return libtiepie.GenGetLeadingEdgeTimeMax(self._dev_handle)
@@ -629,7 +636,7 @@ class Generator(Device):
         """Get or set the available leading edge time.
 
         Available for signal type "pulse".
-        
+
         Not tested.
         """
         return libtiepie.GenGetLeadingEdgeTime(self._dev_handle)
@@ -642,7 +649,7 @@ class Generator(Device):
         """Verify a leading edge time without setting it in the hardware.
 
         Available for signal type "pulse".
-        
+
         Not tested.
 
         Args:
@@ -652,15 +659,16 @@ class Generator(Device):
                    (The hardware might not set the leading edge time
                     due to clipping.)
         """
-        return libtiepie.GenVerifyLeadingEdgeTime(self._dev_handle,
-                                                  leading_edge_time)
+        return libtiepie.GenVerifyLeadingEdgeTime(
+            self._dev_handle, leading_edge_time
+        )
 
     @property
     def trailing_edge_time_min(self):
         """Get the minimum available trailing edge time.
 
         Available for signal type "pulse".
-        
+
         Not tested.
         """
         return libtiepie.GenGetTrailingEdgeTimeMin(self._dev_handle)
@@ -670,7 +678,7 @@ class Generator(Device):
         """Get the maximum available trailing edge time.
 
         Available for signal type "pulse".
-        
+
         Not tested.
         """
         return libtiepie.GenGetTrailingEdgeTimeMax(self._dev_handle)
@@ -680,7 +688,7 @@ class Generator(Device):
         """Get or set the available trailing edge time.
 
         Available for signal type "pulse".
-        
+
         Not tested.
         """
         return libtiepie.GenGetTrailingEdgeTime(self._dev_handle)
@@ -693,7 +701,7 @@ class Generator(Device):
         """Verify a trailing edge time without setting it in the hardware.
 
         Available for signal type "pulse".
-        
+
         Not tested.
 
         Args:
@@ -703,14 +711,15 @@ class Generator(Device):
                    (The hardware might not set the trailing edge time
                     due to clipping.)
         """
-        return libtiepie.GenVerifyTrailingEdgeTime(self._dev_handle,
-                                                   trailing_edge_time)
+        return libtiepie.GenVerifyTrailingEdgeTime(
+            self._dev_handle, trailing_edge_time
+        )
 
     @property
     def is_arb_data_available(self):
         """Get whether the current signal type supports controlling the
         arbitrary waveform buffer.
-        
+
         Not tested.
         """
         return libtiepie.GenHasData(self._dev_handle) == 1
@@ -753,7 +762,7 @@ class Generator(Device):
         hardware.
 
         Available for signal type "arbitrary".
-        
+
         Not tested.
 
         Args:
@@ -763,8 +772,7 @@ class Generator(Device):
                  (The hardware might not set the length
                  due to clipping.)
         """
-        return libtiepie.GenVerifyDataLength(self._dev_handle,
-                                             arb_data_length)
+        return libtiepie.GenVerifyDataLength(self._dev_handle, arb_data_length)
 
     def arb_data(self, value_list):
         """Fill the arbitrary data buffer of the generator.
@@ -808,10 +816,12 @@ class Generator(Device):
         zero = ctypes.c_uint64()
         maximum = ctypes.c_uint64()
 
-        libtiepie.GenGetDataRawValueRange(self._dev_handle,
-                                          ctypes.byref(minimum),
-                                          ctypes.byref(zero),
-                                          ctypes.byref(maximum))
+        libtiepie.GenGetDataRawValueRange(
+            self._dev_handle,
+            ctypes.byref(minimum),
+            ctypes.byref(zero),
+            ctypes.byref(maximum),
+        )
 
         return minimum.value, zero.value, maximum.value
 
@@ -1042,14 +1052,15 @@ class Generator(Device):
         """Verify a burst segment count without setting it in the hardware.
 
         Not tested.
-        
+
         Args:
             burst_segment_cnt (int): The burst segment count to verify.
-            
+
         Returns:
             int: The burst segment count the hardware would set.
                  (The hardware might not set the burst segment count
                  due to clipping.)
         """
-        return libtiepie.GenVerifyBurstSegmentCount(self._dev_handle,
-                                                    burst_segment_cnt)
+        return libtiepie.GenVerifyBurstSegmentCount(
+            self._dev_handle, burst_segment_cnt
+        )
