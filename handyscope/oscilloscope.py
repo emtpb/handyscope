@@ -1030,10 +1030,8 @@ class Oscilloscope(Device):
     def trig_holdoff(self):
         """Get or set the current trigger holdoff as number of samples.
 
-        The trigger holdoff sets how many samples need to be recorded until
-        a trigger can happen.
-
-        Use :py:attr:`handyscope.oscilloscope.Oscilloscope.TRIG_HOLDOFF_ALL_PRE_SAMPLES`
+        This setting does not work as intended unless you use
+        :py:attr:`handyscope.oscilloscope.Oscilloscope.TRIG_HOLDOFF_ALL_PRE_SAMPLES`
         to ensure all pre samples are recorded if pre_sample_ratio is set.
         """
         return libtiepie.ScpGetTriggerHoldOffCount(self._dev_handle)
