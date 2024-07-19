@@ -10,6 +10,8 @@ class I2CHost(Device):
     via external connectors (D-Sub).
     """
 
+    __slots__ = ()
+
     _device_type = "I2C"
 
     def __init__(self, instr_id, id_kind="product id"):

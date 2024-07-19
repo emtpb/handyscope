@@ -19,6 +19,8 @@ class Generator(Device):
                                 their libtiepie int version
     """
 
+    __slots__ = ()
+
     # See also OscilloscopeChannel.CONNECTOR_TYPES
     CONNECTOR_TYPES = {"unknown": 0, "BNC": 1, "Banana": 2, "Powerplug": 4}
 

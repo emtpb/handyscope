@@ -4,6 +4,8 @@ import ctypes
 
 class TriggerOutput:
 
+    __slots__ = ("_dev_handle", "_idx")
+
     TRIGGER_EVENTS = {
         "unknown": 0,
         "Generator start": 1,

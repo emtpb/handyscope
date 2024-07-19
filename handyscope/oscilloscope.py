@@ -25,6 +25,8 @@ class Oscilloscope(Device):
                                   their libtiepie int version
     """
 
+    __slots__ = ("_channels",)
+
     MEASURE_MODES = {"unknown": 0, "stream": 1, "block": 2}
 
     AUTO_RESOLUTIONS = {

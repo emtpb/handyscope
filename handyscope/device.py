@@ -15,6 +15,8 @@ class Device:
     generator,  whereas an instrument is e.g. the whole 'HS5'.
     """
 
+    __slots__ = ("_dev_handle", "_trig_ins", "_trig_outs", "_obj_cb")
+
     EVENT_IDS = {
         "invalid": 0,
         "object_removed": 1,
