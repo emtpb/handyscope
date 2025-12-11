@@ -8,6 +8,13 @@ This project follows the guidelines of `Keep a changelog`_ and adheres to
 .. _Keep a changelog: http://keepachangelog.com/
 .. _Semantic versioning: https://semver.org/
 
+Unreleased
+==========
+
+Added
+-----
+* Add example scripts for the signal generator and oscilloscope functionalities.
+
 `1.2.0`_ 2024-07-22
 ===================
 
