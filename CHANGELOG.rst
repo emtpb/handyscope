@@ -15,6 +15,11 @@ Added
 -----
 * Add example scripts for the signal generator and oscilloscope functionalities.
 
+Changed
+-------
+* Change to pyproject.toml
+
+
 `1.2.0`_ 2024-07-22
 ===================
 
