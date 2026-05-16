@@ -11,12 +11,13 @@ imported once in Python. This ensures that there is only one instance
 Attributes:
     libtiepie (:py:class:`ctypes.CDLL`): instance of the library
 """
-
+import atexit
+from contextlib import ExitStack
+from ctypes import *
+from importlib import resources
 import platform
 import warnings
-from ctypes import *
 
-from pkg_resources import resource_filename
 
 # Type definitions for callback usage
 Callback = CFUNCTYPE(None, c_void_p)
@@ -36,7 +37,10 @@ def _load_lib():
         # Use bundled amd64 library
         if platform.machine() in ('x86_64', 'x86-64', 'amd64', 'x64'):
             library_name = 'libtiepie.so'
-            library_path = resource_filename(__name__, 'bin/{}'.format(library_name))
+            file_manager = ExitStack()
+            atexit.register(file_manager.close)
+            ref = resources.files(__name__) / 'bin' / library_name
+            library_path = file_manager.enter_context(resources.as_file(ref))
         # Other architectures are not included, requires installation of
         # https://www.tiepie.com/en/download/linux
         else:
@@ -50,7 +54,10 @@ def _load_lib():
             library_name = 'libtiepie32.dll'
         if sizeof(c_voidp) == 8:
             library_name = 'libtiepie64.dll'
-        library_path = resource_filename(__name__, 'bin/{}'.format(library_name))
+        file_manager = ExitStack()
+        atexit.register(file_manager.close)
+        ref = resources.files(__name__) / 'bin' / library_name
+        library_path = file_manager.enter_context(resources.as_file(ref))
     else:
         raise Exception(
             'Can\'t determine library name, unknown platform.system(): ' + platform.system())
