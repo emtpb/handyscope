@@ -18,6 +18,7 @@ Added
 Changed
 -------
 * Change to pyproject.toml
+* Migrate from deprecated pkg_resources to importlib
 
 
 `1.2.0`_ 2024-07-22
