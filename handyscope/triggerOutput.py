@@ -100,4 +100,14 @@ class TriggerOutput:
         )
 
     def force_trig(self):
+        """Manually trigger TriggerOutput.
+
+        Only available if TriggerOutput.event is set to "manual".
+
+        Returns:
+            bool: True if successful, False otherwise.
+
+        Raises:
+            OSError: If TriggerOutput.event is not set to "manual".
+        """
         return libtiepie.DevTrOutTrigger(self._dev_handle, self._idx) == 1

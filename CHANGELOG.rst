@@ -20,6 +20,10 @@ Changed
 * Change to pyproject.toml
 * Migrate from deprecated pkg_resources to importlib
 
+Fixed
+-----
+* Fix tests
+
 
 `1.2.0`_ 2024-07-22
 ===================

@@ -47,7 +47,12 @@ def test_event(device):
 def test_force_trig(device):
     for trig_out in device.trig_outs:
         trig_out.is_enabled = True
-        # HS5 doesn't support forced output triggers
-        with pytest.raises(OSError) as err:
-            trig_out.force_trig()
-        assert err.value.args[0] == "[-2]: NOT_SUPPORTED"
+        # If manual triggering is supported, enable and test it
+        if "manual" in trig_out.events_available:
+            trig_out.event = "manual"
+            assert trig_out.force_trig() is True
+        # Else calling force_trig will raise an exception
+        else:
+            with pytest.raises(OSError) as err:
+                trig_out.force_trig()
+            assert err.value.args[0] == "[-2]: NOT_SUPPORTED"
