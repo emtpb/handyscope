@@ -279,7 +279,7 @@ def test_stop(default_osc):
 def test_force_trig(default_osc):
     # Disable triggers
     for channel in default_osc.channels:
-        channel.trig_is_enabled = False
+        channel.is_trig_enabled = False
     default_osc.trig_timeout = -1
 
     assert default_osc.is_force_trig is False
@@ -341,7 +341,7 @@ def test_is_timeout_trig(default_osc):
 def test_is_force_trig(default_osc):
     # Disable triggers
     for channel in default_osc.channels:
-        channel.trig_is_enabled = False
+        channel.is_trig_enabled = False
     default_osc.trig_timeout = -1
 
     assert default_osc.is_force_trig is False
