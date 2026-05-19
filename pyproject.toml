@@ -36,7 +36,7 @@ Issues = "https://github.com/emtpb/handyscope/issues"
 Changelog = "https://github.com/emtpb/handyscope/blob/master/CHANGELOG.rst"
 
 [build-system]
-requires = ["setuptools_scm", "pytest-runner"]
+requires = ["setuptools>=41", "setuptools_scm", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]

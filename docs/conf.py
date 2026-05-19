@@ -1,5 +1,5 @@
 import os
-from pkg_resources import get_distribution
+import setuptools_scm
 import sys
 
 # Add source code directory to path (required for autodoc)
@@ -18,8 +18,14 @@ extensions = [
     'sphinx.ext.napoleon',
 ]
 
-# Show members of modules/classes and parent classes by default
-autodoc_default_options = {'members': True, 'show-inheritance': True}
+# Autodoc options; include class constructors and undocumented features.
+autodoc_default_options = {
+    'members': True,
+    'member-order': 'bysource',
+    'special-members': '__init__',
+    'undoc-members': True,
+    'exclude-members': '__weakref__'
+}
 
 # Set up napoleon for parsing Google-style docstrings
 napoleon_google_docstring = True
@@ -57,7 +63,7 @@ project = 'Handyscope'
 copyright = "2019, Measurement Engineering Group"
 
 # Get version number from git via setuptools_scm
-release = get_distribution('handyscope').version
+release = setuptools_scm.get_version(root='..', relative_to=__file__)
 version = '.'.join(release.split('.')[:3])
 
 today_fmt = '%Y-%m-%d'
