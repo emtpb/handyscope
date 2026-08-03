@@ -96,13 +96,13 @@ Example for using an oscilloscope device:
     from handyscope import Oscilloscope
     # To initialize as HS3 oscilloscope device
     osc = Oscilloscope("HS3")
-    # Set the range of the channels to 4 Volts
+    # Set the range of the channels to 4 V
     osc.channels[0].range = 4
     osc.channels[1].range = 4
     # Set the trigger kind to rising edge
     osc.channels[0].trig_kind = "rising"
     # Enable the trigger
-    osc.channels[0].trig_enabled= True
+    osc.channels[0].is_trig_enabled = True
     # Disable the trigger timeout
     osc.trig_timeout = -1
     # Set record length and sampling frequency
@@ -119,9 +119,9 @@ Example for using a generator device:
     from handyscope import Generator
     # To initialize as HS3 generator device
     gen = Generator("HS3")
-    # Set the signal type to a sinus wave
+    # Set the signal type to a sine wave
     gen.signal_type = "sine"
-    # Set the amplitude to 2 Volts
+    # Set the amplitude to 2 V
     gen.amplitude = 2
     # Set the frequency to 100 Hz
     gen.freq = 100
@@ -130,6 +130,7 @@ Example for using a generator device:
     # Start the generator
     gen.start()
 
+See the ``examples`` directory for some demo scripts.
 
 Documentation
 -------------
