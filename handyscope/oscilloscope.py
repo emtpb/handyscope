@@ -1178,7 +1178,7 @@ class Oscilloscope(Device):
         if self.measure_mode == "block":
             if (
                 self.valid_pre_sample_cnt
-                < self.record_length * self.pre_sample_ratio
+                < int(self.record_length * self.pre_sample_ratio)
             ):
                 if safe and self.is_trig_holdoff_available:
                     raise ValueError("Not all presamples have been collected")
